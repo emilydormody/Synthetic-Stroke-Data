@@ -28,14 +28,14 @@ class Patient(Agent):
         elif self.arrived:
             if self.ct_time == 0:
                 self.model.ct_patients.append(self)
-            elif self.t_time == 0:
-                if self.ct_time > self.model.current_time - 2:
+            elif self.t_time == 0: #and self.ct_time > self.model.current_time - 2:
+                if self.ct_time < self.model.current_time - 5:
                     self.model.t_patients.append(self)
             elif not self.icu_arrived and self.t_time != self.model.current_time:
                 self.icu_arrived = True
                 print(self.unique_id, 'icu at ', self.model.current_time)
                 self.icu_arrival_time = self.model.current_time
-            elif self.neuro_time == 0 and self.icu_arrival_time > self.model.current_time - 24:
+            elif self.neuro_time == 0 and self.icu_arrival_time < self.model.current_time - 24:
                 self.model.neuro_patients.append(self)
 
 class Hospital(Model):
