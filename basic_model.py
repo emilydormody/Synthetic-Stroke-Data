@@ -16,7 +16,8 @@ class Patient(Agent):
         self.ct_time = 0
         self.t_time = 0
         self.neuro_time = 0
-        self.icu_arrival = 0
+        self.icu_arrived = False
+        self.icu_arrival_time = 0
         self.arrived = False
 
     def step(self):
@@ -24,9 +25,15 @@ class Patient(Agent):
             self.arrived = True
         elif self.arrived:
             if self.ct_time == 0:
-                self.ct_patients
-
-
+                self.model.ct_patients.append(self)
+            elif self.t_time == 0:
+                if self.ct_time > self.model.current_time - 10:
+                    self.model.t_patients.append(self)
+            elif not self.icu_arrived:
+                self.icu_arrived = True
+                self.icu_arrival_time = self.model.current_time
+            elif self.neuro_time == 0 and self.icu_arrival_time > self.model.current_time - 24:
+                self.model.neuro_patients.append(self)
 
 class Hospital(Model):
     def __init__(self):
