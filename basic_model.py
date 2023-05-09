@@ -2,6 +2,7 @@ import random
 
 from mesa import Agent, Model
 import mesa.time
+from matplotlib import pyplot as plt
 
 class Patient(Agent):
     def __init__(self, unique_id, model):
@@ -43,10 +44,12 @@ class Hospital(Model):
         self.current_time = 1
         self.ct_patients = []
         self.t_patients = []
-        self.neuro_patients = [] # modelled to have only one of each treatment happen at a time
-        for i in range(100):
+        self.neuro_patients = []
+        self.all_patients = [] # modelled to have only one of each treatment happen at a time
+        for i in range(20):
             patient = Patient(i, self)
             self.schedule.add(patient)
+            self.all_patients.append(patient)
 
     def step(self):
         self.treat_patients()
@@ -70,6 +73,17 @@ class Hospital(Model):
             print(patient.unique_id, 'saw neuro at ', self.current_time)
 
 
+def graph_arrivals(model):
+    lst = []
+    for patient in model.all_patients:
+        arrival = patient.admission_time
+        lst.append(arrival//60)
+    print(lst)
+    plt.hist(lst)
+    plt.show()
+
+
 h = Hospital()
 for i in range(2880):
     h.step()
+graph_arrivals(h)
