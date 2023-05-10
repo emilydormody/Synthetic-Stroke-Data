@@ -14,9 +14,13 @@ def main():
          "CT Scan Time": track_ctscans(h), "Thrombolysis Treatment Time": track_treatment(h),"ICU Arrival Time": track_icu_arrival(h),
          "Neurologist Visit Time": track_neurologist(h)}
     df = pd.DataFrame(data=d)
+    df['CT Scan Time'] = pd.to_datetime(df['CT Scan Time'])
+    df['Arrival Time'] = pd.to_datetime(df['Arrival Time'])
+    df['Thrombolysis Treatment Time'] = pd.to_datetime(df['Thrombolysis Treatment Time'])
+    df["ICU Arrival Time"] = pd.to_datetime(df["ICU Arrival Time"])
+    df["Neurologist Visit Time"] = pd.to_datetime(df["Neurologist Visit Time"])
+    print(df.info())
     print(df.head())
-    inpt = input("enter index: ")
-    print(df.iloc[int(inpt)])
 
 
 main()
