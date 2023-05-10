@@ -81,11 +81,15 @@ class Hospital(Model):
 
 
 def convert_time(time):
+    date = "2023-05-07 "
+    if time >= 1440:
+        date = "2023-05-08 "
+        time -= 1440
     hour = time//60
     minute = time-hour*60
     if minute < 10:
         minute = "0"+str(minute)
-    return str(hour)+":"+str(minute)
+    return date+str(hour)+":"+str(minute)
 
 def track_arrivals(model):
     lst = []
