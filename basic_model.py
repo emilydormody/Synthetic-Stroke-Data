@@ -31,15 +31,15 @@ class Patient(Agent):
             if not self.ct_scanned:
                 self.model.ct_patients.append(self)
             elif self.ct_scanned and not self.treated: # self.ct_time < self.model.current_time:
-                if self.ct_time < self.model.current_time - 5:
+                if self.ct_time < self.model.current_time - 30:
                     self.model.t_patients.append(self)
             elif self.treated and not self.icu_arrived:
-                if self.t_time < self.model.current_time:
+                if self.t_time < self.model.current_time - 5:
                     self.icu_arrived = True
                     print(self.unique_id, 'icu at ', self.model.current_time)
                     self.icu_arrival_time = self.model.current_time
             elif self.icu_arrived and not self.neuro_visit:
-                if self.icu_arrival_time < self.model.current_time - 24:
+                if self.icu_arrival_time < self.model.current_time - 120:
                     self.model.neuro_patients.append(self)
 
 class Hospital(Model):

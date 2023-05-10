@@ -15,6 +15,7 @@ def main():
          "Neurologist Visit Time": track_neurologist(h)}
     df = pd.DataFrame(data=d)
     print(df.head())
+    print(df.iloc[5])
 
 
 main()
