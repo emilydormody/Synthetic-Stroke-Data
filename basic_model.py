@@ -80,38 +80,45 @@ class Hospital(Model):
             print(patient.unique_id, 'saw neuro at ', self.current_time)
 
 
+def convert_time(time):
+    hour = time//60
+    minute = time-hour*60
+    if minute < 10:
+        minute = "0"+str(minute)
+    return str(hour)+":"+str(minute)
+
 def track_arrivals(model):
     lst = []
     for patient in model.all_patients:
-        arrival = patient.admission_time
+        arrival = convert_time(patient.admission_time)
         lst.append(arrival)
     return lst
 
 def track_icu_arrival(model):
     lst = []
     for patient in model.all_patients:
-        arrival = patient.icu_arrival_time
+        arrival = convert_time(patient.icu_arrival_time)
         lst.append(arrival)
     return lst
 
 def track_ctscans(model):
     lst = []
     for patient in model.all_patients:
-        scan = patient.ct_time
+        scan = convert_time(patient.ct_time)
         lst.append(scan)
     return lst
 
 def track_treatment(model):
     lst = []
     for patient in model.all_patients:
-        treatment = patient.t_time
+        treatment = convert_time(patient.t_time)
         lst.append(treatment)
     return lst
 
 def track_neurologist(model):
     lst = []
     for patient in model.all_patients:
-        visit = patient.neuro_time
+        visit = convert_time(patient.neuro_time)
         lst.append(visit)
     return lst
 
@@ -141,7 +148,7 @@ def main():
     h = Hospital()
     for i in range(2880):
         h.step()
-    track_arrivals(h)
+
 
 if __name__ == "__main__":
     main()
