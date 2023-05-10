@@ -35,8 +35,9 @@ class Patient(Agent):
                 self.icu_arrived = True
                 print(self.unique_id, 'icu at ', self.model.current_time)
                 self.icu_arrival_time = self.model.current_time
-            elif self.neuro_time == 0 and self.icu_arrival_time < self.model.current_time - 24:
-                self.model.neuro_patients.append(self)
+            elif self.icu_arrived and self.neuro_time == 0:
+                if self.icu_arrival_time < self.model.current_time - 24:
+                    self.model.neuro_patients.append(self)
 
 class Hospital(Model):
     def __init__(self):
@@ -73,17 +74,15 @@ class Hospital(Model):
             print(patient.unique_id, 'saw neuro at ', self.current_time)
 
 
-def graph_arrivals(model):
+def track_arrivals(model):
     lst = []
     for patient in model.all_patients:
         arrival = patient.admission_time
         lst.append(arrival//60)
     print(lst)
-    plt.hist(lst)
-    plt.show()
 
 
 h = Hospital()
 for i in range(2880):
     h.step()
-graph_arrivals(h)
+track_arrivals(h)
