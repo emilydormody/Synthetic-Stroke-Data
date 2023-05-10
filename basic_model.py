@@ -28,7 +28,7 @@ class Patient(Agent):
         elif self.arrived:
             if self.ct_time == 0:
                 self.model.ct_patients.append(self)
-            elif self.t_time == 0: #and self.ct_time > self.model.current_time - 2:
+            elif self.t_time == 0 and self.ct_time != self.model.current_time:
                 if self.ct_time < self.model.current_time - 5:
                     self.model.t_patients.append(self)
             elif not self.icu_arrived and self.t_time != self.model.current_time:
@@ -47,7 +47,7 @@ class Hospital(Model):
         self.t_patients = []
         self.neuro_patients = []
         self.all_patients = [] # modelled to have only one of each treatment happen at a time
-        for i in range(20):
+        for i in range(100):
             patient = Patient(i, self)
             self.schedule.add(patient)
             self.all_patients.append(patient)
