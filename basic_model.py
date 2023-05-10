@@ -2,7 +2,6 @@ import random
 
 from mesa import Agent, Model
 import mesa.time
-from matplotlib import pyplot as plt
 
 class Patient(Agent):
     def __init__(self, unique_id, model):
@@ -15,8 +14,11 @@ class Patient(Agent):
         self.age = random.randint(20, 91)
         self.admission_time = random.randint(1,1440)
         self.ct_time = 0
+        self.ct_scanned = False
         self.t_time = 0
+        self.treated = False
         self.neuro_time = 0
+        self.neuro_visit = False
         self.icu_arrived = False
         self.icu_arrival_time = 0
         self.arrived = False
@@ -26,16 +28,17 @@ class Patient(Agent):
             self.arrived = True
             print(self.unique_id, 'arrived at ', self.model.current_time)
         elif self.arrived:
-            if self.ct_time == 0:
+            if not self.ct_scanned:
                 self.model.ct_patients.append(self)
-            elif self.t_time == 0 and self.ct_time != self.model.current_time:
+            elif self.ct_scanned and not self.treated: # self.ct_time < self.model.current_time:
                 if self.ct_time < self.model.current_time - 5:
                     self.model.t_patients.append(self)
-            elif not self.icu_arrived and self.t_time != self.model.current_time:
-                self.icu_arrived = True
-                print(self.unique_id, 'icu at ', self.model.current_time)
-                self.icu_arrival_time = self.model.current_time
-            elif self.icu_arrived and self.neuro_time == 0:
+            elif self.treated and not self.icu_arrived:
+                if self.t_time < self.model.current_time:
+                    self.icu_arrived = True
+                    print(self.unique_id, 'icu at ', self.model.current_time)
+                    self.icu_arrival_time = self.model.current_time
+            elif self.icu_arrived and not self.neuro_visit:
                 if self.icu_arrival_time < self.model.current_time - 24:
                     self.model.neuro_patients.append(self)
 
@@ -60,16 +63,19 @@ class Hospital(Model):
     def treat_patients(self):
         if len(self.ct_patients) != 0:
             patient = self.ct_patients.pop(0)
+            patient.ct_scanned = True
             patient.ct_time = self.current_time
             print(patient.unique_id, 'ct scan at ', self.current_time)
 
         if len(self.t_patients) != 0:
             patient = self.t_patients.pop(0)
+            patient.treated = True
             patient.t_time = self.current_time
             print(patient.unique_id, 'thrombo at ', self.current_time)
 
         if len(self.neuro_patients) != 0:
             patient = self.neuro_patients.pop(0)
+            patient.neuro_visit = True
             patient.neuro_time = self.current_time
             print(patient.unique_id, 'saw neuro at ', self.current_time)
 
@@ -78,11 +84,22 @@ def track_arrivals(model):
     lst = []
     for patient in model.all_patients:
         arrival = patient.admission_time
-        lst.append(arrival//60)
-    print(lst)
+        lst.append(arrival)
+    return lst
 
+def track_icu_arrival(model):
+    lst = []
+    for patient in model.all_patients:
+        arrival = patient.icu_arrival_time
+        lst.append(arrival)
+    return lst
 
-h = Hospital()
-for i in range(2880):
-    h.step()
-track_arrivals(h)
+def main():
+    h = Hospital()
+    for i in range(2880):
+        h.step()
+    track_arrivals(h)
+
+if __name__ == "__main__":
+    main()
+
