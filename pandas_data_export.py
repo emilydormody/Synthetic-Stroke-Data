@@ -7,7 +7,7 @@ def main():
     for i in range(2880):  # 48 hours of steps
         h.step()
 
-    d = {"Arrival Time": track_arrivals(h), "col2": track_icu_arrival(h)}
+    d = {"Arrival Time": track_arrivals(h), "ICU Arrival Time": track_icu_arrival(h)}
     df = pd.DataFrame(data=d)
     print(df.head())
 

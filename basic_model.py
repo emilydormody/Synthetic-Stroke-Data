@@ -94,6 +94,49 @@ def track_icu_arrival(model):
         lst.append(arrival)
     return lst
 
+def track_ctscans(model):
+    lst = []
+    for patient in model.all_patients:
+        scan = patient.ct_time
+        lst.append(scan)
+    return lst
+
+def track_treatment(model):
+    lst = []
+    for patient in model.all_patients:
+        treatment = patient.t_time
+        lst.append(treatment)
+    return lst
+
+def track_neurologist(model):
+    lst = []
+    for patient in model.all_patients:
+        visit = patient.neuro_time
+        lst.append(visit)
+    return lst
+
+def patient_name(model):
+    lst = []
+    for patient in model.all_patients:
+        name = patient.name
+        lst.append(name)
+    return lst
+
+def patient_age(model):
+    lst = []
+    for patient in model.all_patients:
+        age = patient.age
+        lst.append(age)
+    return lst
+
+def patient_gender(model):
+    lst = []
+    for patient in model.all_patients:
+        gender = patient.gender
+        lst.append(gender)
+    return lst
+
+
 def main():
     h = Hospital()
     for i in range(2880):
