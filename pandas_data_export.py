@@ -22,5 +22,7 @@ def main():
     print(df.info())
     print(df.head())
 
+    df.to_csv('C:\Users\emily\OneDrive\Documents\MUN\NSERC 2023\Project Files\stroke_model_data.csv')
+
 
 main()
