@@ -12,7 +12,7 @@ def main():
 
     d = {"Patient Id": patient_name(h), "Age": patient_age(h), "Gender": patient_gender(h), "Arrival Time": track_arrivals(h),
          "CT Scan Time": track_ctscans(h), "Thrombolysis Treatment Time": track_treatment(h),"ICU Arrival Time": track_icu_arrival(h),
-         "Neurologist Visit Time": track_neurologist(h)}
+         "Neurologist Visit Time": track_neurologist(h), "Delay": track_delay(h)}
     df = pd.DataFrame(data=d)
     df['CT Scan Time'] = pd.to_datetime(df['CT Scan Time'])
     df['Arrival Time'] = pd.to_datetime(df['Arrival Time'])

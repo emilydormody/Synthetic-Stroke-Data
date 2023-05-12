@@ -3,6 +3,7 @@ import random
 from mesa import Agent, Model
 import mesa.time
 
+
 class Patient(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
@@ -12,7 +13,7 @@ class Patient(Agent):
         else:
             self.gender = "F"
         self.age = random.randint(20, 91)
-        self.admission_time = random.randint(1,1440)
+        self.admission_time = random.randint(1, 1440)
         self.ct_time = 0
         self.ct_scanned = False
         self.t_time = 0
@@ -21,6 +22,7 @@ class Patient(Agent):
         self.neuro_visit = False
         self.icu_arrived = False
         self.icu_arrival_time = 0
+        self.delay = random.uniform(0, 3)
         self.arrived = False
 
     def step(self):
@@ -29,19 +31,38 @@ class Patient(Agent):
             print(self.unique_id, 'arrived at ', self.model.current_time)
         elif self.arrived:
             if not self.ct_scanned:
-                if self.admission_time < self.model.current_time - 15:
+                if self.admission_time < self.model.current_time - 15 - self.ct_delay():
                     self.model.ct_patients.append(self)
-            elif self.ct_scanned and not self.treated: # self.ct_time < self.model.current_time:
-                if self.ct_time < self.model.current_time - 15:
+            elif self.ct_scanned and not self.treated:  # self.ct_time < self.model.current_time:
+                if self.ct_time < self.model.current_time - 15 - self.t_delay():
                     self.model.t_patients.append(self)
             elif self.treated and not self.icu_arrived:
-                if self.t_time < self.model.current_time - 5:
+                if self.t_time < self.model.current_time - 5 - self.icu_delay():
                     self.icu_arrived = True
                     print(self.unique_id, 'icu at ', self.model.current_time)
                     self.icu_arrival_time = self.model.current_time
             elif self.icu_arrived and not self.neuro_visit:
                 if self.icu_arrival_time < self.model.current_time - 120:
                     self.model.neuro_patients.append(self)
+
+    def ct_delay(self):
+        if 0.5 < self.delay < 1:
+            return int(self.delay * 10)
+        else:
+            return 0
+
+    def t_delay(self):
+        if 1 < self.delay < 2:
+            return int((self.delay - 1) * 10)
+        else:
+            return 0
+
+    def icu_delay(self):
+        if 2 < self.delay < 3:
+            return int((self.delay - 2) * 10)
+        else:
+            return 0
+
 
 class Hospital(Model):
     def __init__(self):
@@ -50,7 +71,7 @@ class Hospital(Model):
         self.ct_patients = []
         self.t_patients = []
         self.neuro_patients = []
-        self.all_patients = [] # modelled to have only one of each treatment happen at a time
+        self.all_patients = []  # modelled to have only one of each treatment happen at a time
         for i in range(100):
             patient = Patient(i, self)
             self.schedule.add(patient)
@@ -86,11 +107,12 @@ def convert_time(time):
     if time >= 1440:
         date = "2023-05-08 "
         time -= 1440
-    hour = time//60
-    minute = time-hour*60
+    hour = time // 60
+    minute = time - hour * 60
     if minute < 10:
-        minute = "0"+str(minute)
-    return date+str(hour)+":"+str(minute)
+        minute = "0" + str(minute)
+    return date + str(hour) + ":" + str(minute)
+
 
 def track_arrivals(model):
     lst = []
@@ -99,12 +121,14 @@ def track_arrivals(model):
         lst.append(arrival)
     return lst
 
+
 def track_icu_arrival(model):
     lst = []
     for patient in model.all_patients:
         arrival = convert_time(patient.icu_arrival_time)
         lst.append(arrival)
     return lst
+
 
 def track_ctscans(model):
     lst = []
@@ -113,12 +137,14 @@ def track_ctscans(model):
         lst.append(scan)
     return lst
 
+
 def track_treatment(model):
     lst = []
     for patient in model.all_patients:
         treatment = convert_time(patient.t_time)
         lst.append(treatment)
     return lst
+
 
 def track_neurologist(model):
     lst = []
@@ -127,12 +153,14 @@ def track_neurologist(model):
         lst.append(visit)
     return lst
 
+
 def patient_name(model):
     lst = []
     for patient in model.all_patients:
         name = patient.name
         lst.append(name)
     return lst
+
 
 def patient_age(model):
     lst = []
@@ -141,11 +169,20 @@ def patient_age(model):
         lst.append(age)
     return lst
 
+
 def patient_gender(model):
     lst = []
     for patient in model.all_patients:
         gender = patient.gender
         lst.append(gender)
+    return lst
+
+
+def track_delay(model):
+    lst = []
+    for patient in model.all_patients:
+        delay = patient.delay
+        lst.append(delay)
     return lst
 
 
@@ -157,4 +194,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
