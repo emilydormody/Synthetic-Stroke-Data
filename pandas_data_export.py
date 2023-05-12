@@ -22,7 +22,7 @@ def main():
     print(df.info())
     print(df.head())
 
-    df.to_csv('~/Documents/NSERC/stroke_model_data.csv')
+    df.sort_values(by='Arrival Time').to_csv('~/Documents/NSERC/stroke_model_data.csv')
 
 
 main()
