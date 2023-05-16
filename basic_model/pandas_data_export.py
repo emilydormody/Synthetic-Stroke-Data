@@ -1,4 +1,5 @@
-from basic_model import *
+from hospital import Hospital
+from patient_and_patientdata import Patient
 import pandas as pd
 
 
