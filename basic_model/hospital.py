@@ -36,21 +36,19 @@ class Hospital(Model):
             patient.ct_scanned = True
             patient.ct_time = self.current_time
             patient.last_treatment = self.current_time
-            print(patient.unique_id, ' scanned at ', self.current_time)
 
         if len(self.t_patients) != 0:
             patient = self.t_patients.pop(0)
             patient.treated = True
             patient.t_time = self.current_time
             patient.last_treatment = self.current_time
-            print(patient.unique_id, ' tpa at ', self.current_time)
 
         # if len(self.neuro_patients) != 0:
         #     patient = self.neuro_patients.pop(0)
         #     patient.neuro_ward = True
         #     patient.neuro_time = self.current_time
         #     patient.last_treatment = self.current_time
-        #     print(patient.unique_id, ' neuro ward at ', self.current_time)
+
 
     def neuro_ward_ordered_treatment(self):
         self.neuro_reset()
@@ -63,37 +61,30 @@ class Hospital(Model):
                     patient.last_treatment = self.current_time
                     patient.occupational_visit = self.current_time
                     self.occupational_patient = patient
-                    print(patient.unique_id, ' occupe at ', self.current_time)
                 elif patient.speech_visit == 0 and self.speech_patient is None:
                     patient.last_treatment = self.current_time
                     patient.speech_visit = self.current_time
                     self.speech_patient = patient
-                    print(patient.unique_id, ' speech at ', self.current_time)
                 elif patient.physio_visit == 0 and self.physio_patient is None:
                     patient.last_treatment = self.current_time
                     patient.physio_visit = self.current_time
                     self.physio_patient = patient
-                    print(patient.unique_id, ' physio at ', self.current_time)
                 elif patient.diet_visit == 0 and self.diet_patient is None:
                     patient.last_treatment = self.current_time
                     patient.diet_visit = self.current_time
                     self.diet_patient = patient
-                    print(patient.unique_id, ' diet at ', self.current_time)
                 elif patient.social_worker_visit == 0 and self.social_worker_patient is None:
                     patient.last_treatment = self.current_time
                     patient.social_worker_visit = self.current_time
                     self.social_worker_patient = patient
-                    print(patient.unique_id, ' sw at ', self.current_time)
                 elif patient.neuro_visit == 0 and self.neuro_patient is None:
                     patient.last_treatment = self.current_time
                     patient.neuro_visit = self.current_time
                     self.neuro_patient = patient
-                    print(patient.unique_id, ' neuro at ', self.current_time)
                 elif patient.cardiologist_visit == 0 and patient.need_cardiologist and self.cardiologist_patient is None:
                     patient.last_treatment = self.current_time
                     patient.cardiologist_visit = self.current_time
                     self.cardiologist_patient = patient
-                    print(patient.unique_id, ' cardio at ', self.current_time)
 
     def neuro_reset(self):
         self.occupational_patient = None
@@ -120,36 +111,29 @@ class Hospital(Model):
                     patient.last_treatment = self.current_time
                     patient.occupational_visit = self.current_time
                     self.neuro_lst[space] = patient
-                    print(patient.unique_id, ' occupe at ', self.current_time)
                 elif space == 1 and patient.speech_visit == 0:
                     patient.last_treatment = self.current_time
                     patient.speech_visit = self.current_time
                     self.neuro_lst[space] = patient
-                    print(patient.unique_id, ' speech at ', self.current_time)
                 elif space == 2 and patient.physio_visit == 0:
                     patient.last_treatment = self.current_time
                     patient.physio_visit = self.current_time
                     self.neuro_lst[space] = patient
-                    print(patient.unique_id, ' physio at ', self.current_time)
                 elif space == 3 and patient.diet_visit == 0:
                     patient.last_treatment = self.current_time
                     patient.diet_visit = self.current_time
                     self.neuro_lst[space] = patient
-                    print(patient.unique_id, ' diet at ', self.current_time)
                 elif space == 4 and patient.social_worker_visit == 0:
                     patient.last_treatment = self.current_time
                     patient.social_worker_visit = self.current_time
                     self.neuro_lst[space] = patient
-                    print(patient.unique_id, ' sw at ', self.current_time)
                 elif space == 5 and patient.neuro_visit == 0:
                     patient.last_treatment = self.current_time
                     patient.neuro_visit = self.current_time
                     self.neuro_lst[space] = patient
-                    print(patient.unique_id, ' neuro at ', self.current_time)
                 elif space == 6 and patient.cardiologist_visit == 0 and patient.need_cardiologist:
                     patient.last_treatment = self.current_time
                     patient.cardiologist_visit = self.current_time
                     self.neuro_lst[space] = patient
-                    print(patient.unique_id, ' cardio at ', self.current_time)
                 return
 
