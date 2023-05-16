@@ -14,8 +14,8 @@ class Patient(Agent):
         else:
             self.gender = "F"
         self.age = random.randint(20, 91)
-        self.admission_time = random.randint(180, 1620)
-        self.time_of_stroke = self.admission_time - random.randint(120, 180) - np.random.normal(60, 15)
+        self.admission_time = random.randint(300, 1740)
+        self.time_of_stroke = self.admission_time - random.randint(120, 210) - np.random.normal(60, 15)
         self.ct_time = 0
         self.ct_scanned = False
         self.t_time = 0
@@ -27,6 +27,7 @@ class Patient(Agent):
         self.icu_arrival_time = 0
         self.delay = random.uniform(0, 3)
         self.arrived = False
+        self.last_treatment = -1
 
         self.occupational_visit = 0
         self.speech_visit = 0
@@ -39,38 +40,44 @@ class Patient(Agent):
     def step(self):
         if self.model.current_time >= self.admission_time and not self.arrived:
             self.arrived = True
+            if self.admission_time-self.time_of_stroke <= 270:
+                self.tpa_permitted = True
+            print(self.unique_id, ' stroke at ', self.time_of_stroke, ' arrived at ', self.admission_time, ' difference is ', self.admission_time-self.time_of_stroke)
         elif self.arrived:
             if not self.ct_scanned:
-                if self.admission_time < self.model.current_time - 15 - self.ct_delay():
+                if self.last_treatment < self.model.current_time - self.ct_delay():
                     self.model.ct_patients.append(self)
-            elif self.ct_scanned and not self.treated:  # self.ct_time < self.model.current_time:
-                if self.ct_time < self.model.current_time - 15 - self.t_delay():
-                    self.model.t_patients.append(self)
-            elif self.treated and not self.icu_arrived:
-                if self.t_time < self.model.current_time - 5 - self.icu_delay():
+            elif self.tpa_permitted and not self.treated:
+                if self.ct_scanned:  # self.ct_time < self.model.current_time:
+                    if self.last_treatment < self.model.current_time - self.t_delay():
+                        self.model.t_patients.append(self)
+            elif (self.treated or not self.tpa_permitted) and not self.icu_arrived:
+                if self.last_treatment < self.model.current_time - self.icu_delay():
                     self.icu_arrived = True
                     self.icu_arrival_time = self.model.current_time
+                    self.last_treatment = self.model.current_time
+                    print(self.unique_id, ' icu at ', self.model.current_time)
             elif self.icu_arrived and not self.neuro_ward:
-                if self.icu_arrival_time < self.model.current_time - 120:
+                if self.last_treatment < self.model.current_time - 120:
                     self.model.neuro_patients.append(self)
 
     def ct_delay(self):
+        delay = 15
         if 0.5 < self.delay < 1:
-            return int(self.delay * 10)
-        else:
-            return 0
+            delay += int(self.delay * 10)
+        return delay
 
     def t_delay(self):
+        delay = 15
         if 1 < self.delay < 2:
-            return int((self.delay - 1) * 10)
-        else:
-            return 0
+            delay += int((self.delay - 1) * 10)
+        return delay
 
     def icu_delay(self):
+        delay = 5
         if 2 < self.delay < 3:
-            return int((self.delay - 2) * 10)
-        else:
-            return 0
+            delay += int((self.delay - 2) * 10)
+        return delay
 
 
 class Hospital(Model):
@@ -81,7 +88,7 @@ class Hospital(Model):
         self.t_patients = []
         self.neuro_patients = []
         self.all_patients = []  # modelled to have only one of each treatment happen at a time
-        for i in range(100):
+        for i in range(20):
             patient = Patient(i, self)
             self.schedule.add(patient)
             self.all_patients.append(patient)
@@ -96,16 +103,22 @@ class Hospital(Model):
             patient = self.ct_patients.pop(0)
             patient.ct_scanned = True
             patient.ct_time = self.current_time
+            patient.last_treatment = self.current_time
+            print(patient.unique_id, ' scanned at ', self.current_time)
 
         if len(self.t_patients) != 0:
             patient = self.t_patients.pop(0)
             patient.treated = True
             patient.t_time = self.current_time
+            patient.last_treatment = self.current_time
+            print(patient.unique_id, ' tpa at ', self.current_time)
 
         if len(self.neuro_patients) != 0:
             patient = self.neuro_patients.pop(0)
             patient.neuro_ward = True
             patient.neuro_time = self.current_time
+            patient.last_treatment = self.current_time
+            print(patient.unique_id, ' neuro ward at ', self.current_time)
 
 
 def convert_time(time):
@@ -194,7 +207,7 @@ def track_delay(model):
 
 def main():
     h = Hospital()
-    for i in range(2880):
+    for i in range(3180):
         h.step()
 
 
