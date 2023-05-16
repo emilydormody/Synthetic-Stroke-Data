@@ -9,6 +9,7 @@ class Patient(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.name = unique_id
+        self.model = model
         if self.name % 2 == 0:
             self.gender = "M"
         else:
@@ -97,89 +98,31 @@ class Patient(Agent):
 
 
 class PatientData():
-    def __init__(self, Hospital):
-        self.all_patients = Hospital.all_patients
+    def __init__(self, hospital):
+        self.all_patients = hospital.all_patients
+
+    def convert_time(self,time):
+        date = "2023-05-07 "
+        if time >= 1440:
+            date = "2023-05-08 "
+            time -= 1440
+        hour = time // 60
+        minute = time - hour * 60
+        if minute < 10:
+            minute = "0" + str(minute)
+        return date + str(hour) + ":" + str(minute)
+    def patient_info(self):
+        dict = {"Patient Id":[], "Age":[], "Gender":[]}
+        for patient in self.all_patients:
+            dict["Patient Id"].append(patient.name)
+            dict["Age"].append(patient.age)
+            dict["Gender"].append(patient.gender)
+        return dict
 
 
-def convert_time(time):
-    date = "2023-05-07 "
-    if time >= 1440:
-        date = "2023-05-08 "
-        time -= 1440
-    hour = time // 60
-    minute = time - hour * 60
-    if minute < 10:
-        minute = "0" + str(minute)
-    return date + str(hour) + ":" + str(minute)
 
 
-def track_arrivals(model):
-    lst = []
-    for patient in model.all_patients:
-        arrival = convert_time(patient.admission_time)
-        lst.append(arrival)
-    return lst
 
 
-def track_icu_arrival(model):
-    lst = []
-    for patient in model.all_patients:
-        arrival = convert_time(patient.icu_arrival_time)
-        lst.append(arrival)
-    return lst
 
 
-def track_ctscans(model):
-    lst = []
-    for patient in model.all_patients:
-        scan = convert_time(patient.ct_time)
-        lst.append(scan)
-    return lst
-
-
-def track_treatment(model):
-    lst = []
-    for patient in model.all_patients:
-        treatment = convert_time(patient.t_time)
-        lst.append(treatment)
-    return lst
-
-
-def track_neurologist(model):
-    lst = []
-    for patient in model.all_patients:
-        visit = convert_time(patient.neuro_time)
-        lst.append(visit)
-    return lst
-
-
-def patient_name(model):
-    lst = []
-    for patient in model.all_patients:
-        name = patient.name
-        lst.append(name)
-    return lst
-
-
-def patient_age(model):
-    lst = []
-    for patient in model.all_patients:
-        age = patient.age
-        lst.append(age)
-    return lst
-
-
-def patient_gender(model):
-    lst = []
-    for patient in model.all_patients:
-        gender = patient.gender
-        lst.append(gender)
-    return lst
-
-
-def track_delay(model):
-    lst = []
-    for patient in model.all_patients:
-        delay = patient.delay
-        lst.append(delay)
-    return lst

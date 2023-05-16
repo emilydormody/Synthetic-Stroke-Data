@@ -1,7 +1,7 @@
 from mesa import Agent, Model
 import mesa.time
 import numpy as np
-from patient_and_patientdata import Patient
+from patient_and_patientdata import Patient, PatientData
 
 class Hospital(Model):
     def __init__(self):
@@ -9,7 +9,7 @@ class Hospital(Model):
         self.current_time = 1
         self.ct_patients = []
         self.t_patients = []
-        self.neuro_patients = []
+        self.neuro_patients = []  # modelled to have only one of each treatment happen at a time
         self.occupational_patient = None
         self.speech_patient = None
         self.physio_patient = None
@@ -18,12 +18,12 @@ class Hospital(Model):
         self.neuro_patient = None
         self.cardiologist_patient = None
         self.neuro_lst = [0 for x in range(7)]
-        self.all_patients = []  # modelled to have only one of each treatment happen at a time
+        self.all_patients = []
         for i in range(100):
             patient = Patient(i, self)
             self.schedule.add(patient)
             self.all_patients.append(patient)
-
+        self.patient_data = PatientData(self)
     def step(self):
         self.treat_patients()
         self.neuro_ward_unordered()
