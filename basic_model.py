@@ -2,6 +2,7 @@ import random
 
 from mesa import Agent, Model
 import mesa.time
+import numpy as np
 
 
 class Patient(Agent):
@@ -13,22 +14,31 @@ class Patient(Agent):
         else:
             self.gender = "F"
         self.age = random.randint(20, 91)
-        self.admission_time = random.randint(1, 1440)
+        self.admission_time = random.randint(180, 1620)
+        self.time_of_stroke = self.admission_time - random.randint(120, 180) - np.random.normal(60, 15)
         self.ct_time = 0
         self.ct_scanned = False
         self.t_time = 0
+        self.tpa_permitted = False
         self.treated = False
         self.neuro_time = 0
-        self.neuro_visit = False
+        self.neuro_ward = False
         self.icu_arrived = False
         self.icu_arrival_time = 0
         self.delay = random.uniform(0, 3)
         self.arrived = False
 
+        self.occupational_visit = 0
+        self.speech_visit = 0
+        self.physio_visit = 0
+        self.diet_visit = 0
+        self.social_worker_visit = 0
+        self.neuro_visit = 0
+        self.need_cardiologist = False
+        self.cardiologist_visit = 0
     def step(self):
         if self.model.current_time >= self.admission_time and not self.arrived:
             self.arrived = True
-            print(self.unique_id, 'arrived at ', self.model.current_time)
         elif self.arrived:
             if not self.ct_scanned:
                 if self.admission_time < self.model.current_time - 15 - self.ct_delay():
@@ -39,9 +49,8 @@ class Patient(Agent):
             elif self.treated and not self.icu_arrived:
                 if self.t_time < self.model.current_time - 5 - self.icu_delay():
                     self.icu_arrived = True
-                    print(self.unique_id, 'icu at ', self.model.current_time)
                     self.icu_arrival_time = self.model.current_time
-            elif self.icu_arrived and not self.neuro_visit:
+            elif self.icu_arrived and not self.neuro_ward:
                 if self.icu_arrival_time < self.model.current_time - 120:
                     self.model.neuro_patients.append(self)
 
@@ -87,19 +96,16 @@ class Hospital(Model):
             patient = self.ct_patients.pop(0)
             patient.ct_scanned = True
             patient.ct_time = self.current_time
-            print(patient.unique_id, 'ct scan at ', self.current_time)
 
         if len(self.t_patients) != 0:
             patient = self.t_patients.pop(0)
             patient.treated = True
             patient.t_time = self.current_time
-            print(patient.unique_id, 'thrombo at ', self.current_time)
 
         if len(self.neuro_patients) != 0:
             patient = self.neuro_patients.pop(0)
-            patient.neuro_visit = True
+            patient.neuro_ward = True
             patient.neuro_time = self.current_time
-            print(patient.unique_id, 'saw neuro at ', self.current_time)
 
 
 def convert_time(time):
