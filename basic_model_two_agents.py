@@ -35,18 +35,14 @@ class Patient(Agent):
         self.diet_visit = 0
         self.social_worker_visit = 0
         self.neuro_visit = 0
-        if random.randint(0, 4) == 0:
-            self.need_cardiologist = True
-        else: self.need_cardiologist = False
+        self.need_cardiologist = False
         self.cardiologist_visit = 0
-
     def step(self):
         if self.model.current_time >= self.admission_time and not self.arrived:
             self.arrived = True
-            if self.admission_time - self.time_of_stroke <= 270:
+            if self.admission_time-self.time_of_stroke <= 270:
                 self.tpa_permitted = True
-            print(self.unique_id, ' stroke at ', self.time_of_stroke, ' arrived at ', self.admission_time,
-                  ' difference is ', self.admission_time - self.time_of_stroke)
+            print(self.unique_id, ' stroke at ', self.time_of_stroke, ' arrived at ', self.admission_time, ' difference is ', self.admission_time-self.time_of_stroke)
         elif self.arrived:
             if not self.ct_scanned:
                 if self.last_treatment < self.model.current_time - self.ct_delay():
@@ -66,6 +62,7 @@ class Patient(Agent):
                     self.neuro_ward = True
                     self.neuro_time = self.model.current_time
                     self.model.neuro_patients.append(self)
+
 
     def ct_delay(self):
         delay = 15
@@ -93,13 +90,6 @@ class Hospital(Model):
         self.ct_patients = []
         self.t_patients = []
         self.neuro_patients = []
-        self.occupational_patient = None
-        self.speech_patient = None
-        self.physio_patient = None
-        self.diet_patient = None
-        self.social_worker_patient = None
-        self.neuro_patient = None
-        self.cardiologist_patient = None
         self.all_patients = []  # modelled to have only one of each treatment happen at a time
         for i in range(20):
             patient = Patient(i, self)
@@ -108,7 +98,6 @@ class Hospital(Model):
 
     def step(self):
         self.treat_patients()
-        self.neuro_ward_ordered_treatment()
         self.schedule.step()
         self.current_time += 1
 
@@ -134,49 +123,6 @@ class Hospital(Model):
         #     patient.last_treatment = self.current_time
         #     print(patient.unique_id, ' neuro ward at ', self.current_time)
 
-    def neuro_ward_ordered_treatment(self):
-        self.neuro_reset_ordered_treatment()
-        for i in np.random.permutation(len(self.neuro_patients)):
-            patient = self.neuro_patients[i]
-            if patient.last_treatment <= self.current_time - 30:
-                if patient.occupational_visit == 0:
-                    patient.last_treatment = self.current_time
-                    patient.occupational_visit = self.current_time
-                    self.occupational_patient = patient
-                elif patient.speech_visit == 0:
-                    patient.last_treatment = self.current_time
-                    patient.speech_visit = self.current_time
-                    self.speech_patient = patient
-                elif patient.physio_visit == 0:
-                    patient.last_treatment = self.current_time
-                    patient.physio_visit = self.current_time
-                    self.physio_patient = patient
-                elif patient.diet_visit == 0:
-                    patient.last_treatment = self.current_time
-                    patient.diet_visit = self.current_time
-                    self.diet_patient = patient
-                elif patient.social_worker_visit == 0:
-                    patient.last_treatment = self.current_time
-                    patient.social_worker_visit = self.current_time
-                    self.social_worker_patient = patient
-                elif patient.neuro_visit == 0:
-                    patient.last_treatment = self.current_time
-                    patient.neuro_visit = self.current_time
-                    self.neuro_patient = patient
-                elif patient.cardiologist_visit == 0 and patient.need_cardiologist:
-                    patient.last_treatment = self.current_time
-                    patient.cardiologist_visit = self.current_time
-                    self.cardiologist_patient = patient
-
-
-    def neuro_reset_ordered_treatment(self):
-        self.occupational_patient = None
-        self.speech_patient = None
-        self.physio_patient = None
-        self.diet_patient = None
-        self.social_worker_patient = None
-        self.neuro_patient = None
-        self.cardiologist_patient = None
 
 
 def convert_time(time):
