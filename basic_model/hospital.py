@@ -26,7 +26,7 @@ class Hospital(Model):
 
     def step(self):
         self.treat_patients()
-        self.neuro_ward_ordered_treatment()
+        self.neuro_ward_unordered()
         self.schedule.step()
         self.current_time += 1
 
@@ -56,6 +56,8 @@ class Hospital(Model):
         self.neuro_reset()
         for i in np.random.permutation(len(self.neuro_patients)):
             patient = self.neuro_patients[i]
+            if patient.fully_treated():
+                self.neuro_patients.remove(patient)
             if patient.last_treatment <= self.current_time - 30:
                 if patient.occupational_visit == 0 and self.occupational_patient is None:
                     patient.last_treatment = self.current_time
@@ -94,7 +96,6 @@ class Hospital(Model):
                     print(patient.unique_id, ' cardio at ', self.current_time)
 
     def neuro_reset(self):
-        self.neuro_lst = [0 for x in range(7)]
         self.occupational_patient = None
         self.speech_patient = None
         self.physio_patient = None
@@ -104,16 +105,15 @@ class Hospital(Model):
         self.cardiologist_patient = None
 
     def neuro_ward_unordered(self):
-        self.neuro_reset()
+        self.neuro_lst = [0 for x in range(7)]
         for i in np.random.permutation(len(self.neuro_patients)):
             patient = self.neuro_patients[i]
             if patient.last_treatment <= self.current_time - 30:
-                if self.find_next_space(patient) >= 0:
-                    self.neuro_lst[self.find_next_space(patient)] = patient
+                self.find_next_space(patient)
 
     def find_next_space(self, patient):
-        if self.neuro_lst.count(0) == len(self.neuro_lst):
-            return -1
+        if self.neuro_lst.count(0) == 0:
+            return
         for space in range(len(self.neuro_lst)):
             if self.neuro_lst[space] == 0:
                 if space == 0 and patient.occupational_visit == 0:
@@ -136,8 +136,20 @@ class Hospital(Model):
                     patient.diet_visit = self.current_time
                     self.neuro_lst[space] = patient
                     print(patient.unique_id, ' diet at ', self.current_time)
-                elif space == 4 and patient.speech_visit == 0:
+                elif space == 4 and patient.social_worker_visit == 0:
                     patient.last_treatment = self.current_time
-                    patient.speech_visit = self.current_time
+                    patient.social_worker_visit = self.current_time
                     self.neuro_lst[space] = patient
-                    print(patient.unique_id, ' speech at ', self.current_time)
+                    print(patient.unique_id, ' sw at ', self.current_time)
+                elif space == 5 and patient.neuro_visit == 0:
+                    patient.last_treatment = self.current_time
+                    patient.neuro_visit = self.current_time
+                    self.neuro_lst[space] = patient
+                    print(patient.unique_id, ' neuro at ', self.current_time)
+                elif space == 6 and patient.cardiologist_visit == 0 and patient.need_cardiologist:
+                    patient.last_treatment = self.current_time
+                    patient.cardiologist_visit = self.current_time
+                    self.neuro_lst[space] = patient
+                    print(patient.unique_id, ' cardio at ', self.current_time)
+                return
+

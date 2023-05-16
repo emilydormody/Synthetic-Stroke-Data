@@ -37,7 +37,8 @@ class Patient(Agent):
         self.neuro_visit = 0
         if random.randint(0, 4) == 0:
             self.need_cardiologist = True
-        else: self.need_cardiologist = False
+        else:
+            self.need_cardiologist = False
         self.cardiologist_visit = 0
 
     def step(self):
@@ -50,11 +51,13 @@ class Patient(Agent):
         elif self.arrived:
             if not self.ct_scanned:
                 if self.last_treatment < self.model.current_time - self.ct_delay():
-                    self.model.ct_patients.append(self)
+                    if self.model.ct_patients.count(self) == 0:
+                        self.model.ct_patients.append(self)
             elif self.tpa_permitted and not self.treated:
                 if self.ct_scanned:  # self.ct_time < self.model.current_time:
                     if self.last_treatment < self.model.current_time - self.t_delay():
-                        self.model.t_patients.append(self)
+                        if self.model.t_patients.count(self) == 0:
+                            self.model.t_patients.append(self)
             elif (self.treated or not self.tpa_permitted) and not self.icu_arrived:
                 if self.last_treatment < self.model.current_time - self.icu_delay():
                     self.icu_arrived = True
@@ -68,6 +71,11 @@ class Patient(Agent):
                     self.last_treatment = self.model.current_time
                     self.model.neuro_patients.append(self)
                     print(self.unique_id, ' neuro ward at ', self.model.current_time)
+
+    def fully_treated(self):
+        return self.neuro_time != 0 and self.occupational_visit != 0 and self.speech_visit != 0 and self.physio_visit != 0 and \
+                self.diet_visit != 0 and self.social_worker_visit != 0 and self.neuro_visit != 0 and \
+                (self.cardiologist_visit != 0 or not self.need_cardiologist)
 
     def ct_delay(self):
         delay = 15
@@ -91,6 +99,8 @@ class Patient(Agent):
 class PatientData():
     def __init__(self, Hospital):
         self.all_patients = Hospital.all_patients
+
+
 def convert_time(time):
     date = "2023-05-07 "
     if time >= 1440:
@@ -173,6 +183,3 @@ def track_delay(model):
         delay = patient.delay
         lst.append(delay)
     return lst
-
-
-
