@@ -46,7 +46,7 @@ class Patient(Agent):
             if self.admission_time - self.time_of_stroke <= 270:
                 self.tpa_permitted = True
             print(self.unique_id, ' stroke at ', self.time_of_stroke, ' arrived at ', self.admission_time,
-                  ' difference is ', self.admission_time - self.time_of_stroke)
+                  ' difference is ', self.admission_time - self.time_of_stroke, ' need cardio ', self.need_cardiologist)
         elif self.arrived:
             if not self.ct_scanned:
                 if self.last_treatment < self.model.current_time - self.ct_delay():
@@ -65,7 +65,9 @@ class Patient(Agent):
                 if self.last_treatment < self.model.current_time - 120:
                     self.neuro_ward = True
                     self.neuro_time = self.model.current_time
+                    self.last_treatment = self.model.current_time
                     self.model.neuro_patients.append(self)
+                    print(self.unique_id, ' neuro ward at ', self.model.current_time)
 
     def ct_delay(self):
         delay = 15
@@ -101,7 +103,7 @@ class Hospital(Model):
         self.neuro_patient = None
         self.cardiologist_patient = None
         self.all_patients = []  # modelled to have only one of each treatment happen at a time
-        for i in range(20):
+        for i in range(100):
             patient = Patient(i, self)
             self.schedule.add(patient)
             self.all_patients.append(patient)
@@ -139,34 +141,41 @@ class Hospital(Model):
         for i in np.random.permutation(len(self.neuro_patients)):
             patient = self.neuro_patients[i]
             if patient.last_treatment <= self.current_time - 30:
-                if patient.occupational_visit == 0:
+                if patient.occupational_visit == 0 and self.occupational_patient is None:
                     patient.last_treatment = self.current_time
                     patient.occupational_visit = self.current_time
                     self.occupational_patient = patient
-                elif patient.speech_visit == 0:
+                    print(patient.unique_id, ' occupe at ', self.current_time)
+                elif patient.speech_visit == 0 and self.speech_patient is None:
                     patient.last_treatment = self.current_time
                     patient.speech_visit = self.current_time
                     self.speech_patient = patient
-                elif patient.physio_visit == 0:
+                    print(patient.unique_id, ' speech at ', self.current_time)
+                elif patient.physio_visit == 0 and self.physio_patient is None:
                     patient.last_treatment = self.current_time
                     patient.physio_visit = self.current_time
                     self.physio_patient = patient
-                elif patient.diet_visit == 0:
+                    print(patient.unique_id, ' physio at ', self.current_time)
+                elif patient.diet_visit == 0 and self.diet_patient is None:
                     patient.last_treatment = self.current_time
                     patient.diet_visit = self.current_time
                     self.diet_patient = patient
-                elif patient.social_worker_visit == 0:
+                    print(patient.unique_id, ' diet at ', self.current_time)
+                elif patient.social_worker_visit == 0 and self.social_worker_patient is None:
                     patient.last_treatment = self.current_time
                     patient.social_worker_visit = self.current_time
                     self.social_worker_patient = patient
-                elif patient.neuro_visit == 0:
+                    print(patient.unique_id, ' sw at ', self.current_time)
+                elif patient.neuro_visit == 0 and self.neuro_patient is None:
                     patient.last_treatment = self.current_time
                     patient.neuro_visit = self.current_time
                     self.neuro_patient = patient
-                elif patient.cardiologist_visit == 0 and patient.need_cardiologist:
+                    print(patient.unique_id, ' neuro at ', self.current_time)
+                elif patient.cardiologist_visit == 0 and patient.need_cardiologist and self.cardiologist_patient is None:
                     patient.last_treatment = self.current_time
                     patient.cardiologist_visit = self.current_time
                     self.cardiologist_patient = patient
+                    print(patient.unique_id, ' cardio at ', self.current_time)
 
 
     def neuro_reset_ordered_treatment(self):
