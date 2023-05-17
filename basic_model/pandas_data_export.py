@@ -19,6 +19,6 @@ def export_to_pandas(model):
     df["Cardiologist Visit"] = pd.to_datetime(df["Cardiologist Visit"])
     df["Neurologist Visit"] = pd.to_datetime(df["Neurologist Visit"])
     print(df.info())
-    print(df.head())
+    print(df)
 
     # df.sort_values(by='Arrival Time').to_csv('~/Documents/NSERC/stroke_model_data.csv')

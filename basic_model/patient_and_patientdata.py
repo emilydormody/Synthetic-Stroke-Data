@@ -98,6 +98,8 @@ class PatientData():
         self.all_patients = hospital.all_patients
 
     def convert_time(self, time):
+        if time == 0:
+            return None
         time = int(time)
         date = "2023-05-07 "
         if time >= 1440:

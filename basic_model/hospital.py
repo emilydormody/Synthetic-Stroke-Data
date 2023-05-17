@@ -97,11 +97,11 @@ class Hospital(Model):
         self.neuro_lst = [0 for x in range(7)]
         for i in np.random.permutation(len(self.neuro_patients)):
             patient = self.neuro_patients[i]
+            if patient.last_treatment <= self.current_time - 30:
+                self.find_next_space(patient)
+        for patient in self.neuro_patients:
             if patient.fully_treated():
                 self.neuro_patients.remove(patient)
-            elif patient.last_treatment <= self.current_time - 30:
-                self.find_next_space(patient)
-
     def find_next_space(self, patient):
         if self.neuro_lst.count(0) == 0:
             return
@@ -135,5 +135,5 @@ class Hospital(Model):
                     patient.last_treatment = self.current_time
                     patient.cardiologist_visit = self.current_time
                     self.neuro_lst[space] = patient
-                return
+
 
