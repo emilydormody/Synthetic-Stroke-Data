@@ -45,6 +45,7 @@ class Patient(Agent):
     def step(self):
         if self.model.current_time >= self.admission_time and not self.arrived:
             self.arrived = True
+            self.last_treatment = self.model.current_time
             if self.admission_time - self.time_of_stroke <= 270:
                 self.tpa_permitted = True
         elif self.arrived:
