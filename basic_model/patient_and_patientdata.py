@@ -24,6 +24,10 @@ class Patient(Agent):
         self.treated = False
         self.icu_arrived = False
         self.icu_arrival_time = 0
+        if random.randint(0,1) == 0:
+            self.need_icu = True
+        else:
+            self.need_icu = False
         self.delay = random.uniform(0, 3)
         self.arrived = False
         self.last_treatment = -1
@@ -58,12 +62,13 @@ class Patient(Agent):
                     if self.last_treatment < self.model.current_time - self.t_delay():
                         if self.model.t_patients.count(self) == 0:
                             self.model.t_patients.append(self)
-            elif (self.treated or not self.tpa_permitted) and not self.icu_arrived:
+            elif (self.treated or not self.tpa_permitted) and (not self.icu_arrived and self.need_icu):
                 if self.last_treatment < self.model.current_time - self.icu_delay():
-                    self.icu_arrived = True
-                    self.icu_arrival_time = self.model.current_time
-                    self.last_treatment = self.model.current_time
-            elif self.icu_arrived and not self.neuro_ward:
+                    if self.need_icu:
+                        self.icu_arrived = True
+                        self.icu_arrival_time = self.model.current_time
+                        self.last_treatment = self.model.current_time
+            elif (self.icu_arrived or not self.need_icu) and not self.neuro_ward:
                 if self.last_treatment < self.model.current_time - 120:
                     self.neuro_ward = True
                     self.neuro_time = self.model.current_time
