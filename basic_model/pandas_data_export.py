@@ -18,6 +18,7 @@ def export_to_pandas(model):
     df["Social Worker Visit"] = pd.to_datetime(df["Social Worker Visit"])
     df["Cardiologist Visit"] = pd.to_datetime(df["Cardiologist Visit"])
     df["Neurologist Visit"] = pd.to_datetime(df["Neurologist Visit"])
+    df["Blood Work Time"] = pd.to_datetime(df["Blood Work Time"])
     print(df.info())
     print(df)
 
