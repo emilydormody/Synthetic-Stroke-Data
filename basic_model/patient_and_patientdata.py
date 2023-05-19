@@ -1,3 +1,4 @@
+import datetime
 import random
 
 from mesa import Agent, Model
@@ -107,16 +108,9 @@ class PatientData():
     def convert_time(self, time):
         if time == 0:
             return None
-        time = int(time)
-        date = "2023-05-07 "
-        if time >= 1440:
-            date = "2023-05-08 "
-            time -= 1440
-        hour = time // 60
-        minute = time - hour * 60
-        if minute < 10:
-            minute = "0" + str(minute)
-        return date + str(hour) + ":" + str(minute)
+        date = datetime.datetime.now()
+        date += datetime.timedelta(minutes=time)
+        return str(date)[0:19]
 
     def patient_info(self):
         dict = {"Patient Id": [], "Age": [], "Gender": [], "Time of Stroke": [], "Arrival Time": [], "CT Scan Time": [],
