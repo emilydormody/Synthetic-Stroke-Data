@@ -55,7 +55,10 @@ class Hospital(Model):
         for i in np.random.permutation(len(self.neuro_patients)):
             patient = self.neuro_patients[i]
             if patient.last_treatment <= self.current_time - 30:
-                if patient.occupational_visit == 0 and self.occupational_patient is None:
+                if patient.bloodwork == 0:
+                    patient.last_treatment = self.current_time
+                    patient.bloodwork = self.current_time
+                elif patient.occupational_visit == 0 and self.occupational_patient is None:
                     patient.last_treatment = self.current_time
                     patient.occupational_visit = self.current_time
                     self.occupational_patient = patient
@@ -98,7 +101,11 @@ class Hospital(Model):
         for i in np.random.permutation(len(self.neuro_patients)):
             patient = self.neuro_patients[i]
             if patient.last_treatment <= self.current_time - 30:
-                self.find_next_space(patient)
+                if patient.bloodwork == 0:
+                    patient.last_treatment = self.current_time
+                    patient.bloodwork = self.current_time
+                else:
+                    self.find_next_space(patient)
         for patient in self.neuro_patients:
             if patient.fully_treated():
                 self.neuro_patients.remove(patient)
