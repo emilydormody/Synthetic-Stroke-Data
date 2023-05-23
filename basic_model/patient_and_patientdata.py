@@ -2,7 +2,6 @@ import datetime
 import random
 
 from mesa import Agent, Model
-import mesa.time
 import numpy as np
 
 
@@ -19,13 +18,10 @@ class Patient(Agent):
         self.admission_time = random.randint(300, 1740)
         self.time_of_stroke = self.admission_time - random.randint(120, 210) - np.random.normal(60, 15)
         self.ct_time = 0
-        self.ct_scanned = False
         self.t_time = 0
         self.tpa_permitted = False
-        self.treated = False
-        self.icu_arrived = False
         self.icu_arrival_time = 0
-        if random.randint(0,1) == 0:
+        if random.randint(0, 1) == 0:
             self.need_icu = True
         else:
             self.need_icu = False
@@ -34,7 +30,6 @@ class Patient(Agent):
         self.last_treatment = -1
 
         self.neuro_time = 0
-        self.neuro_ward = False
         self.occupational_visit = 0
         self.speech_visit = 0
         self.physio_visit = 0
@@ -55,24 +50,21 @@ class Patient(Agent):
             if self.admission_time - self.time_of_stroke <= 270:
                 self.tpa_permitted = True
         elif self.arrived:
-            if not self.ct_scanned:
+            if self.ct_time == 0:
                 if self.last_treatment < self.model.current_time - self.ct_delay():
                     if self.model.ct_patients.count(self) == 0:
                         self.model.ct_patients.append(self)
-            elif self.tpa_permitted and not self.treated:
-                if self.ct_scanned:  # self.ct_time < self.model.current_time:
-                    if self.last_treatment < self.model.current_time - self.t_delay():
-                        if self.model.t_patients.count(self) == 0:
-                            self.model.t_patients.append(self)
-            elif (self.treated or not self.tpa_permitted) and (not self.icu_arrived and self.need_icu):
+            elif self.tpa_permitted and self.t_time == 0:
+                if self.last_treatment < self.model.current_time - self.t_delay():
+                    if self.model.t_patients.count(self) == 0:
+                        self.model.t_patients.append(self)
+            elif (self.t_time > 0 or not self.tpa_permitted) and (self.icu_arrival_time == 0 and self.need_icu):
                 if self.last_treatment < self.model.current_time - self.icu_delay():
                     if self.need_icu:
-                        self.icu_arrived = True
                         self.icu_arrival_time = self.model.current_time
                         self.last_treatment = self.model.current_time
-            elif (self.icu_arrived or not self.need_icu) and not self.neuro_ward:
+            elif (self.icu_arrival_time > 0 or not self.need_icu) and self.neuro_time == 0:
                 if self.last_treatment < self.model.current_time - 120:
-                    self.neuro_ward = True
                     self.neuro_time = self.model.current_time
                     self.last_treatment = self.model.current_time
                     self.model.neuro_patients.append(self)
@@ -101,7 +93,7 @@ class Patient(Agent):
         return delay
 
 
-class PatientData():
+class PatientData:
     def __init__(self, hospital):
         self.all_patients = hospital.all_patients
 

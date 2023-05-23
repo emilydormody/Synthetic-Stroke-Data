@@ -3,6 +3,7 @@ import mesa.time
 import numpy as np
 from patient_and_patientdata import Patient, PatientData
 
+
 class Hospital(Model):
     def __init__(self):
         self.schedule = mesa.time.RandomActivation(self)
@@ -19,11 +20,12 @@ class Hospital(Model):
         self.cardiologist_patient = None
         self.neuro_lst = [0 for x in range(7)]
         self.all_patients = []
-        for i in range(100):
+        for i in range(10):
             patient = Patient(i, self)
             self.schedule.add(patient)
             self.all_patients.append(patient)
         self.patient_data = PatientData(self)
+
     def step(self):
         self.treat_patients()
         self.neuro_ward_unordered()
@@ -33,22 +35,13 @@ class Hospital(Model):
     def treat_patients(self):
         if len(self.ct_patients) != 0:
             patient = self.ct_patients.pop(0)
-            patient.ct_scanned = True
             patient.ct_time = self.current_time
             patient.last_treatment = self.current_time
 
         if len(self.t_patients) != 0:
             patient = self.t_patients.pop(0)
-            patient.treated = True
             patient.t_time = self.current_time
             patient.last_treatment = self.current_time
-
-        # if len(self.neuro_patients) != 0:
-        #     patient = self.neuro_patients.pop(0)
-        #     patient.neuro_ward = True
-        #     patient.neuro_time = self.current_time
-        #     patient.last_treatment = self.current_time
-
 
     def neuro_ward_ordered_treatment(self):
         self.neuro_reset()
@@ -109,6 +102,7 @@ class Hospital(Model):
         for patient in self.neuro_patients:
             if patient.fully_treated():
                 self.neuro_patients.remove(patient)
+
     def find_next_space(self, patient):
         if self.neuro_lst.count(0) == 0:
             return
@@ -118,29 +112,34 @@ class Hospital(Model):
                     patient.last_treatment = self.current_time
                     patient.occupational_visit = self.current_time
                     self.neuro_lst[space] = patient
+                    return
                 elif space == 1 and patient.speech_visit == 0:
                     patient.last_treatment = self.current_time
                     patient.speech_visit = self.current_time
                     self.neuro_lst[space] = patient
+                    return
                 elif space == 2 and patient.physio_visit == 0:
                     patient.last_treatment = self.current_time
                     patient.physio_visit = self.current_time
                     self.neuro_lst[space] = patient
+                    return
                 elif space == 3 and patient.diet_visit == 0:
                     patient.last_treatment = self.current_time
                     patient.diet_visit = self.current_time
                     self.neuro_lst[space] = patient
+                    return
                 elif space == 4 and patient.social_worker_visit == 0:
                     patient.last_treatment = self.current_time
                     patient.social_worker_visit = self.current_time
                     self.neuro_lst[space] = patient
+                    return
                 elif space == 5 and patient.neuro_visit == 0:
                     patient.last_treatment = self.current_time
                     patient.neuro_visit = self.current_time
                     self.neuro_lst[space] = patient
+                    return
                 elif space == 6 and patient.cardiologist_visit == 0 and patient.need_cardiologist:
                     patient.last_treatment = self.current_time
                     patient.cardiologist_visit = self.current_time
                     self.neuro_lst[space] = patient
-
-
+                    return
