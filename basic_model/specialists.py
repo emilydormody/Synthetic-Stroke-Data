@@ -114,6 +114,7 @@ class SpeechPathologist(Agent):
             self.current_patient.in_treatment = False
             self.current_patient = None
 
+
 class Dietitian(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
@@ -132,6 +133,29 @@ class Dietitian(Agent):
                     self.current_patient.in_treatment = True
                     break
         elif self.current_patient.diet_visit < self.model.current_time - self.treatment_time:
+            self.current_patient.last_treatment = self.model.current_time
+            self.current_patient.in_treatment = False
+            self.current_patient = None
+
+
+class SocialWorker(Agent):
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        self.name = unique_id
+        self.model = model
+        self.treatment_time = 30
+        self.current_patient = None
+
+    def step(self):
+        if self.current_patient is None:
+            for i in np.random.permutation(len(self.model.neuro_patients)):
+                patient = self.model.neuro_patients[i]
+                if patient.social_worker_visit == 0 and not patient.in_treatment:
+                    self.current_patient = patient
+                    patient.social_worker_visit = self.model.current_time
+                    self.current_patient.in_treatment = True
+                    break
+        elif self.current_patient.social_worker_visit < self.model.current_time - self.treatment_time:
             self.current_patient.last_treatment = self.model.current_time
             self.current_patient.in_treatment = False
             self.current_patient = None

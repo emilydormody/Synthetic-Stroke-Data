@@ -33,6 +33,8 @@ class Hospital(Model):
         phys2 = PhysioTherapist(605, self)
         sp = SpeechPathologist(606, self)
         diet = Dietitian(607, self)
+        sw1 = SocialWorker(608, self)
+        sw2 = SocialWorker(609, self)
         self.schedule.add(ct1)
         self.schedule.add(ct2)
         self.schedule.add(tpa)
@@ -41,6 +43,8 @@ class Hospital(Model):
         self.schedule.add(phys2)
         self.schedule.add(sp)
         self.schedule.add(diet)
+        self.schedule.add(sw1)
+        self.schedule.add(sw2)
         self.patient_data = PatientData(self)
 
     def step(self):
@@ -73,10 +77,10 @@ class Hospital(Model):
                 #     patient.last_treatment = self.current_time
                 #     patient.diet_visit = self.current_time
                 #     self.diet_patient = patient
-                elif patient.social_worker_visit == 0 and self.social_worker_patient is None:
-                    patient.last_treatment = self.current_time
-                    patient.social_worker_visit = self.current_time
-                    self.social_worker_patient = patient
+                # elif patient.social_worker_visit == 0 and self.social_worker_patient is None:
+                #     patient.last_treatment = self.current_time
+                #     patient.social_worker_visit = self.current_time
+                #     self.social_worker_patient = patient
                 elif patient.neuro_visit == 0 and self.neuro_patient is None:
                     patient.last_treatment = self.current_time
                     patient.neuro_visit = self.current_time
