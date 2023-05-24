@@ -47,14 +47,12 @@ class Patient(Agent):
         if self.model.current_time >= self.admission_time and not self.arrived:
             self.arrived = True
             self.last_treatment = self.model.current_time
-            if self.admission_time - self.time_of_stroke <= 270:
-                self.tpa_permitted = True
         elif self.arrived:
             if self.ct_time == 0:
                 if self.last_treatment < self.model.current_time - self.ct_delay():
                     if self.model.ct_patients.count(self) == 0:
                         self.model.ct_patients.append(self)
-            elif self.tpa_permitted and self.t_time == 0:
+            elif self.check_permitted() and self.t_time == 0:
                 if self.last_treatment < self.model.current_time - self.t_delay():
                     if self.model.t_patients.count(self) == 0:
                         self.model.t_patients.append(self)
@@ -74,6 +72,13 @@ class Patient(Agent):
                self.diet_visit != 0 and self.social_worker_visit != 0 and self.neuro_visit != 0 and \
                (self.cardiologist_visit != 0 or not self.need_cardiologist)
 
+    def check_permitted(self):
+        if self.model.current_time - self.time_of_stroke <= 270:
+            self.tpa_permitted = True
+            return True
+        else:
+            self.tpa_permitted = False
+            return False
     def ct_delay(self):
         delay = 15
         if 0.5 < self.delay < 1:

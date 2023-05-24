@@ -20,7 +20,7 @@ class Hospital(Model):
         self.cardiologist_patient = None
         self.neuro_lst = [0 for x in range(7)]
         self.all_patients = []
-        for i in range(10):
+        for i in range(100):
             patient = Patient(i, self)
             self.schedule.add(patient)
             self.all_patients.append(patient)
