@@ -2,7 +2,7 @@ from mesa import Agent, Model
 import mesa.time
 import numpy as np
 from patient_and_patientdata import Patient, PatientData
-from specialists import CTScan, TPA, OccupationalTherapist, PhysioTherapist, SpeechPathologist
+from specialists import*
 
 
 class Hospital(Model):
@@ -32,6 +32,7 @@ class Hospital(Model):
         phys1 = PhysioTherapist(604, self)
         phys2 = PhysioTherapist(605, self)
         sp = SpeechPathologist(606, self)
+        diet = Dietitian(607, self)
         self.schedule.add(ct1)
         self.schedule.add(ct2)
         self.schedule.add(tpa)
@@ -39,6 +40,7 @@ class Hospital(Model):
         self.schedule.add(phys1)
         self.schedule.add(phys2)
         self.schedule.add(sp)
+        self.schedule.add(diet)
         self.patient_data = PatientData(self)
 
     def step(self):
@@ -67,10 +69,10 @@ class Hospital(Model):
                 #     patient.last_treatment = self.current_time
                 #     patient.physio_visit = self.current_time
                 #     self.physio_patient = patient
-                elif patient.diet_visit == 0 and self.diet_patient is None:
-                    patient.last_treatment = self.current_time
-                    patient.diet_visit = self.current_time
-                    self.diet_patient = patient
+                # elif patient.diet_visit == 0 and self.diet_patient is None:
+                #     patient.last_treatment = self.current_time
+                #     patient.diet_visit = self.current_time
+                #     self.diet_patient = patient
                 elif patient.social_worker_visit == 0 and self.social_worker_patient is None:
                     patient.last_treatment = self.current_time
                     patient.social_worker_visit = self.current_time
