@@ -58,53 +58,6 @@ class Hospital(Model):
         self.schedule.step()
         self.current_time += 1
 
-
-    def neuro_ward_ordered_treatment(self):
-        self.neuro_reset()
-        for i in np.random.permutation(len(self.neuro_patients)):
-            patient = self.neuro_patients[i]
-            if patient.last_treatment <= self.current_time - 30 and not patient.in_treatment:
-                if patient.bloodwork == 0:
-                    patient.last_treatment = self.current_time
-                    patient.bloodwork = self.current_time
-                # elif patient.occupational_visit == 0 and self.occupational_patient is None:
-                #     patient.last_treatment = self.current_time
-                #     patient.occupational_visit = self.current_time
-                #     self.occupational_patient = patient
-                # elif patient.speech_visit == 0 and self.speech_patient is None:
-                #     patient.last_treatment = self.current_time
-                #     patient.speech_visit = self.current_time
-                #     self.speech_patient = patient
-                # elif patient.physio_visit == 0 and self.physio_patient is None:
-                #     patient.last_treatment = self.current_time
-                #     patient.physio_visit = self.current_time
-                #     self.physio_patient = patient
-                # elif patient.diet_visit == 0 and self.diet_patient is None:
-                #     patient.last_treatment = self.current_time
-                #     patient.diet_visit = self.current_time
-                #     self.diet_patient = patient
-                # elif patient.social_worker_visit == 0 and self.social_worker_patient is None:
-                #     patient.last_treatment = self.current_time
-                #     patient.social_worker_visit = self.current_time
-                #     self.social_worker_patient = patient
-                elif patient.neuro_visit == 0 and self.neuro_patient is None:
-                    patient.last_treatment = self.current_time
-                    patient.neuro_visit = self.current_time
-                    self.neuro_patient = patient
-                elif patient.cardiologist_visit == 0 and patient.need_cardiologist and self.cardiologist_patient is None:
-                    patient.last_treatment = self.current_time
-                    patient.cardiologist_visit = self.current_time
-                    self.cardiologist_patient = patient
-
-    def neuro_reset(self):
-        self.occupational_patient = None
-        self.speech_patient = None
-        self.physio_patient = None
-        self.diet_patient = None
-        self.social_worker_patient = None
-        self.neuro_patient = None
-        self.cardiologist_patient = None
-
     def neuro_ward_unordered(self):
         self.neuro_lst = [0 for x in range(7)]
         for i in np.random.permutation(len(self.neuro_patients)):
