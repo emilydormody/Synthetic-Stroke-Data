@@ -16,7 +16,7 @@ class Patient(Agent):
             self.gender = "F"
         self.age = random.randint(20, 91)
         self.admission_time = random.randint(300, 1740)
-        self.time_of_stroke = self.admission_time - random.randint(120, 210) - np.random.normal(60, 15)
+        self.time_of_stroke = self.admission_time - random.randint(60, 150) - np.random.normal(60, 15)
         self.ct_time = 0
         self.t_time = 0
         self.tpa_permitted = False
@@ -28,7 +28,7 @@ class Patient(Agent):
         self.delay = random.uniform(0, 3)
         self.arrived = False
         self.last_treatment = -1
-
+        self.in_treatment = False
         self.neuro_time = 0
         self.occupational_visit = 0
         self.speech_visit = 0
@@ -47,8 +47,8 @@ class Patient(Agent):
         if self.model.current_time >= self.admission_time and not self.arrived:
             self.arrived = True
             self.last_treatment = self.model.current_time
-        elif self.arrived:
-            if self.ct_time == 0:
+        elif self.arrived and not self.in_treatment:
+            if self.ct_time == 0 and not self.in_treatment:
                 if self.last_treatment < self.model.current_time - self.ct_delay():
                     if self.model.ct_patients.count(self) == 0:
                         self.model.ct_patients.append(self)
@@ -86,7 +86,7 @@ class Patient(Agent):
         return delay
 
     def t_delay(self):
-        delay = 32
+        delay = 15
         if 1 < self.delay < 2:
             delay += int((self.delay - 1) * 10)
         return delay

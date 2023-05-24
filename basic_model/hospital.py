@@ -2,7 +2,7 @@ from mesa import Agent, Model
 import mesa.time
 import numpy as np
 from patient_and_patientdata import Patient, PatientData
-from specialists import CTScan
+from specialists import CTScan, TPA
 
 
 class Hospital(Model):
@@ -27,8 +27,10 @@ class Hospital(Model):
             self.all_patients.append(patient)
         ct = CTScan(600, self)
         ct2 = CTScan(601, self)
+        tpa = TPA(602, self)
         self.schedule.add(ct)
         self.schedule.add(ct2)
+        self.schedule.add(tpa)
         self.patient_data = PatientData(self)
 
     def step(self):
@@ -38,15 +40,16 @@ class Hospital(Model):
         self.current_time += 1
 
     def treat_patients(self):
+        return
         # if len(self.ct_patients) != 0:
         #     patient = self.ct_patients.pop(0)
         #     patient.ct_time = self.current_time
         #     patient.last_treatment = self.current_time
 
-        if len(self.t_patients) != 0:
-            patient = self.t_patients.pop(0)
-            patient.t_time = self.current_time
-            patient.last_treatment = self.current_time
+        # if len(self.t_patients) != 0:
+        #     patient = self.t_patients.pop(0)
+        #     patient.t_time = self.current_time
+        #     patient.last_treatment = self.current_time
 
     def neuro_ward_ordered_treatment(self):
         self.neuro_reset()
