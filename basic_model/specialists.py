@@ -203,3 +203,27 @@ class BloodWork(Agent):
             self.current_patient.last_treatment = self.model.current_time
             self.current_patient.in_treatment = False
             self.current_patient = None
+
+class Cardiologist(Agent):
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        self.name = unique_id
+        self.model = model
+        self.treatment_time = 30
+        self.current_patient = None
+
+    def step(self):
+        if self.current_patient is None:
+            for i in np.random.permutation(len(self.model.neuro_patients)):
+                patient = self.model.neuro_patients[i]
+                if patient.need_cardiologist:
+                    if patient.cardiologist_visit == 0 and not patient.in_treatment:
+                        self.current_patient = patient
+                        patient.cardiologist_visit = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        break
+        elif self.current_patient.cardiologist_visit < self.model.current_time - self.treatment_time:
+            self.current_patient.last_treatment = self.model.current_time
+            self.current_patient.in_treatment = False
+            self.current_patient = None
+

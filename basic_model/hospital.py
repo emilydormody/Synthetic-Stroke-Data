@@ -36,8 +36,9 @@ class Hospital(Model):
         sw1 = SocialWorker(608, self)
         sw2 = SocialWorker(609, self)
         neuro = Neurologist(610, self)
+        cd = Cardiologist(611, self)
         for i in range(5):
-            bw = BloodWork(611+i, self)
+            bw = BloodWork(612+i, self)
             self.schedule.add(bw)
         self.schedule.add(ct1)
         self.schedule.add(ct2)
@@ -50,6 +51,7 @@ class Hospital(Model):
         self.schedule.add(sw1)
         self.schedule.add(sw2)
         self.schedule.add(neuro)
+        self.schedule.add(cd)
         self.patient_data = PatientData(self)
 
     def step(self):
