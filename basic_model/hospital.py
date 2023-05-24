@@ -35,6 +35,10 @@ class Hospital(Model):
         diet = Dietitian(607, self)
         sw1 = SocialWorker(608, self)
         sw2 = SocialWorker(609, self)
+        neuro = Neurologist(610, self)
+        for i in range(5):
+            bw = BloodWork(611+i, self)
+            self.schedule.add(bw)
         self.schedule.add(ct1)
         self.schedule.add(ct2)
         self.schedule.add(tpa)
@@ -45,10 +49,10 @@ class Hospital(Model):
         self.schedule.add(diet)
         self.schedule.add(sw1)
         self.schedule.add(sw2)
+        self.schedule.add(neuro)
         self.patient_data = PatientData(self)
 
     def step(self):
-        self.neuro_ward_ordered_treatment()
         self.schedule.step()
         self.current_time += 1
 
