@@ -2,7 +2,7 @@ from mesa import Agent, Model
 import mesa.time
 import numpy as np
 from patient_and_patientdata import Patient, PatientData
-from specialists import CTScan, TPA, OccupationalTherapist
+from specialists import CTScan, TPA, OccupationalTherapist, PhysioTherapist
 
 
 class Hospital(Model):
@@ -25,14 +25,18 @@ class Hospital(Model):
             patient = Patient(i, self)
             self.schedule.add(patient)
             self.all_patients.append(patient)
-        ct = CTScan(600, self)
+        ct1 = CTScan(600, self)
         ct2 = CTScan(601, self)
         tpa = TPA(602, self)
         ocu = OccupationalTherapist(603, self)
-        self.schedule.add(ct)
+        phys1 = PhysioTherapist(604, self)
+        phys2 = PhysioTherapist(605, self)
+        self.schedule.add(ct1)
         self.schedule.add(ct2)
         self.schedule.add(tpa)
         self.schedule.add(ocu)
+        self.schedule.add(phys1)
+        self.schedule.add(phys2)
         self.patient_data = PatientData(self)
 
     def step(self):
@@ -57,10 +61,10 @@ class Hospital(Model):
                     patient.last_treatment = self.current_time
                     patient.speech_visit = self.current_time
                     self.speech_patient = patient
-                elif patient.physio_visit == 0 and self.physio_patient is None:
-                    patient.last_treatment = self.current_time
-                    patient.physio_visit = self.current_time
-                    self.physio_patient = patient
+                # elif patient.physio_visit == 0 and self.physio_patient is None:
+                #     patient.last_treatment = self.current_time
+                #     patient.physio_visit = self.current_time
+                #     self.physio_patient = patient
                 elif patient.diet_visit == 0 and self.diet_patient is None:
                     patient.last_treatment = self.current_time
                     patient.diet_visit = self.current_time
