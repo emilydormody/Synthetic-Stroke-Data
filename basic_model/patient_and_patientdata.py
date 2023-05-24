@@ -86,7 +86,7 @@ class Patient(Agent):
         return delay
 
     def t_delay(self):
-        delay = 15
+        delay = 32
         if 1 < self.delay < 2:
             delay += int((self.delay - 1) * 10)
         return delay

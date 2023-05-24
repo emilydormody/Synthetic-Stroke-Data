@@ -1,4 +1,4 @@
-from mesa import Agent, Model
+from mesa import Agent
 
 
 class CTScan(Agent):
@@ -10,9 +10,13 @@ class CTScan(Agent):
         self.current_patient = None
 
     def step(self):
-        if self.current_patient is None and len(self.model.ct_patients) != 0:
-            patient = self.model.ct_patients.pop(0)
-            patient.ct_time = self.model.current_time
-            patient.last_treatment = self.model.current_time
+        if self.current_patient is None:
+            if len(self.model.ct_patients) != 0:
+                self.current_patient = self.model.ct_patients.pop(0)
+                self.current_patient.ct_time = self.model.current_time
+                self.current_patient.last_treatment = self.model.current_time
+                print(self.current_patient.unique_id, ' ct start ', self.model.current_time, ' with ', self.name)
         elif self.current_patient.ct_time < self.model.current_time - 30:
-                self.current_patient = None
+            print(self.current_patient.unique_id, ' ct end ', self.model.current_time, ' with ', self.name)
+            self.current_patient = None
+
