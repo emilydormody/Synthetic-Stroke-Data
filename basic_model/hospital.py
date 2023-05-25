@@ -1,7 +1,7 @@
 from mesa import Agent, Model
 import mesa.time
-import numpy as np
-from patient_and_patientdata import Patient, PatientData
+import datetime
+from patient import Patient, PatientData
 from specialists import*
 
 
@@ -112,3 +112,40 @@ class Hospital(Model):
                     patient.cardiologist_visit = self.current_time
                     self.neuro_lst[space] = patient
                     return
+
+    def convert_time(self, time):
+        if time == 0:
+            return None
+        date = datetime.datetime.now()
+        date += datetime.timedelta(minutes=time)
+        return str(date)[0:19]
+
+    def patient_info(self):
+        dict = {"Patient Id": [], "Age": [], "Gender": [], "Time of Stroke": [], "Arrival Time": [], "CT Scan Time": [],
+                "TPA Treatment Time": [], "ICU Arrival Time": [], "Neurology Ward Arrival Time": [],
+                "Occupational Therapist Visit": [],
+                "Speech Pathologist Visit": [], "Physiotherapist Visit": [], "Dietitian Visit": [],
+                "Social Worker Visit": [],
+                "Cardiologist Visit": [], "Neurologist Visit": [], "Blood Work Time": []}
+        for patient in self.all_patients:
+            dict["Patient Id"].append(patient.name)
+            dict["Age"].append(patient.age)
+            dict["Gender"].append(patient.gender)
+            dict["Time of Stroke"].append(self.convert_time(patient.time_of_stroke))
+            dict["Arrival Time"].append(self.convert_time(patient.admission_time))
+            dict["CT Scan Time"].append(self.convert_time(patient.ct_time))
+            dict["TPA Treatment Time"].append(self.convert_time(patient.t_time))
+            dict["ICU Arrival Time"].append(self.convert_time(patient.icu_arrival_time))
+            dict["Neurology Ward Arrival Time"].append(self.convert_time(patient.neuro_time))
+            dict["Occupational Therapist Visit"].append(self.convert_time(patient.occupational_visit))
+            dict["Speech Pathologist Visit"].append(self.convert_time(patient.speech_visit))
+            dict["Physiotherapist Visit"].append(self.convert_time(patient.physio_visit))
+            dict["Dietitian Visit"].append(self.convert_time(patient.diet_visit))
+            dict["Social Worker Visit"].append(self.convert_time(patient.social_worker_visit))
+            if patient.cardiologist_visit == 0:
+                dict["Cardiologist Visit"].append(None)
+            else:
+                dict["Cardiologist Visit"].append(self.convert_time(patient.cardiologist_visit))
+            dict["Neurologist Visit"].append(self.convert_time(patient.neuro_visit))
+            dict["Blood Work Time"].append(self.convert_time(patient.bloodwork))
+        return dict
