@@ -42,6 +42,7 @@ class Patient(Agent):
             self.need_cardiologist = False
         self.cardiologist_visit = 0
         self.bloodwork = 0
+        self.last_checkin = 0
 
     def step(self):
         if self.model.current_time >= self.admission_time and not self.arrived:

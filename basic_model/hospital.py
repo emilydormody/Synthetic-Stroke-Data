@@ -41,6 +41,9 @@ class Hospital(Model):
         for i in range(5):
             bw = BloodWork(690+i, self)
             self.schedule.add(bw)
+        for i in range(8):
+            nurse = Nurse(6100+i, self)
+            self.schedule.add(nurse)
         self.schedule.add(tpa)
         self.schedule.add(ocu)
         self.schedule.add(phys1)
@@ -70,7 +73,7 @@ class Hospital(Model):
                 "Occupational Therapist Visit": [],
                 "Speech Pathologist Visit": [], "Physiotherapist Visit": [], "Dietitian Visit": [],
                 "Social Worker Visit": [],
-                "Cardiologist Visit": [], "Neurologist Visit": [], "Blood Work Time": []}
+                "Cardiologist Visit": [], "Neurologist Visit": [], "Blood Work Time": [], "Last Check": []}
         for patient in self.all_patients:
             dict["Patient Id"].append(patient.name)
             dict["Age"].append(patient.age)
@@ -92,4 +95,5 @@ class Hospital(Model):
                 dict["Cardiologist Visit"].append(self.convert_time(patient.cardiologist_visit))
             dict["Neurologist Visit"].append(self.convert_time(patient.neuro_visit))
             dict["Blood Work Time"].append(self.convert_time(patient.bloodwork))
+            dict["Last Check"].append(self.convert_time(patient.last_checkin))
         return dict

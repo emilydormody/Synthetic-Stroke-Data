@@ -241,3 +241,16 @@ class Nurse(Agent):
         self.model = model
         self.treatment_time = 5
         self.current_patient = None
+
+    def step(self):
+        if self.current_patient is None:
+            for i in np.random.permutation(len(self.model.neuro_patients)):
+                patient = self.model.neuro_patients[i]
+                if not patient.in_treatment:
+                    self.current_patient = patient
+                    patient.last_checkin = self.model.current_time
+                    self.current_patient.in_treatment = True
+                    break
+        elif self.current_patient.last_checkin < self.model.current_time - self.treatment_time:
+            self.current_patient.in_treatment = False
+            self.current_patient = None
