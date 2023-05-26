@@ -4,7 +4,7 @@ import pandas as pd
 
 def export_to_pandas(model):
 
-    df = pd.DataFrame(data=model.patient_data.patient_info())
+    df = pd.DataFrame(data=model.patient_info())
     df['CT Scan Time'] = pd.to_datetime(df['CT Scan Time'])
     df['Arrival Time'] = pd.to_datetime(df['Arrival Time'])
     df['TPA Treatment Time'] = pd.to_datetime(df['TPA Treatment Time'])

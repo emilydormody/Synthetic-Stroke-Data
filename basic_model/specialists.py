@@ -58,11 +58,12 @@ class OccupationalTherapist(Agent):
         if self.current_patient is None:
             for i in np.random.permutation(len(self.model.neuro_patients)):
                 patient = self.model.neuro_patients[i]
-                if patient.occupational_visit == 0 and not patient.in_treatment:
-                    self.current_patient = patient
-                    patient.occupational_visit = self.model.current_time
-                    self.current_patient.in_treatment = True
-                    break
+                if patient.last_treatment < self.model.current_time - 10:
+                    if patient.occupational_visit == 0 and not patient.in_treatment:
+                        self.current_patient = patient
+                        patient.occupational_visit = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        break
         elif self.current_patient.occupational_visit < self.model.current_time - self.treatment_time:
             self.current_patient.last_treatment = self.model.current_time
             self.current_patient.in_treatment = False
@@ -81,11 +82,12 @@ class PhysioTherapist(Agent):
         if self.current_patient is None:
             for i in np.random.permutation(len(self.model.neuro_patients)):
                 patient = self.model.neuro_patients[i]
-                if patient.physio_visit == 0 and not patient.in_treatment:
-                    self.current_patient = patient
-                    patient.physio_visit = self.model.current_time
-                    self.current_patient.in_treatment = True
-                    break
+                if patient.last_treatment < self.model.current_time - 10:
+                    if patient.physio_visit == 0 and not patient.in_treatment:
+                        self.current_patient = patient
+                        patient.physio_visit = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        break
         elif self.current_patient.physio_visit < self.model.current_time - self.treatment_time:
             self.current_patient.last_treatment = self.model.current_time
             self.current_patient.in_treatment = False
@@ -104,11 +106,12 @@ class SpeechPathologist(Agent):
         if self.current_patient is None:
             for i in np.random.permutation(len(self.model.neuro_patients)):
                 patient = self.model.neuro_patients[i]
-                if patient.speech_visit == 0 and not patient.in_treatment:
-                    self.current_patient = patient
-                    patient.speech_visit = self.model.current_time
-                    self.current_patient.in_treatment = True
-                    break
+                if patient.last_treatment < self.model.current_time - 10:
+                    if patient.speech_visit == 0 and not patient.in_treatment:
+                        self.current_patient = patient
+                        patient.speech_visit = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        break
         elif self.current_patient.speech_visit < self.model.current_time - self.treatment_time:
             self.current_patient.last_treatment = self.model.current_time
             self.current_patient.in_treatment = False
@@ -127,11 +130,12 @@ class Dietitian(Agent):
         if self.current_patient is None:
             for i in np.random.permutation(len(self.model.neuro_patients)):
                 patient = self.model.neuro_patients[i]
-                if patient.diet_visit == 0 and not patient.in_treatment:
-                    self.current_patient = patient
-                    patient.diet_visit = self.model.current_time
-                    self.current_patient.in_treatment = True
-                    break
+                if patient.last_treatment < self.model.current_time - 10:
+                    if patient.diet_visit == 0 and not patient.in_treatment:
+                        self.current_patient = patient
+                        patient.diet_visit = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        break
         elif self.current_patient.diet_visit < self.model.current_time - self.treatment_time:
             self.current_patient.last_treatment = self.model.current_time
             self.current_patient.in_treatment = False
@@ -150,11 +154,12 @@ class SocialWorker(Agent):
         if self.current_patient is None:
             for i in np.random.permutation(len(self.model.neuro_patients)):
                 patient = self.model.neuro_patients[i]
-                if patient.social_worker_visit == 0 and not patient.in_treatment:
-                    self.current_patient = patient
-                    patient.social_worker_visit = self.model.current_time
-                    self.current_patient.in_treatment = True
-                    break
+                if patient.last_treatment < self.model.current_time - 10:
+                    if patient.social_worker_visit == 0 and not patient.in_treatment:
+                        self.current_patient = patient
+                        patient.social_worker_visit = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        break
         elif self.current_patient.social_worker_visit < self.model.current_time - self.treatment_time:
             self.current_patient.last_treatment = self.model.current_time
             self.current_patient.in_treatment = False
@@ -172,11 +177,12 @@ class Neurologist(Agent):
         if self.current_patient is None:
             for i in np.random.permutation(len(self.model.neuro_patients)):
                 patient = self.model.neuro_patients[i]
-                if patient.neuro_visit == 0 and not patient.in_treatment:
-                    self.current_patient = patient
-                    patient.neuro_visit = self.model.current_time
-                    self.current_patient.in_treatment = True
-                    break
+                if patient.last_treatment < self.model.current_time - 10:
+                    if patient.neuro_visit == 0 and not patient.in_treatment:
+                        self.current_patient = patient
+                        patient.neuro_visit = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        break
         elif self.current_patient.neuro_visit < self.model.current_time - self.treatment_time:
             self.current_patient.last_treatment = self.model.current_time
             self.current_patient.in_treatment = False
@@ -194,11 +200,12 @@ class BloodWork(Agent):
         if self.current_patient is None:
             for i in np.random.permutation(len(self.model.neuro_patients)):
                 patient = self.model.neuro_patients[i]
-                if patient.bloodwork == 0 and not patient.in_treatment:
-                    self.current_patient = patient
-                    patient.bloodwork = self.model.current_time
-                    self.current_patient.in_treatment = True
-                    break
+                if patient.last_treatment < self.model.current_time - 10:
+                    if patient.bloodwork == 0 and not patient.in_treatment:
+                        self.current_patient = patient
+                        patient.bloodwork = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        break
         elif self.current_patient.bloodwork < self.model.current_time - self.treatment_time:
             self.current_patient.last_treatment = self.model.current_time
             self.current_patient.in_treatment = False
@@ -216,7 +223,7 @@ class Cardiologist(Agent):
         if self.current_patient is None:
             for i in np.random.permutation(len(self.model.neuro_patients)):
                 patient = self.model.neuro_patients[i]
-                if patient.need_cardiologist:
+                if patient.need_cardiologist and patient.last_treatment < self.model.current_time - 10:
                     if patient.cardiologist_visit == 0 and not patient.in_treatment:
                         self.current_patient = patient
                         patient.cardiologist_visit = self.model.current_time
@@ -227,3 +234,10 @@ class Cardiologist(Agent):
             self.current_patient.in_treatment = False
             self.current_patient = None
 
+class Nurse(Agent):
+    def __init__(self, unique_id, model):
+        super().__init__(unique_id, model)
+        self.name = unique_id
+        self.model = model
+        self.treatment_time = 5
+        self.current_patient = None
