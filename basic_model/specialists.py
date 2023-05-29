@@ -1,5 +1,8 @@
+import datetime
+
 import numpy as np
 from mesa import Agent
+from datetime import time
 
 
 class CTScan(Agent):
@@ -9,17 +12,27 @@ class CTScan(Agent):
         self.model = model
         self.treatment_time = 30
         self.current_patient = None
+        self.shift_end = None
+        self.shift_start = None
+
+    def set_schedule(self, start, end):
+        self.shift_start = time(start)
+        self.shift_end = time(end)
+        print(self.shift_start, self.shift_end)
 
     def step(self):
-        if self.current_patient is None:
-            if len(self.model.ct_patients) != 0:
-                self.current_patient = self.model.ct_patients.pop(0)
-                self.current_patient.ct_time = self.model.current_time
-                self.current_patient.in_treatment = True
-        elif self.current_patient.ct_time < self.model.current_time - self.treatment_time:
-            self.current_patient.last_treatment = self.model.current_time
-            self.current_patient.in_treatment = False
-            self.current_patient = None
+        if self.model.working_hours(self):
+            if self.current_patient is None:
+                if len(self.model.ct_patients) != 0:
+                    self.current_patient = self.model.ct_patients.pop(0)
+                    self.current_patient.ct_time = self.model.current_time
+                    self.current_patient.in_treatment = True
+            elif self.current_patient.ct_time < self.model.current_time - self.treatment_time:
+                self.current_patient.last_treatment = self.model.current_time
+                self.current_patient.in_treatment = False
+                self.current_patient = None
+
+
 
 
 class TPA(Agent):
@@ -29,21 +42,29 @@ class TPA(Agent):
         self.model = model
         self.treatment_time = 15
         self.current_patient = None
+        self.shift_end = None
+        self.shift_start = None
+
+    def set_schedule(self, start, end):
+        self.shift_start = time(start)
+        self.shift_end = time(end)
+        print(self.shift_start, self.shift_end)
 
     def step(self):
-        if self.current_patient is None:
-            if len(self.model.t_patients) != 0:
-                patient = self.model.t_patients.pop(0)
-                if patient.check_permitted():
-                    self.current_patient = patient
-                    self.current_patient.t_time = self.model.current_time
-                    self.current_patient.in_treatment = True
-                else:
-                    patient.tpa_permitted = False
-        elif self.current_patient.t_time < self.model.current_time - self.treatment_time:
-            self.current_patient.last_treatment = self.model.current_time
-            self.current_patient.in_treatment = False
-            self.current_patient = None
+        if self.model.working_hours(self):
+            if self.current_patient is None:
+                if len(self.model.t_patients) != 0:
+                    patient = self.model.t_patients.pop(0)
+                    if patient.check_permitted():
+                        self.current_patient = patient
+                        self.current_patient.t_time = self.model.current_time
+                        self.current_patient.in_treatment = True
+                    else:
+                        patient.tpa_permitted = False
+            elif self.current_patient.t_time < self.model.current_time - self.treatment_time:
+                self.current_patient.last_treatment = self.model.current_time
+                self.current_patient.in_treatment = False
+                self.current_patient = None
 
 
 class OccupationalTherapist(Agent):
@@ -165,6 +186,7 @@ class SocialWorker(Agent):
             self.current_patient.in_treatment = False
             self.current_patient = None
 
+
 class Neurologist(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
@@ -187,6 +209,7 @@ class Neurologist(Agent):
             self.current_patient.last_treatment = self.model.current_time
             self.current_patient.in_treatment = False
             self.current_patient = None
+
 
 class BloodWork(Agent):
     def __init__(self, unique_id, model):
@@ -211,6 +234,7 @@ class BloodWork(Agent):
             self.current_patient.in_treatment = False
             self.current_patient = None
 
+
 class Cardiologist(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
@@ -234,6 +258,7 @@ class Cardiologist(Agent):
             self.current_patient.in_treatment = False
             self.current_patient = None
 
+
 class Nurse(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
@@ -254,3 +279,5 @@ class Nurse(Agent):
         elif self.current_patient.last_checkin < self.model.current_time - self.treatment_time:
             self.current_patient.in_treatment = False
             self.current_patient = None
+
+

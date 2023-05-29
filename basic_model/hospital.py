@@ -12,23 +12,21 @@ class Hospital(Model):
         self.ct_patients = []
         self.t_patients = []
         self.neuro_patients = []  # modelled to have only one of each treatment happen at a time
-        self.occupational_patient = None
-        self.speech_patient = None
-        self.physio_patient = None
-        self.diet_patient = None
-        self.social_worker_patient = None
-        self.neuro_patient = None
-        self.cardiologist_patient = None
-        self.neuro_lst = [0 for x in range(7)]
         self.all_patients = []
+        self.date = datetime.datetime.now()
         for i in range(100):
             patient = Patient(i, self)
             self.schedule.add(patient)
             self.all_patients.append(patient)
-        for i in range(5):
+        for i in range(4):
             ct = CTScan(600+i, self)
+            ct.set_schedule(8,16)
             self.schedule.add(ct)
+        ct = CTScan(604, self)
+        ct.set_schedule(16,6)
+        self.schedule.add(ct)
         tpa = TPA(610, self)
+        tpa.set_schedule(8,16)
         ocu = OccupationalTherapist(620, self)
         phys1 = PhysioTherapist(630, self)
         phys2 = PhysioTherapist(631, self)
@@ -63,9 +61,15 @@ class Hospital(Model):
     def convert_time(self, time):
         if time == 0:
             return None
-        date = datetime.datetime.now()
-        date += datetime.timedelta(minutes=time)
+        date = self.date+datetime.timedelta(minutes=time)
         return str(date)[0:19]
+
+    def working_hours(self, agent):
+        current = (self.date + datetime.timedelta(minutes=self.current_time)).time()
+        if agent.shift_start < agent.shift_end:
+            return agent.shift_start <= current <= agent.shift_end
+        elif agent.shift_end < agent.shift_start:
+            return agent.shift_start <= current or current <= agent.shift_end
 
     def patient_info(self):
         dict = {"Patient Id": [], "Age": [], "Gender": [], "Time of Stroke": [], "Arrival Time": [], "CT Scan Time": [],
