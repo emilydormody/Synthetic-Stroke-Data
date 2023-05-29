@@ -4,7 +4,7 @@ from pandas_data_export import *
 
 def main():
     h = Hospital()
-    for i in range(8000):  # 24 hours from last possible admission time
+    for i in range(10000):
         h.step()
 
     export_to_pandas(h)
