@@ -3,25 +3,22 @@ import datetime
 import numpy as np
 from mesa import Agent
 from datetime import time
+from specialist import Specialist
 
 
-class CTScan(Agent):
+class CTScan(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.name = unique_id
         self.model = model
         self.treatment_time = 30
         self.current_patient = None
-        self.shift_end = None
-        self.shift_start = None
 
     def set_schedule(self, start, end):
-        self.shift_start = time(start)
-        self.shift_end = time(end)
-        print(self.shift_start, self.shift_end)
+        super().set_schedule(start, end)
 
     def step(self):
-        if self.model.working_hours(self):
+        if super().working_hours():
             if self.current_patient is None:
                 if len(self.model.ct_patients) != 0:
                     self.current_patient = self.model.ct_patients.pop(0)
