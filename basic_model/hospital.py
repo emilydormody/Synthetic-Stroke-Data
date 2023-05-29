@@ -11,7 +11,7 @@ class Hospital(Model):
         self.current_time = 1
         self.ct_patients = []
         self.t_patients = []
-        self.neuro_patients = []  # modelled to have only one of each treatment happen at a time
+        self.neuro_patients = []
         self.all_patients = []
         self.date = datetime.datetime.now()
         self.add_specialists()
@@ -28,12 +28,6 @@ class Hospital(Model):
         date = self.date+datetime.timedelta(minutes=time)
         return str(date)[0:19]
 
-    # def working_hours(self, agent):
-    #     current = (self.date + datetime.timedelta(minutes=self.current_time)).time()
-    #     if agent.shift_start < agent.shift_end:
-    #         return agent.shift_start <= current <= agent.shift_end
-    #     elif agent.shift_end < agent.shift_start:
-    #         return agent.shift_start <= current or current <= agent.shift_end
 
     def patient_info(self):
         dict = {"Patient Id": [], "Age": [], "Gender": [], "Time of Stroke": [], "Arrival Time": [], "CT Scan Time": [],

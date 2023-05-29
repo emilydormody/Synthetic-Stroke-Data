@@ -43,6 +43,8 @@ class Patient(Agent):
         self.cardiologist_visit = 0
         self.bloodwork = 0
         self.last_checkin = 0
+        self.patient_info = self.get_patient_info()
+
 
     def step(self):
         if self.model.current_time >= self.admission_time and not self.arrived:
@@ -97,3 +99,60 @@ class Patient(Agent):
         if 2 < self.delay < 3:
             delay += int((self.delay - 2) * 10)
         return delay
+
+    def get_patient_info(self):
+        dict = {}
+        dict["Blood Glucose"] = 0
+        dict["Temperature"] = 0
+        dict["Heart Rate"] = 0
+        dict["Respiratory Rate"] = 0
+        dict["Blood Pressure"] = 0
+        dict["Pulse Oximetry"] = 0
+        dict["Swallowing Ability"] = 0
+        dict["Swallowing Screen Result"] = None
+        dict["Diet Type"] = None
+        dict["Texture of Food"] = None
+        dict["Home/Family Situation"] = 0
+        dict["Mental State"] = 0
+        dict["Emotional State"] = 0
+        dict["Action Plan"] = 0
+        dict["Environment"] = 0
+        dict["Bath/Shower Ability"] = 0
+        dict["Dressing"] = 0
+        dict["Grooming"] = 0
+        dict["Toileting"] = 0
+        dict["Eating"] = 0
+        dict["Bed Mobility"] = 0
+        dict["Walking"] = 0
+        dict["Wheelchair Mobility"] = 0
+        dict["Cognition"] = 0
+        dict["Perception"] = 0
+        dict["Range of Motion"] = 0
+        dict["Balance"] = 0
+        dict["Sensation"] = 0
+        dict["Proprioception"] = 0
+        dict["Strength"] = 0
+        dict["Manual Dexterity"] = 0
+        dict["Coordination"] = 0
+        dict["Ashworth Scale Result"] = 0
+        dict["Accomodation"] = 0
+        dict["Hand Dominance"] = 0
+        dict["Pain"] = 0
+        dict["Communication"] = 0
+        dict["Vision"] = 0
+        dict["Hearing"] = 0
+        dict["Bowel/Bladder Functioning"] = 0
+        dict["Cardiopulmonary Functioning"] = 0
+        dict["Respiratory Functioning"] = 0
+        dict["Muscle Tone"] = 0
+        dict["Reflexes/Coordination"] = 0
+        dict["Speech Intelligibility"] = 0
+        dict["Oral Peripheral Exam Result"] = 0
+
+
+
+
+
+
+
+
