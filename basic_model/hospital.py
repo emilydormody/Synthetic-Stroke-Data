@@ -28,12 +28,12 @@ class Hospital(Model):
         date = self.date+datetime.timedelta(minutes=time)
         return str(date)[0:19]
 
-    def working_hours(self, agent):
-        current = (self.date + datetime.timedelta(minutes=self.current_time)).time()
-        if agent.shift_start < agent.shift_end:
-            return agent.shift_start <= current <= agent.shift_end
-        elif agent.shift_end < agent.shift_start:
-            return agent.shift_start <= current or current <= agent.shift_end
+    # def working_hours(self, agent):
+    #     current = (self.date + datetime.timedelta(minutes=self.current_time)).time()
+    #     if agent.shift_start < agent.shift_end:
+    #         return agent.shift_start <= current <= agent.shift_end
+    #     elif agent.shift_end < agent.shift_start:
+    #         return agent.shift_start <= current or current <= agent.shift_end
 
     def patient_info(self):
         dict = {"Patient Id": [], "Age": [], "Gender": [], "Time of Stroke": [], "Arrival Time": [], "CT Scan Time": [],

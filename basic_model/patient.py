@@ -15,7 +15,7 @@ class Patient(Agent):
         else:
             self.gender = "F"
         self.age = random.randint(20, 91)
-        self.admission_time = random.randint(300, 1740)
+        self.admission_time = random.randint(300, 8000)
         self.time_of_stroke = self.admission_time - random.randint(60, 150) - np.random.normal(60, 15)
         self.ct_time = 0
         self.t_time = 0

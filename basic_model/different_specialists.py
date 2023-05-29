@@ -30,23 +30,19 @@ class CTScan(Specialist):
                 self.current_patient = None
 
 
-class TPA(Agent):
+class TPA(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.name = unique_id
         self.model = model
         self.treatment_time = 15
         self.current_patient = None
-        self.shift_end = None
-        self.shift_start = None
 
     def set_schedule(self, start, end):
-        self.shift_start = time(start)
-        self.shift_end = time(end)
-        print(self.shift_start, self.shift_end)
+        super().set_schedule(start, end)
 
     def step(self):
-        if self.model.working_hours(self):
+        if super().working_hours():
             if self.current_patient is None:
                 if len(self.model.t_patients) != 0:
                     patient = self.model.t_patients.pop(0)
@@ -62,23 +58,19 @@ class TPA(Agent):
                 self.current_patient = None
 
 
-class OccupationalTherapist(Agent):
+class OccupationalTherapist(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.name = unique_id
         self.model = model
         self.treatment_time = 30
         self.current_patient = None
-        self.shift_end = None
-        self.shift_start = None
 
     def set_schedule(self, start, end):
-        self.shift_start = time(start)
-        self.shift_end = time(end)
-        print(self.shift_start, self.shift_end)
+        super().set_schedule(start, end)
 
     def step(self):
-        if self.model.working_hours(self):
+        if super().working_hours():
             if self.current_patient is None:
                 for i in np.random.permutation(len(self.model.neuro_patients)):
                     patient = self.model.neuro_patients[i]
@@ -94,23 +86,19 @@ class OccupationalTherapist(Agent):
                 self.current_patient = None
 
 
-class PhysioTherapist(Agent):
+class PhysioTherapist(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.name = unique_id
         self.model = model
         self.treatment_time = 30
         self.current_patient = None
-        self.shift_end = None
-        self.shift_start = None
 
     def set_schedule(self, start, end):
-        self.shift_start = time(start)
-        self.shift_end = time(end)
-        print(self.shift_start, self.shift_end)
+        super().set_schedule(start, end)
 
     def step(self):
-        if self.model.working_hours(self):
+        if super().working_hours():
             if self.current_patient is None:
                 for i in np.random.permutation(len(self.model.neuro_patients)):
                     patient = self.model.neuro_patients[i]
@@ -126,23 +114,19 @@ class PhysioTherapist(Agent):
                 self.current_patient = None
 
 
-class SpeechPathologist(Agent):
+class SpeechPathologist(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.name = unique_id
         self.model = model
         self.treatment_time = 30
         self.current_patient = None
-        self.shift_end = None
-        self.shift_start = None
 
     def set_schedule(self, start, end):
-        self.shift_start = time(start)
-        self.shift_end = time(end)
-        print(self.shift_start, self.shift_end)
+        super().set_schedule(start, end)
 
     def step(self):
-        if self.model.working_hours(self):
+        if super().working_hours():
             if self.current_patient is None:
                 for i in np.random.permutation(len(self.model.neuro_patients)):
                     patient = self.model.neuro_patients[i]
@@ -158,23 +142,19 @@ class SpeechPathologist(Agent):
                 self.current_patient = None
 
 
-class Dietitian(Agent):
+class Dietitian(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.name = unique_id
         self.model = model
         self.treatment_time = 30
         self.current_patient = None
-        self.shift_end = None
-        self.shift_start = None
 
     def set_schedule(self, start, end):
-        self.shift_start = time(start)
-        self.shift_end = time(end)
-        print(self.shift_start, self.shift_end)
+        super().set_schedule(start, end)
 
     def step(self):
-        if self.model.working_hours(self):
+        if super().working_hours():
             if self.current_patient is None:
                 for i in np.random.permutation(len(self.model.neuro_patients)):
                     patient = self.model.neuro_patients[i]
@@ -190,23 +170,19 @@ class Dietitian(Agent):
                 self.current_patient = None
 
 
-class SocialWorker(Agent):
+class SocialWorker(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.name = unique_id
         self.model = model
         self.treatment_time = 30
         self.current_patient = None
-        self.shift_end = None
-        self.shift_start = None
 
     def set_schedule(self, start, end):
-        self.shift_start = time(start)
-        self.shift_end = time(end)
-        print(self.shift_start, self.shift_end)
+        super().set_schedule(start, end)
 
     def step(self):
-        if self.model.working_hours(self):
+        if super().working_hours():
             if self.current_patient is None:
                 for i in np.random.permutation(len(self.model.neuro_patients)):
                     patient = self.model.neuro_patients[i]
@@ -222,23 +198,19 @@ class SocialWorker(Agent):
                 self.current_patient = None
 
 
-class Neurologist(Agent):
+class Neurologist(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.name = unique_id
         self.model = model
         self.treatment_time = 30
         self.current_patient = None
-        self.shift_end = None
-        self.shift_start = None
 
     def set_schedule(self, start, end):
-        self.shift_start = time(start)
-        self.shift_end = time(end)
-        print(self.shift_start, self.shift_end)
+        super().set_schedule(start, end)
 
     def step(self):
-        if self.model.working_hours(self):
+        if super().working_hours():
             if self.current_patient is None:
                 for i in np.random.permutation(len(self.model.neuro_patients)):
                     patient = self.model.neuro_patients[i]
@@ -254,23 +226,19 @@ class Neurologist(Agent):
                 self.current_patient = None
 
 
-class BloodWork(Agent):
+class BloodWork(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.name = unique_id
         self.model = model
         self.treatment_time = 20
         self.current_patient = None
-        self.shift_end = None
-        self.shift_start = None
 
     def set_schedule(self, start, end):
-        self.shift_start = time(start)
-        self.shift_end = time(end)
-        print(self.shift_start, self.shift_end)
+        super().set_schedule(start, end)
 
     def step(self):
-        if self.model.working_hours(self):
+        if super().working_hours():
             if self.current_patient is None:
                 for i in np.random.permutation(len(self.model.neuro_patients)):
                     patient = self.model.neuro_patients[i]
@@ -286,23 +254,19 @@ class BloodWork(Agent):
                 self.current_patient = None
 
 
-class Cardiologist(Agent):
+class Cardiologist(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.name = unique_id
         self.model = model
         self.treatment_time = 30
         self.current_patient = None
-        self.shift_end = None
-        self.shift_start = None
 
     def set_schedule(self, start, end):
-        self.shift_start = time(start)
-        self.shift_end = time(end)
-        print(self.shift_start, self.shift_end)
+        super().set_schedule(start, end)
 
     def step(self):
-        if self.model.working_hours(self):
+        if super().working_hours():
             if self.current_patient is None:
                 for i in np.random.permutation(len(self.model.neuro_patients)):
                     patient = self.model.neuro_patients[i]
@@ -318,23 +282,19 @@ class Cardiologist(Agent):
                 self.current_patient = None
 
 
-class Nurse(Agent):
+class Nurse(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
         self.name = unique_id
         self.model = model
         self.treatment_time = 5
         self.current_patient = None
-        self.shift_end = None
-        self.shift_start = None
 
     def set_schedule(self, start, end):
-        self.shift_start = time(start)
-        self.shift_end = time(end)
-        print(self.shift_start, self.shift_end)
+        super().set_schedule(start, end)
 
     def step(self):
-        if self.model.working_hours(self):
+        if super().working_hours():
             if self.current_patient is None:
                 for i in np.random.permutation(len(self.model.neuro_patients)):
                     patient = self.model.neuro_patients[i]
