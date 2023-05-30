@@ -20,6 +20,10 @@ class Patient(Agent):
         self.ct_time = 0
         self.t_time = 0
         self.tpa_permitted = False
+        if random.randint(0,9) == 0:
+            self.tpa_denied = True
+        else:
+            self.tpa_denied = False
         self.icu_arrival_time = 0
         if random.randint(0, 1) == 0:
             self.need_icu = True
@@ -76,7 +80,9 @@ class Patient(Agent):
                (self.cardiologist_visit != 0 or not self.need_cardiologist)
 
     def check_permitted(self):
-        if self.model.current_time - self.time_of_stroke <= 270:
+        if self.tpa_denied:
+            return False
+        elif self.model.current_time - self.time_of_stroke <= 270:
             self.tpa_permitted = True
             return True
         else:
