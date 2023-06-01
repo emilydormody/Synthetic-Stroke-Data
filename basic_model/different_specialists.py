@@ -14,9 +14,6 @@ class CTScan(Specialist):
         self.treatment_time = 30
         self.current_patient = None
 
-    def set_schedule(self, start, end):
-        super().set_schedule(start, end)
-
     def step(self):
         if super().working_hours():
             if self.current_patient is None:
@@ -37,9 +34,6 @@ class TPA(Specialist):
         self.model = model
         self.treatment_time = 15
         self.current_patient = None
-
-    def set_schedule(self, start, end):
-        super().set_schedule(start, end)
 
     def step(self):
         if super().working_hours():
@@ -66,9 +60,6 @@ class OccupationalTherapist(Specialist):
         self.treatment_time = 30
         self.current_patient = None
 
-    def set_schedule(self, start, end):
-        super().set_schedule(start, end)
-
     def step(self):
         if super().working_hours():
             if self.current_patient is None:
@@ -93,9 +84,6 @@ class PhysioTherapist(Specialist):
         self.model = model
         self.treatment_time = 30
         self.current_patient = None
-
-    def set_schedule(self, start, end):
-        super().set_schedule(start, end)
 
     def step(self):
         if super().working_hours():
@@ -122,9 +110,6 @@ class SpeechPathologist(Specialist):
         self.treatment_time = 30
         self.current_patient = None
 
-    def set_schedule(self, start, end):
-        super().set_schedule(start, end)
-
     def step(self):
         if super().working_hours():
             if self.current_patient is None:
@@ -149,9 +134,6 @@ class Dietitian(Specialist):
         self.model = model
         self.treatment_time = 30
         self.current_patient = None
-
-    def set_schedule(self, start, end):
-        super().set_schedule(start, end)
 
     def step(self):
         if super().working_hours():
@@ -178,9 +160,6 @@ class SocialWorker(Specialist):
         self.treatment_time = 30
         self.current_patient = None
 
-    def set_schedule(self, start, end):
-        super().set_schedule(start, end)
-
     def step(self):
         if super().working_hours():
             if self.current_patient is None:
@@ -205,9 +184,6 @@ class Neurologist(Specialist):
         self.model = model
         self.treatment_time = 30
         self.current_patient = None
-
-    def set_schedule(self, start, end):
-        super().set_schedule(start, end)
 
     def step(self):
         if super().working_hours():
@@ -234,9 +210,6 @@ class BloodWork(Specialist):
         self.treatment_time = 20
         self.current_patient = None
 
-    def set_schedule(self, start, end):
-        super().set_schedule(start, end)
-
     def step(self):
         if super().working_hours():
             if self.current_patient is None:
@@ -262,9 +235,6 @@ class Cardiologist(Specialist):
         self.treatment_time = 30
         self.current_patient = None
 
-    def set_schedule(self, start, end):
-        super().set_schedule(start, end)
-
     def step(self):
         if super().working_hours():
             if self.current_patient is None:
@@ -289,9 +259,6 @@ class Nurse(Specialist):
         self.model = model
         self.treatment_time = 5
         self.current_patient = None
-
-    def set_schedule(self, start, end):
-        super().set_schedule(start, end)
 
     def step(self):
         if super().working_hours():

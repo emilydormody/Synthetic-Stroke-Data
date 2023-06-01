@@ -1,4 +1,3 @@
-
 import random
 
 from mesa import Agent, Model
@@ -20,7 +19,7 @@ class Patient(Agent):
         self.ct_time = 0
         self.t_time = 0
         self.tpa_permitted = False
-        if random.randint(0,9) == 0:
+        if random.randint(0, 9) == 0:
             self.tpa_denied = True
         else:
             self.tpa_denied = False
@@ -49,7 +48,6 @@ class Patient(Agent):
         self.last_checkin = 0
         self.patient_info = self.get_patient_info()
 
-
     def step(self):
         if self.model.current_time >= self.admission_time and not self.arrived:
             self.arrived = True
@@ -74,11 +72,6 @@ class Patient(Agent):
                     self.last_treatment = self.model.current_time
                     self.model.neuro_patients.append(self)
 
-    def fully_treated(self):
-        return self.neuro_time != 0 and self.occupational_visit != 0 and self.speech_visit != 0 and self.physio_visit != 0 and \
-               self.diet_visit != 0 and self.social_worker_visit != 0 and self.neuro_visit != 0 and \
-               (self.cardiologist_visit != 0 or not self.need_cardiologist)
-
     def check_permitted(self):
         if self.tpa_denied:
             return False
@@ -88,6 +81,7 @@ class Patient(Agent):
         else:
             self.tpa_permitted = False
             return False
+
     def ct_delay(self):
         delay = 15
         if 0.5 < self.delay < 1:
@@ -154,11 +148,4 @@ class Patient(Agent):
         dict["Reflexes/Coordination"] = 0
         dict["Speech Intelligibility"] = 0
         dict["Oral Peripheral Exam Result"] = 0
-
-
-
-
-
-
-
-
+        return dict

@@ -14,7 +14,6 @@ class Specialist(Agent):
     def set_schedule(self, start, end):
         self.shift_start = time(start)
         self.shift_end = time(end)
-        print(self.shift_start, self.shift_end)
 
     def working_hours(self):
         current = (self.model.date + timedelta(minutes=self.model.current_time)).time()
