@@ -70,6 +70,7 @@ class OccupationalTherapist(Specialist):
                             self.current_patient = patient
                             patient.occupational_visit = self.model.current_time
                             self.current_patient.in_treatment = True
+                            self.daily_stroke_patients -= 1
                             break
             elif self.current_patient.occupational_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
@@ -95,6 +96,7 @@ class PhysioTherapist(Specialist):
                             self.current_patient = patient
                             patient.physio_visit = self.model.current_time
                             self.current_patient.in_treatment = True
+                            self.daily_stroke_patients -= 1
                             break
             elif self.current_patient.physio_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
@@ -120,6 +122,7 @@ class SpeechPathologist(Specialist):
                             self.current_patient = patient
                             patient.speech_visit = self.model.current_time
                             self.current_patient.in_treatment = True
+                            self.daily_stroke_patients -= 1
                             break
             elif self.current_patient.speech_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
@@ -145,6 +148,7 @@ class Dietitian(Specialist):
                             self.current_patient = patient
                             patient.diet_visit = self.model.current_time
                             self.current_patient.in_treatment = True
+                            self.daily_stroke_patients -= 1
                             break
             elif self.current_patient.diet_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
@@ -170,6 +174,7 @@ class SocialWorker(Specialist):
                             self.current_patient = patient
                             patient.social_worker_visit = self.model.current_time
                             self.current_patient.in_treatment = True
+                            self.daily_stroke_patients -= 1
                             break
             elif self.current_patient.social_worker_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
@@ -195,6 +200,7 @@ class Neurologist(Specialist):
                             self.current_patient = patient
                             patient.neuro_visit = self.model.current_time
                             self.current_patient.in_treatment = True
+                            self.daily_stroke_patients -= 1
                             break
             elif self.current_patient.neuro_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
@@ -245,6 +251,7 @@ class Cardiologist(Specialist):
                             self.current_patient = patient
                             patient.cardiologist_visit = self.model.current_time
                             self.current_patient.in_treatment = True
+                            self.daily_stroke_patients -= 1
                             break
             elif self.current_patient.cardiologist_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
