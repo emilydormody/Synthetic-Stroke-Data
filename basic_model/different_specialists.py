@@ -1,9 +1,11 @@
 import datetime
+import random
 
 import numpy as np
 from mesa import Agent
 from datetime import time
 from specialist import Specialist
+from patient import Patient
 
 
 class CTScan(Specialist):
@@ -55,27 +57,33 @@ class TPA(Specialist):
 class OccupationalTherapist(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.name = unique_id
-        self.model = model
         self.treatment_time = 30
-        self.current_patient = None
 
     def step(self):
         if super().working_hours():
-            if self.current_patient is None:
-                for i in np.random.permutation(len(self.model.neuro_patients)):
-                    patient = self.model.neuro_patients[i]
-                    if patient.last_treatment < self.model.current_time - 10:
-                        if patient.occupational_visit == 0 and not patient.in_treatment:
-                            self.current_patient = patient
-                            patient.occupational_visit = self.model.current_time
-                            self.current_patient.in_treatment = True
-                            self.daily_stroke_patients -= 1
-                            break
+            if not self.busy:
+                if random.randint(0, 1) == 0:
+                    self.current_patient = Patient(0, self.model)
+                    self.current_patient.occupational_visit = self.model.current_time
+                    self.busy = True
+                else:
+                    for i in np.random.permutation(len(self.model.neuro_patients)):
+                        patient = self.model.neuro_patients[i]
+                        if patient.last_treatment < self.model.current_time - 10:
+                            if patient.occupational_visit == 0 and not patient.in_treatment:
+                                self.current_patient = patient
+                                patient.occupational_visit = self.model.current_time
+                                self.current_patient.in_treatment = True
+                                self.busy = True
+                                self.daily_stroke_patients -= 1
+                                print(self.model.current_time, self.daily_stroke_patients, self.unique_id)
+                                break
             elif self.current_patient.occupational_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
                 self.current_patient = None
+                self.busy = False
+
 
 
 class PhysioTherapist(Specialist):
