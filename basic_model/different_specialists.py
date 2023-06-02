@@ -11,10 +11,7 @@ from patient import Patient
 class CTScan(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.name = unique_id
-        self.model = model
         self.treatment_time = 30
-        self.current_patient = None
 
     def step(self):
         if super().working_hours():
@@ -32,10 +29,7 @@ class CTScan(Specialist):
 class TPA(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.name = unique_id
-        self.model = model
         self.treatment_time = 15
-        self.current_patient = None
 
     def step(self):
         if super().working_hours():
@@ -89,10 +83,7 @@ class OccupationalTherapist(Specialist):
 class PhysioTherapist(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.name = unique_id
-        self.model = model
         self.treatment_time = 30
-        self.current_patient = None
 
     def step(self):
         if super().working_hours():
@@ -115,10 +106,7 @@ class PhysioTherapist(Specialist):
 class SpeechPathologist(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.name = unique_id
-        self.model = model
         self.treatment_time = 30
-        self.current_patient = None
 
     def step(self):
         if super().working_hours():
@@ -141,10 +129,7 @@ class SpeechPathologist(Specialist):
 class Dietitian(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.name = unique_id
-        self.model = model
         self.treatment_time = 30
-        self.current_patient = None
 
     def step(self):
         if super().working_hours():
@@ -167,10 +152,7 @@ class Dietitian(Specialist):
 class SocialWorker(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.name = unique_id
-        self.model = model
         self.treatment_time = 30
-        self.current_patient = None
 
     def step(self):
         if super().working_hours():
@@ -193,10 +175,7 @@ class SocialWorker(Specialist):
 class Neurologist(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.name = unique_id
-        self.model = model
         self.treatment_time = 30
-        self.current_patient = None
 
     def step(self):
         if super().working_hours():
@@ -219,10 +198,7 @@ class Neurologist(Specialist):
 class BloodWork(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.name = unique_id
-        self.model = model
         self.treatment_time = 20
-        self.current_patient = None
 
     def step(self):
         if super().working_hours():
@@ -244,10 +220,7 @@ class BloodWork(Specialist):
 class Cardiologist(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.name = unique_id
-        self.model = model
         self.treatment_time = 30
-        self.current_patient = None
 
     def step(self):
         if super().working_hours():
@@ -270,10 +243,7 @@ class Cardiologist(Specialist):
 class Nurse(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
-        self.name = unique_id
-        self.model = model
         self.treatment_time = 5
-        self.current_patient = None
 
     def step(self):
         if super().working_hours():
