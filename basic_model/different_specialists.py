@@ -70,7 +70,6 @@ class OccupationalTherapist(Specialist):
                                 self.current_patient.in_treatment = True
                                 self.busy = True
                                 self.daily_stroke_patients -= 1
-                                print(self.model.current_time, self.daily_stroke_patients, self.unique_id)
                                 break
             elif self.current_patient.occupational_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
@@ -102,7 +101,6 @@ class PhysioTherapist(Specialist):
                                 self.current_patient.in_treatment = True
                                 self.busy = True
                                 self.daily_stroke_patients -= 1
-                                print(self.model.current_time, self.daily_stroke_patients, self.unique_id)
                                 break
             elif self.current_patient.physio_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
@@ -133,7 +131,6 @@ class SpeechPathologist(Specialist):
                                 self.current_patient.in_treatment = True
                                 self.busy = True
                                 self.daily_stroke_patients -= 1
-                                print(self.model.current_time, self.daily_stroke_patients, self.unique_id)
                                 break
             elif self.current_patient.speech_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
@@ -164,7 +161,6 @@ class Dietitian(Specialist):
                                 self.current_patient.in_treatment = True
                                 self.busy = True
                                 self.daily_stroke_patients -= 1
-                                print(self.model.current_time, self.daily_stroke_patients, self.unique_id)
                                 break
             elif self.current_patient.diet_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
@@ -195,7 +191,6 @@ class SocialWorker(Specialist):
                                 self.current_patient.in_treatment = True
                                 self.busy = True
                                 self.daily_stroke_patients -= 1
-                                print(self.model.current_time, self.daily_stroke_patients, self.unique_id)
                                 break
             elif self.current_patient.social_worker_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
@@ -226,7 +221,6 @@ class Neurologist(Specialist):
                                 self.current_patient.in_treatment = True
                                 self.busy = True
                                 self.daily_stroke_patients -= 1
-                                print(self.model.current_time, self.daily_stroke_patients, self.unique_id)
                                 break
             elif self.current_patient.neuro_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
@@ -242,19 +236,27 @@ class BloodWork(Specialist):
 
     def step(self):
         if super().working_hours():
-            if self.current_patient is None:
-                for i in np.random.permutation(len(self.model.neuro_patients)):
-                    patient = self.model.neuro_patients[i]
-                    if patient.last_treatment < self.model.current_time - 10:
-                        if patient.bloodwork == 0 and not patient.in_treatment:
-                            self.current_patient = patient
-                            patient.bloodwork = self.model.current_time
-                            self.current_patient.in_treatment = True
-                            break
+            if not self.busy:
+                if random.randint(0, 1) == 0:
+                    self.current_patient = Patient(0, self.model)
+                    self.current_patient.bloodwork = self.model.current_time
+                    self.busy = True
+                else:
+                    for i in np.random.permutation(len(self.model.neuro_patients)):
+                        patient = self.model.neuro_patients[i]
+                        if patient.last_treatment < self.model.current_time - 10:
+                            if patient.bloodwork == 0 and not patient.in_treatment:
+                                self.current_patient = patient
+                                patient.bloodwork = self.model.current_time
+                                self.current_patient.in_treatment = True
+                                self.busy = True
+                                self.daily_stroke_patients -= 1
+                                break
             elif self.current_patient.bloodwork < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
                 self.current_patient = None
+                self.busy = False
 
 
 class Cardiologist(Specialist):
@@ -262,22 +264,30 @@ class Cardiologist(Specialist):
         super().__init__(unique_id, model)
         self.treatment_time = 30
 
+
     def step(self):
         if super().working_hours():
-            if self.current_patient is None:
-                for i in np.random.permutation(len(self.model.neuro_patients)):
-                    patient = self.model.neuro_patients[i]
-                    if patient.need_cardiologist and patient.last_treatment < self.model.current_time - 10:
-                        if patient.cardiologist_visit == 0 and not patient.in_treatment:
-                            self.current_patient = patient
-                            patient.cardiologist_visit = self.model.current_time
-                            self.current_patient.in_treatment = True
-                            self.daily_stroke_patients -= 1
-                            break
+            if not self.busy:
+                if random.randint(0, 1) == 0:
+                    self.current_patient = Patient(0, self.model)
+                    self.current_patient.cardiologist_visit = self.model.current_time
+                    self.busy = True
+                else:
+                    for i in np.random.permutation(len(self.model.neuro_patients)):
+                        patient = self.model.neuro_patients[i]
+                        if patient.need_cardiologist and patient.last_treatment < self.model.current_time - 10:
+                            if patient.cardiologist_visit == 0 and not patient.in_treatment:
+                                self.current_patient = patient
+                                patient.cardiologist_visit = self.model.current_time
+                                self.current_patient.in_treatment = True
+                                self.busy = True
+                                self.daily_stroke_patients -= 1
+                                break
             elif self.current_patient.cardiologist_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
                 self.current_patient = None
+                self.busy = False
 
 
 class Nurse(Specialist):
