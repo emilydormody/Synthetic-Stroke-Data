@@ -75,6 +75,8 @@ class Patient(Agent):
     def check_permitted(self):
         if self.tpa_denied:
             return False
+        elif self.patient_info["Blood Pressure"] > 185:
+            return False
         elif self.model.current_time - self.time_of_stroke <= 270:
             self.tpa_permitted = True
             return True
@@ -106,7 +108,12 @@ class Patient(Agent):
         dict["Temperature"] = 0
         dict["Heart Rate"] = 0
         dict["Respiratory Rate"] = 0
-        dict["Blood Pressure"] = 0
+        if self.age >= 60:
+            dict["Blood Pressure"] = self.age + np.random.normal(70, 15) + 5
+        else:
+            dict["Blood Pressure"] = self.age + np.random.normal(90, 15) + 5
+        if dict["Blood Pressure"] < 120:
+            dict["Blood Pressure"] = int(dict["Blood Pressure"] +30)
         dict["Pulse Oximetry"] = 0
         dict["Swallowing Ability"] = 0
         dict["Swallowing Screen Result"] = None
