@@ -22,4 +22,4 @@ def export_to_pandas(model):
     print(df.info())
     print(df)
 
-    df.sort_values(by='Arrival Time').to_csv('~/Downloads/stroke_model_data.csv')
+    #df.sort_values(by='Arrival Time').to_csv('~/Downloads/stroke_model_data.csv')

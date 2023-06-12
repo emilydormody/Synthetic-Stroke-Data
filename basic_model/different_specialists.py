@@ -46,6 +46,10 @@ class TPA(Specialist):
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
                 self.current_patient = None
+        else:
+            for patient in self.model.t_patients:
+                if not patient.check_permitted():
+                    self.model.t_patients.remove(patient)
 
 
 class OccupationalTherapist(Specialist):
