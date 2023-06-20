@@ -56,10 +56,14 @@ class Patient(Agent):
     def step(self):
         if self.model.current_time >= self.hospital_arrival and not (self.ed_arrived or self.hospital_arrival == self.admission_time):
             self.ed_arrived = True
-            print(self.unique_id, 'ed')
+            if self.model.ed_patients.count(self) == 0:
+                self.model.ed_patients.append(self)
             self.last_treatment = self.model.current_time
+            print(self.unique_id, 'ed', self.model.ed_patients)
         elif self.model.current_time >= self.admission_time and not self.arrived:
             self.arrived = True
+            if self in self.model.ed_patients:
+                self.model.ed_patients.remove(self)
             self.last_treatment = self.model.current_time
         elif self.arrived and not self.in_treatment:
             if self.ct_time == 0 and not self.in_treatment:
