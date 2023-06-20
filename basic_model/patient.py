@@ -14,8 +14,12 @@ class Patient(Agent):
         else:
             self.gender = "F"
         self.age = random.randint(20, 91)
-        self.admission_time = random.randint(300, 8000)
-        self.time_of_stroke = self.admission_time - random.randint(60, 150) - np.random.normal(60, 15)
+        self.hospital_arrival = random.randint(300, 8000)
+        if random.randint(0,3) == 0:
+            self.admission_time = self.hospital_arrival
+        else:
+            self.admission_time = self.hospital_arrival+self.admission_time_normal()
+        self.time_of_stroke = self.hospital_arrival - random.randint(60, 150) - np.random.normal(60, 15)
         self.ct_time = 0
         self.t_time = 0
         self.tpa_permitted = False
@@ -29,6 +33,7 @@ class Patient(Agent):
         else:
             self.need_icu = False
         self.delay = random.uniform(0, 3)
+        self.ed_arrived = False
         self.arrived = False
         self.last_treatment = -1
         self.in_treatment = False
@@ -49,7 +54,11 @@ class Patient(Agent):
         self.patient_info = self.get_patient_info()
 
     def step(self):
-        if self.model.current_time >= self.admission_time and not self.arrived:
+        if self.model.current_time >= self.hospital_arrival and not (self.ed_arrived or self.hospital_arrival == self.admission_time):
+            self.ed_arrived = True
+            print(self.unique_id, 'ed')
+            self.last_treatment = self.model.current_time
+        elif self.model.current_time >= self.admission_time and not self.arrived:
             self.arrived = True
             self.last_treatment = self.model.current_time
         elif self.arrived and not self.in_treatment:
@@ -149,3 +158,6 @@ class Patient(Agent):
         dict["Speech Intelligibility"] = 0
         dict["Oral Peripheral Exam Result"] = 0
         return dict
+
+    def admission_time_normal(self):
+        return 300

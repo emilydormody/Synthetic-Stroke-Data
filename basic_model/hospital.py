@@ -9,12 +9,13 @@ class Hospital(Model):
     def __init__(self):
         self.schedule = mesa.time.RandomActivation(self)
         self.current_time = 1
+        self.ed_patients = []
         self.ct_patients = []
         self.t_patients = []
         self.neuro_patients = []
         self.all_patients = []
         self.date = datetime.datetime.now()
-        self.add_specialists()
+        self.add_agents()
 
 
     def step(self):
@@ -68,8 +69,8 @@ class Hospital(Model):
             dict["Last Check"].append(self.convert_time(patient.last_checkin))
         return dict
 
-    def add_specialists(self):
-        for i in range(100):
+    def add_agents(self):
+        for i in range(20):
             patient = Patient(i, self)
             self.schedule.add(patient)
             self.all_patients.append(patient)
