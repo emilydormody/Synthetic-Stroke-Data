@@ -1,3 +1,4 @@
+import math
 import random
 
 from mesa import Agent, Model
@@ -15,29 +16,34 @@ class Patient(Agent):
             self.gender = "F"
         self.age = random.randint(20, 91)
         self.hospital_arrival = random.randint(300, 8000)
-        if random.randint(0,3) == 0:
+        if random.random() >= 0.75:
             self.admission_time = self.hospital_arrival
         else:
             self.admission_time = self.hospital_arrival+self.admission_time_normal()
         self.time_of_stroke = self.hospital_arrival - random.randint(60, 150) - np.random.normal(60, 15)
-        self.ct_time = 0
-        self.t_time = 0
+        self.ct_time = self.admission_time + self.ct_time_normal()
+        self.ct_treated = False
+        self.t_time = self.admission_time + self.tpa_time_normal()
+        self.tpa_treated = False
         self.tpa_permitted = False
-        if random.randint(0, 9) == 0:
+        if random.random() >= 0.9:
             self.tpa_denied = True
         else:
             self.tpa_denied = False
-        self.icu_arrival_time = 0
-        if random.randint(0, 1) == 0:
+        if random.random() >= 0.5:
             self.need_icu = True
+            self.icu_arrival_time = self.admission_time + self.icu_time_normal()
         else:
             self.need_icu = False
+            self.icu_arrival_time = 0
         self.delay = random.uniform(0, 3)
         self.ed_arrived = False
         self.arrived = False
+        self.icu_arrived = False
         self.last_treatment = -1
         self.in_treatment = False
-        self.neuro_time = 0
+        self.neuro_time = self.admission_time + self.neuro_time_normal()
+        self.neuro_ward_arrived = False
         self.occupational_visit = 0
         self.speech_visit = 0
         self.physio_visit = 0
@@ -56,44 +62,49 @@ class Patient(Agent):
     def step(self):
         if self.model.current_time >= self.hospital_arrival and not (self.ed_arrived or self.hospital_arrival == self.admission_time):
             self.ed_arrived = True
-            if self.model.ed_patients.count(self) == 0:
-                self.model.ed_patients.append(self)
+            self.model.ed_patients.append(self)
             self.last_treatment = self.model.current_time
-            print(self.unique_id, 'ed', self.model.ed_patients)
+            print(self.unique_id, 'ed')
         elif self.model.current_time >= self.admission_time and not self.arrived:
             self.arrived = True
             if self in self.model.ed_patients:
                 self.model.ed_patients.remove(self)
             self.last_treatment = self.model.current_time
+            print(self.unique_id, 'arrived')
         elif self.arrived and not self.in_treatment:
-            if self.ct_time == 0 and not self.in_treatment:
-                if self.last_treatment < self.model.current_time - self.ct_delay():
-                    if self.model.ct_patients.count(self) == 0:
-                        self.model.ct_patients.append(self)
-            elif self.check_permitted() and self.t_time == 0:
-                if self.last_treatment < self.model.current_time - self.t_delay():
-                    if self.model.t_patients.count(self) == 0:
-                        self.model.t_patients.append(self)
-            elif (self.t_time > 0 or not self.tpa_permitted) and (self.icu_arrival_time == 0 and self.need_icu):
-                if self.last_treatment < self.model.current_time - self.icu_delay():
-                    if self.need_icu:
-                        self.icu_arrival_time = self.model.current_time
-                        self.last_treatment = self.model.current_time
-            elif (self.icu_arrival_time > 0 or not self.need_icu) and self.neuro_time == 0:
-                if self.last_treatment < self.model.current_time - 120:
+            if self.model.current_time >= self.ct_time and not self.ct_treated:
+                if self.model.ct_patients.count(self) == 0:
+                    self.model.ct_patients.append(self)
+                    print(self.unique_id, 'ct list')
+            elif self.check_permitted() and self.model.current_time >= self.t_time and self.ct_treated:
+                #if self.last_treatment < self.model.current_time - self.t_delay():
+                if self.model.t_patients.count(self) == 0:
+                    self.model.t_patients.append(self)
+                    print(self.unique_id, 'tpa list')
+            elif (self.tpa_treated or not self.tpa_permitted) and (self.model.current_time >= self.icu_arrival_time and self.need_icu) and not self.icu_arrived:
+                #if self.last_treatment < self.model.current_time - self.icu_delay():
+                    #if self.need_icu:
+                print(self.unique_id, 'icu')
+                self.icu_arrival_time = self.model.current_time
+                self.icu_arrived = True
+                self.last_treatment = self.model.current_time
+            elif (self.icu_arrived or not self.need_icu) and self.model.current_time >= self.neuro_time:
+                if not self.neuro_ward_arrived:
+                    self.neuro_ward_arrived = True
                     self.neuro_time = self.model.current_time
                     self.last_treatment = self.model.current_time
                     self.model.neuro_patients.append(self)
+                    print(self.unique_id, 'neuro')
 
     def check_permitted(self):
         if self.tpa_denied:
             return False
-        elif self.model.current_time - self.time_of_stroke <= 270:
-            self.tpa_permitted = True
-            return True
         else:
-            self.tpa_permitted = False
-            return False
+            if self.model.current_time - self.time_of_stroke <= 270:
+                self.tpa_permitted = True
+            else:
+                self.tpa_permitted = False
+            return self.tpa_permitted
 
     def ct_delay(self):
         delay = 15
@@ -165,3 +176,15 @@ class Patient(Agent):
 
     def admission_time_normal(self):
         return 300
+
+    def neuro_time_normal(self):
+        return 180
+
+    def icu_time_normal(self):
+        return 100
+
+    def ct_time_normal(self):
+        return 15
+
+    def tpa_time_normal(self):
+        return 45

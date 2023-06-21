@@ -23,6 +23,7 @@ class CTScan(Specialist):
             elif self.current_patient.ct_time < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
+                self.current_patient.ct_treated = True
                 self.current_patient = None
 
 
@@ -45,6 +46,7 @@ class TPA(Specialist):
             elif self.current_patient.t_time < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
+                self.current_patient.tpa_treated = True
                 self.current_patient = None
         else:
             for patient in self.model.t_patients:

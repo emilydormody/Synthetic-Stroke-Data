@@ -20,6 +20,6 @@ def export_to_pandas(model):
     df["Neurologist Visit"] = pd.to_datetime(df["Neurologist Visit"])
     df["Blood Work Time"] = pd.to_datetime(df["Blood Work Time"])
     print(df.info())
-    print(df)
+    print(df.head())
 
-    #df.sort_values(by='Arrival Time').to_csv('~/Downloads/stroke_model_data.csv')
+    df.sort_values(by='Arrival Time').to_csv('~/Downloads/stroke_model_data.csv')

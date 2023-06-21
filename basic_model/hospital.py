@@ -45,13 +45,15 @@ class Hospital(Model):
             dict["Time of Stroke"].append(self.convert_time(patient.time_of_stroke))
             dict["Arrival Time"].append(self.convert_time(patient.admission_time))
             dict["CT Scan Time"].append(self.convert_time(patient.ct_time))
-            dict["TPA Treatment Time"].append(self.convert_time(patient.t_time))
-            if patient.tpa_denied:
-                reason = "Patient/family refusal"
-            elif patient.t_time == 0:
-                reason = "Arrived later then 4.5 Hours"
-            else:
+            if patient.tpa_treated == True:
+                dict["TPA Treatment Time"].append(self.convert_time(patient.t_time))
                 reason = None
+            else:
+                dict["TPA Treatment Time"].append(None)
+                if patient.tpa_denied:
+                    reason = "Patient/family refusal"
+                else:
+                    reason = "Arrived later then 4.5 Hours"
             dict["Reason for Rejecting TPA"].append(reason)
             dict["ICU Arrival Time"].append(self.convert_time(patient.icu_arrival_time))
             dict["Neurology Ward Arrival Time"].append(self.convert_time(patient.neuro_time))
