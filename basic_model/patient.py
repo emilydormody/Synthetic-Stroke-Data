@@ -76,20 +76,22 @@ class Patient(Agent):
                 if self.model.ct_patients.count(self) == 0:
                     self.model.ct_patients.append(self)
                     print(self.unique_id, 'ct list')
-            elif self.check_permitted() and self.model.current_time >= self.t_time and self.ct_treated:
+            elif self.check_permitted() and not self.tpa_treated:
+                if self.model.current_time >= self.t_time and self.ct_treated:
                 #if self.last_treatment < self.model.current_time - self.t_delay():
-                if self.model.t_patients.count(self) == 0:
-                    self.model.t_patients.append(self)
-                    print(self.unique_id, 'tpa list')
-            elif (self.tpa_treated or not self.tpa_permitted) and (self.model.current_time >= self.icu_arrival_time and self.need_icu) and not self.icu_arrived:
+                    if self.model.t_patients.count(self) == 0:
+                        self.model.t_patients.append(self)
+                        print(self.unique_id, 'tpa list')
+            elif (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu:
+                 if self.model.current_time >= self.icu_arrival_time:
                 #if self.last_treatment < self.model.current_time - self.icu_delay():
                     #if self.need_icu:
-                print(self.unique_id, 'icu')
-                self.icu_arrival_time = self.model.current_time
-                self.icu_arrived = True
-                self.last_treatment = self.model.current_time
-            elif (self.icu_arrived or not self.need_icu) and self.model.current_time >= self.neuro_time:
-                if not self.neuro_ward_arrived:
+                    print(self.unique_id, 'icu')
+                    self.icu_arrival_time = self.model.current_time
+                    self.icu_arrived = True
+                    self.last_treatment = self.model.current_time
+            elif (self.icu_arrived or not self.need_icu) and not self.neuro_ward_arrived:
+                if self.model.current_time >= self.neuro_time:
                     self.neuro_ward_arrived = True
                     self.neuro_time = self.model.current_time
                     self.last_treatment = self.model.current_time
