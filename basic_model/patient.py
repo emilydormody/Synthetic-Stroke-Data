@@ -3,6 +3,7 @@ import random
 
 from mesa import Agent, Model
 import numpy as np
+from scipy import stats
 
 
 class Patient(Agent):
@@ -21,9 +22,9 @@ class Patient(Agent):
         else:
             self.admission_time = self.hospital_arrival+self.admission_time_normal()
         self.time_of_stroke = self.hospital_arrival - random.randint(60, 150) - np.random.normal(60, 15)
-        self.ct_time = self.admission_time + self.ct_time_normal()
+        self.ct_time = self.hospital_arrival + self.ct_time_normal()
         self.ct_treated = False
-        self.t_time = self.admission_time + self.tpa_time_normal()
+        self.t_time = self.hospital_arrival + self.tpa_time_normal()
         self.tpa_treated = False
         self.tpa_permitted = False
         if random.random() >= 0.9:
@@ -36,7 +37,6 @@ class Patient(Agent):
         else:
             self.need_icu = False
             self.icu_arrival_time = 0
-        self.delay = random.uniform(0, 3)
         self.ed_arrived = False
         self.arrived = False
         self.icu_arrived = False
@@ -108,24 +108,6 @@ class Patient(Agent):
                 self.tpa_permitted = False
             return self.tpa_permitted
 
-    def ct_delay(self):
-        delay = 15
-        if 0.5 < self.delay < 1:
-            delay += int(self.delay * 10)
-        return delay
-
-    def t_delay(self):
-        delay = 15
-        if 1 < self.delay < 2:
-            delay += int((self.delay - 1) * 10)
-        return delay
-
-    def icu_delay(self):
-        delay = 5
-        if 2 < self.delay < 3:
-            delay += int((self.delay - 2) * 10)
-        return delay
-
     def get_patient_info(self):
         dict = {}
         dict["Blood Glucose"] = 0
@@ -177,7 +159,10 @@ class Patient(Agent):
         return dict
 
     def admission_time_normal(self):
-        return 300
+        if random.random() < 0.956:
+            return stats.skewnorm.rvs(4,146.3,269.8)
+        else:
+            return stats.gamma.rvs(1.2,1002.4,320.2)
 
     def neuro_time_normal(self):
         return 180
