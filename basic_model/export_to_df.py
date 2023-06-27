@@ -11,6 +11,7 @@ def export_to_pandas(model):
     df["ICU Arrival Time"] = pd.to_datetime(df["ICU Arrival Time"])
     df["Neurology Ward Arrival Time"] = pd.to_datetime(df["Neurology Ward Arrival Time"])
     df["Time of Stroke"] = pd.to_datetime(df["Time of Stroke"])
+    df["ED Checkin Time"] = pd.to_datetime(df["ED Checkin Time"])
     df["Occupational Therapist Visit"] = pd.to_datetime(df["Occupational Therapist Visit"])
     df["Speech Pathologist Visit"] = pd.to_datetime(df["Speech Pathologist Visit"])
     df["Physiotherapist Visit"] = pd.to_datetime(df["Physiotherapist Visit"])

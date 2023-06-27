@@ -160,8 +160,13 @@ class Patient(Agent):
 
     def admission_time_normal(self):
         if random.random() < 0.956:
+            if self.unique_id != 10000:
+                print('normal', self.unique_id)
             return stats.skewnorm.rvs(4,146.3,269.8)
+
         else:
+            if self.unique_id != 10000:
+                print('gamma', self.unique_id)
             return stats.gamma.rvs(1.2,1002.4,320.2)
 
     def neuro_time_normal(self):

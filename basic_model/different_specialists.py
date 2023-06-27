@@ -63,7 +63,7 @@ class OccupationalTherapist(Specialist):
         if super().working_hours():
             if not self.busy:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(0, self.model)
+                    self.current_patient = Patient(10000, self.model)
                     self.current_patient.occupational_visit = self.model.current_time
                     self.busy = True
                 else:
@@ -94,7 +94,7 @@ class PhysioTherapist(Specialist):
         if super().working_hours():
             if not self.busy:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(0, self.model)
+                    self.current_patient = Patient(10000, self.model)
                     self.current_patient.physio_visit = self.model.current_time
                     self.busy = True
                 else:
@@ -124,7 +124,7 @@ class SpeechPathologist(Specialist):
         if super().working_hours():
             if not self.busy:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(0, self.model)
+                    self.current_patient = Patient(10000, self.model)
                     self.current_patient.speech_visit = self.model.current_time
                     self.busy = True
                 else:
@@ -154,7 +154,7 @@ class Dietitian(Specialist):
         if super().working_hours():
             if not self.busy:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(0, self.model)
+                    self.current_patient = Patient(10000, self.model)
                     self.current_patient.diet_visit = self.model.current_time
                     self.busy = True
                 else:
@@ -184,7 +184,7 @@ class SocialWorker(Specialist):
         if super().working_hours():
             if not self.busy:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(0, self.model)
+                    self.current_patient = Patient(10000, self.model)
                     self.current_patient.social_worker_visit = self.model.current_time
                     self.busy = True
                 else:
@@ -214,7 +214,7 @@ class Neurologist(Specialist):
         if super().working_hours():
             if not self.busy:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(0, self.model)
+                    self.current_patient = Patient(10000, self.model)
                     self.current_patient.neuro_visit = self.model.current_time
                     self.busy = True
                 else:
@@ -244,7 +244,7 @@ class BloodWork(Specialist):
         if super().working_hours():
             if not self.busy:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(0, self.model)
+                    self.current_patient = Patient(10000, self.model)
                     self.current_patient.bloodwork = self.model.current_time
                     self.busy = True
                 else:
@@ -275,7 +275,7 @@ class Cardiologist(Specialist):
         if super().working_hours():
             if not self.busy:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(0, self.model)
+                    self.current_patient = Patient(10000, self.model)
                     self.current_patient.cardiologist_visit = self.model.current_time
                     self.busy = True
                 else:
