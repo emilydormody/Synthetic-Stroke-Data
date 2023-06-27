@@ -181,7 +181,13 @@ class Patient(Agent):
             return stats.gamma.rvs(0.908, 10090.3, 7966.6)
 
     def icu_time_normal(self):
-        return 100
+        n = random.random()
+        if n < 0.157:
+            return stats.gamma.rvs(3.23, 0.237, 0.343)
+        elif 0.157 <= n < 0.615:
+            return stats.skewnorm.rvs(2.84, 35.6, 59.7)
+        else:
+            return stats.gamma.rvs(0.547,201,15138.3)
 
     def ct_time_normal(self):
         return 15
