@@ -31,10 +31,10 @@ class Hospital(Model):
 
 
     def patient_info(self):
-        dict = {"Patient Id": [], "Age": [], "Gender": [], "Time of Stroke": [], "ED Checkin Time":[],
+        dict = {"Patient Id": [], "Age": [], "Gender": [], "Time of Stroke": [], "ED Arrival Time":[],
                 "Arrival Time": [], "CT Scan Time": [],
-                "TPA Treatment Time": [],
-                "Reason for Rejecting TPA": [], "ICU Arrival Time": [], "Neurology Ward Arrival Time": [],
+                "TPA Treatment Time": [],"Reason for Rejecting TPA": [], "ICU Arrival Time": [],
+                "ICU Checkout Time": [],"Neurology Ward Arrival Time": [],
                 "Occupational Therapist Visit": [],
                 "Speech Pathologist Visit": [], "Physiotherapist Visit": [], "Dietitian Visit": [],
                 "Social Worker Visit": [],
@@ -45,9 +45,9 @@ class Hospital(Model):
             dict["Gender"].append(patient.gender)
             dict["Time of Stroke"].append(self.convert_time(patient.time_of_stroke))
             if patient.ed_arrived:
-                dict["ED Checkin Time"].append(self.convert_time(patient.hospital_arrival))
+                dict["ED Arrival Time"].append(self.convert_time(patient.hospital_arrival))
             else:
-                dict["ED Checkin Time"].append(None)
+                dict["ED Arrival Time"].append(None)
             dict["Arrival Time"].append(self.convert_time(patient.admission_time))
             dict["CT Scan Time"].append(self.convert_time(patient.ct_time))
             if patient.tpa_treated == True:
@@ -61,6 +61,7 @@ class Hospital(Model):
                     reason = "Arrived later then 4.5 Hours"
             dict["Reason for Rejecting TPA"].append(reason)
             dict["ICU Arrival Time"].append(self.convert_time(patient.icu_arrival_time))
+            dict["ICU Checkout Time"].append(self.convert_time(patient.icu_outtime))
             dict["Neurology Ward Arrival Time"].append(self.convert_time(patient.neuro_time))
             dict["Occupational Therapist Visit"].append(self.convert_time(patient.occupational_visit))
             dict["Speech Pathologist Visit"].append(self.convert_time(patient.speech_visit))

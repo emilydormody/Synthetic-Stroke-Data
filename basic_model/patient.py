@@ -34,16 +34,19 @@ class Patient(Agent):
         if random.random() >= 0.5:
             self.need_icu = True
             self.icu_arrival_time = self.admission_time + self.icu_time_normal()
+            self.icu_outtime = self.icu_arrival_time + self.icu_outtime_normal()
         else:
             self.need_icu = False
             self.icu_arrival_time = 0
+            self.icu_outtime = 0
         self.ed_arrived = False
         self.arrived = False
         self.icu_arrived = False
         self.last_treatment = -1
         self.in_treatment = False
+        self.in_icu = False
         self.neuro_time = self.admission_time + self.neuro_time_normal()
-        self.neuro_checkout = self.admission_time + self.neuro_checkout_normal()
+        self.neuro_outtime = self.admission_time + self.neuro_outtime_normal()
         self.neuro_ward_arrived = False
         self.occupational_visit = 0
         self.speech_visit = 0
@@ -79,20 +82,20 @@ class Patient(Agent):
                 print(self.unique_id, 'ct list')
         elif self.check_permitted() and not self.tpa_treated:
             if self.model.current_time >= self.t_time and self.ct_treated:
-                # if self.last_treatment < self.model.current_time - self.t_delay():
                 if self.model.t_patients.count(self) == 0:
                     self.model.t_patients.append(self)
                     print(self.unique_id, 'tpa list')
         elif self.arrived and not self.in_treatment:
             if (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu:
                 if self.model.current_time >= self.icu_arrival_time:
-                    # if self.last_treatment < self.model.current_time - self.icu_delay():
-                    # if self.need_icu:
                     print(self.unique_id, 'icu')
                     self.icu_arrival_time = self.model.current_time
                     self.icu_arrived = True
-                    self.last_treatment = self.model.current_time
-            elif (self.icu_arrived or not self.need_icu) and not self.neuro_ward_arrived:
+                    self.in_icu = True
+            elif self.in_icu:
+                if self.model.current_time >= self.icu_outtime:
+                    self.in_icu = False
+            elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived:
                 if self.model.current_time >= self.neuro_time:
                     self.neuro_ward_arrived = True
                     self.neuro_time = self.model.current_time
@@ -186,8 +189,17 @@ class Patient(Agent):
     def tpa_time_normal(self):
         return 45
 
-    def neuro_checkout_normal(self):
+    def neuro_outtime_normal(self):
         if random.random() < 0.941:
             return stats.gamma.rvs(2.16, -410.2, 2262.7)
         else:
             return stats.gamma.rvs(1.026, 15065.1, 6889.6)
+
+    def icu_outtime_normal(self):
+        n = random.random()
+        if n < 0.285:
+            return stats.skewnorm.rvs(-2.82,2085.4,805.6)
+        elif 0.285 <= n < 0.941:
+            return stats.gamma.rvs(0.891, 2404.5, 5009.6)
+        else:
+            return stats.gamma.rvs(1.05, 20001, 11464)
