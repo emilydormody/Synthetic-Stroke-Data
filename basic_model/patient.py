@@ -20,7 +20,7 @@ class Patient(Agent):
         if random.random() >= 0.75:
             self.admission_time = self.hospital_arrival
         else:
-            self.admission_time = self.hospital_arrival+self.admission_time_normal()
+            self.admission_time = self.hospital_arrival + self.admission_time_normal()
         self.time_of_stroke = self.hospital_arrival - random.randint(60, 150) - np.random.normal(60, 15)
         self.ct_time = self.hospital_arrival + self.ct_time_normal()
         self.ct_treated = False
@@ -43,6 +43,7 @@ class Patient(Agent):
         self.last_treatment = -1
         self.in_treatment = False
         self.neuro_time = self.admission_time + self.neuro_time_normal()
+        self.neuro_checkout = self.admission_time + self.neuro_checkout_normal()
         self.neuro_ward_arrived = False
         self.occupational_visit = 0
         self.speech_visit = 0
@@ -60,7 +61,8 @@ class Patient(Agent):
         self.patient_info = self.get_patient_info()
 
     def step(self):
-        if self.model.current_time >= self.hospital_arrival and not (self.ed_arrived or self.hospital_arrival == self.admission_time):
+        if self.model.current_time >= self.hospital_arrival and not (
+                self.ed_arrived or self.hospital_arrival == self.admission_time):
             self.ed_arrived = True
             self.model.ed_patients.append(self)
             self.last_treatment = self.model.current_time
@@ -83,9 +85,9 @@ class Patient(Agent):
                     print(self.unique_id, 'tpa list')
         elif self.arrived and not self.in_treatment:
             if (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu:
-                 if self.model.current_time >= self.icu_arrival_time:
-                #if self.last_treatment < self.model.current_time - self.icu_delay():
-                    #if self.need_icu:
+                if self.model.current_time >= self.icu_arrival_time:
+                    # if self.last_treatment < self.model.current_time - self.icu_delay():
+                    # if self.need_icu:
                     print(self.unique_id, 'icu')
                     self.icu_arrival_time = self.model.current_time
                     self.icu_arrived = True
@@ -160,12 +162,20 @@ class Patient(Agent):
 
     def admission_time_normal(self):
         if random.random() < 0.956:
-            return stats.skewnorm.rvs(4,146.3,269.8)
+            return stats.skewnorm.rvs(4, 146.3, 269.8)
         else:
-            return stats.gamma.rvs(1.2,1002.4,320.2)
+            return stats.gamma.rvs(1.2, 1002.4, 320.2)
 
     def neuro_time_normal(self):
-        return 180
+        n = random.random()
+        if n < 0.1:
+            return stats.skewnorm.rvs(2.81, 0.762, 0.7)
+        elif 0.1 <= n < 0.54:
+            return stats.skewnorm.rvs(2.35, 45.6, 49)
+        elif 0.54 <= n < 87.8:
+            return stats.gamma.rvs(1.74, 95.5, 1692.1)
+        else:
+            return stats.gamma.rvs(0.908, 10090.3, 7966.6)
 
     def icu_time_normal(self):
         return 100
@@ -175,3 +185,9 @@ class Patient(Agent):
 
     def tpa_time_normal(self):
         return 45
+
+    def neuro_checkout_normal(self):
+        if random.random() < 0.941:
+            return stats.gamma.rvs(2.16, -410.2, 2262.7)
+        else:
+            return stats.gamma.rvs(1.026, 15065.1, 6889.6)
