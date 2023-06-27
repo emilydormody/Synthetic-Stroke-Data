@@ -71,18 +71,18 @@ class Patient(Agent):
                 self.model.ed_patients.remove(self)
             self.last_treatment = self.model.current_time
             print(self.unique_id, 'arrived')
+        elif self.model.current_time >= self.ct_time and not self.ct_treated:
+            if self.model.ct_patients.count(self) == 0:
+                self.model.ct_patients.append(self)
+                print(self.unique_id, 'ct list')
+        elif self.check_permitted() and not self.tpa_treated:
+            if self.model.current_time >= self.t_time and self.ct_treated:
+                # if self.last_treatment < self.model.current_time - self.t_delay():
+                if self.model.t_patients.count(self) == 0:
+                    self.model.t_patients.append(self)
+                    print(self.unique_id, 'tpa list')
         elif self.arrived and not self.in_treatment:
-            if self.model.current_time >= self.ct_time and not self.ct_treated:
-                if self.model.ct_patients.count(self) == 0:
-                    self.model.ct_patients.append(self)
-                    print(self.unique_id, 'ct list')
-            elif self.check_permitted() and not self.tpa_treated:
-                if self.model.current_time >= self.t_time and self.ct_treated:
-                #if self.last_treatment < self.model.current_time - self.t_delay():
-                    if self.model.t_patients.count(self) == 0:
-                        self.model.t_patients.append(self)
-                        print(self.unique_id, 'tpa list')
-            elif (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu:
+            if (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu:
                  if self.model.current_time >= self.icu_arrival_time:
                 #if self.last_treatment < self.model.current_time - self.icu_delay():
                     #if self.need_icu:
@@ -160,13 +160,8 @@ class Patient(Agent):
 
     def admission_time_normal(self):
         if random.random() < 0.956:
-            if self.unique_id != 10000:
-                print('normal', self.unique_id)
             return stats.skewnorm.rvs(4,146.3,269.8)
-
         else:
-            if self.unique_id != 10000:
-                print('gamma', self.unique_id)
             return stats.gamma.rvs(1.2,1002.4,320.2)
 
     def neuro_time_normal(self):
