@@ -77,8 +77,33 @@ class Hospital(Model):
             dict["Last Check"].append(self.convert_time(patient.last_checkin))
         return dict
 
+    def ticks(self):
+        dict = {'patient_id':[], 'time_of_stroke':[], 'ed_intime':[],'admittime':[], 'ct_scan':[], 'tpa_time':[],
+                'icu_intime':[], 'icu_outtime':[], 'neuro_intime':[]}
+        for patient in self.all_patients:
+            dict['patient_id'].append(patient.unique_id)
+            dict['time_of_stroke'].append(patient.time_of_stroke)
+            if patient.ed_arrived:
+                dict['ed_intime'].append(patient.hospital_arrival)
+            else:
+                dict['ed_intime'].append(None)
+            dict['admittime'].append(patient.admission_time)
+            dict['ct_scan'].append(patient.ct_time)
+            if patient.tpa_treated:
+                dict['tpa_time'].append(patient.t_time)
+            else:
+                dict['tpa_time'].append(None)
+            if patient.icu_arrived:
+                dict['icu_intime'].append(patient.icu_arrival_time)
+                dict['icu_outtime'].append(patient.icu_outtime)
+            else:
+                dict['icu_intime'].append(None)
+                dict['icu_outtime'].append(None)
+            dict['neuro_intime'].append(patient.neuro_time)
+        return dict
+
     def add_agents(self):
-        for i in range(20):
+        for i in range(100):
             patient = Patient(i, self)
             self.schedule.add(patient)
             self.all_patients.append(patient)
