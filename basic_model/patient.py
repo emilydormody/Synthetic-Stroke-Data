@@ -62,6 +62,9 @@ class Patient(Agent):
         self.bloodwork = 0
         self.last_checkin = 0
         self.patient_info = self.get_patient_info()
+        if self.unique_id <= 100:
+            print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
+                  self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
 
     def step(self):
         if self.model.current_time >= self.hospital_arrival and not (
@@ -74,24 +77,31 @@ class Patient(Agent):
             if self in self.model.ed_patients:
                 self.model.ed_patients.remove(self)
             self.last_treatment = self.model.current_time
-        elif self.model.current_time >= self.ct_time and not self.ct_treated:
-            if self.model.ct_patients.count(self) == 0:
-                self.model.ct_patients.append(self)
-        elif self.check_permitted() and not self.tpa_treated:
-            if self.model.current_time >= self.t_time and self.ct_treated:
+        elif not self.ct_treated:
+            if self.model.current_time >= self.ct_time:
+                if self.model.ct_patients.count(self) == 0:
+                    self.model.ct_patients.append(self)
+        elif self.check_permitted() and not self.tpa_treated and self.ct_treated:
+            if self.model.current_time >= self.t_time:
                 if self.model.t_patients.count(self) == 0:
                     self.model.t_patients.append(self)
         elif self.arrived and not self.in_treatment:
             if (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu:
                 if self.model.current_time >= self.icu_arrival_time:
+                    if self.model.current_time - 1 > self.icu_arrival_time:
+                        print('icu', self.icu_arrival_time, 'current', self.model.current_time, self.unique_id)
                     self.icu_arrival_time = self.model.current_time
                     self.icu_arrived = True
                     self.in_icu = True
             elif self.in_icu:
                 if self.model.current_time >= self.icu_outtime:
                     self.in_icu = False
+                    if self.model.current_time - 1 > self.icu_outtime:
+                        print('left icu', self.icu_outtime, 'current', self.model.current_time, self.unique_id)
             elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived:
                 if self.model.current_time >= self.neuro_time:
+                    if self.model.current_time - 1 > self.neuro_time:
+                        print('neuro', self.neuro_time, 'current', self.model.current_time, self.unique_id)
                     self.neuro_ward_arrived = True
                     self.neuro_time = self.model.current_time
                     self.last_treatment = self.model.current_time
@@ -181,7 +191,6 @@ class Patient(Agent):
                 time += self.icu_outtime + stats.gamma.rvs(0.832, 1.42, 2309.4)
         return time
 
-
     def icu_time_normal(self):
         n = random.random()
         if n < 0.157:
@@ -189,7 +198,7 @@ class Patient(Agent):
         elif 0.157 <= n < 0.615:
             return stats.skewnorm.rvs(2.84, 35.6, 59.7)
         else:
-            return stats.gamma.rvs(0.547,201,15138.3)
+            return stats.gamma.rvs(0.547, 201, 15138.3)
 
     def ct_time_normal(self):
         return stats.norm.rvs(20, 5)
@@ -206,7 +215,7 @@ class Patient(Agent):
     def icu_outtime_normal(self):
         n = random.random()
         if n < 0.285:
-            return stats.skewnorm.rvs(-2.82,2085.4,805.6)
+            return stats.skewnorm.rvs(-2.82, 2085.4, 805.6)
         elif 0.285 <= n < 0.923:
             return stats.gamma.rvs(0.891, 2404.5, 5009.6)
         else:
