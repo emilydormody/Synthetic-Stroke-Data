@@ -104,7 +104,7 @@ class Hospital(Model):
         return dict
 
     def add_agents(self):
-        for i in range(20):
+        for i in range(100):
             patient = Patient(i, self)
             self.schedule.add(patient)
             self.all_patients.append(patient)

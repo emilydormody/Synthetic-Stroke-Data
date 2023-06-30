@@ -84,17 +84,14 @@ class Patient(Agent):
         elif self.arrived and not self.in_treatment:
             if (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu:
                 if self.model.current_time >= self.icu_arrival_time:
-                    print('icu', self.icu_arrival_time, 'current', self.model.current_time, self.unique_id)
                     self.icu_arrival_time = self.model.current_time
                     self.icu_arrived = True
                     self.in_icu = True
             elif self.in_icu:
                 if self.model.current_time >= self.icu_outtime:
                     self.in_icu = False
-                    print('left icu', self.icu_outtime, 'current', self.model.current_time, self.unique_id)
             elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived:
                 if self.model.current_time >= self.neuro_time:
-                    print('neuro', self.neuro_time, 'current', self.model.current_time, self.unique_id)
                     self.neuro_ward_arrived = True
                     self.neuro_time = self.model.current_time
                     self.last_treatment = self.model.current_time

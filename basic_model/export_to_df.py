@@ -24,5 +24,5 @@ def export_to_pandas(model):
     print(df.info())
     print(df.head())
 
-    df.sort_values(by='Arrival Time').to_csv('C:/Users/emily/NSERC/files/stroke_model_data.csv')
-    pd.DataFrame(data=model.ticks()).to_csv('C:/Users/emily/NSERC/files/data_minutes.csv')
+    df.sort_values(by='Arrival Time').to_csv('~/Documents/NSERC/files/stroke_model_data.csv')
+    pd.DataFrame(data=model.ticks()).to_csv('~/Documents/NSERC/files/data_minutes.csv')

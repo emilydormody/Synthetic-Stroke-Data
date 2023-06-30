@@ -4,7 +4,7 @@ from export_to_df import *
 
 def main():
     h = Hospital()
-    for i in range(10000):
+    for i in range(30000):
         h.step()
 
     export_to_pandas(h)
