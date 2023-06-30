@@ -27,6 +27,7 @@ class CTScan(Specialist):
                 self.current_patient = None
 
 
+
 class TPA(Specialist):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
@@ -48,6 +49,7 @@ class TPA(Specialist):
                 self.current_patient.in_treatment = False
                 self.current_patient.tpa_treated = True
                 self.current_patient = None
+
         else:
             for patient in self.model.t_patients:
                 if not patient.check_permitted():

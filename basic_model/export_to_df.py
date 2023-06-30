@@ -23,9 +23,6 @@ def export_to_pandas(model):
     df["Blood Work Time"] = pd.to_datetime(df["Blood Work Time"])
     print(df.info())
     print(df.head())
-    # df2 = pd.DataFrame()
-    # df2['ct_time'] = (df['CT Scan Time'] - df['Arrival Time']).dt.total_seconds() / 60
-    # df2['ct_time']
 
-    df.sort_values(by='Arrival Time').to_csv('~/Downloads/stroke_model_data.csv')
+    df.sort_values(by='Arrival Time').to_csv('C:/Users/emily/NSERC/files/stroke_model_data.csv')
     pd.DataFrame(data=model.ticks()).to_csv('C:/Users/emily/NSERC/files/data_minutes.csv')
