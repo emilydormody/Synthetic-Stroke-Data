@@ -21,7 +21,7 @@ class Patient(Agent):
             self.admission_time = self.hospital_arrival
         else:
             self.admission_time = self.hospital_arrival + self.admission_time_normal()
-        self.time_of_stroke = self.hospital_arrival - random.randint(60, 150) - np.random.normal(60, 15)
+        self.time_of_stroke = self.hospital_arrival - random.randint(120, 150) - np.random.normal(60, 15)
         self.ct_time = self.hospital_arrival + self.ct_time_normal()
         self.ct_treated = False
         self.t_time = self.hospital_arrival + self.tpa_time_normal()

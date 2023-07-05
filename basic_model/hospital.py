@@ -76,7 +76,7 @@ class Hospital(Model):
 
     def ticks(self):
         dict = {'patient_id': [], 'time_of_stroke': [], 'ed_intime': [], 'admittime': [], 'ct_scan': [], 'tpa_time': [],
-                'icu_intime': [], 'icu_outtime': [], 'neuro_intime': [], 'neuro_outtime': []}
+                'icu_intime': [], 'icu_outtime': [], 'icu_arrived': [], 'neuro_intime': [], 'neuro_outtime': []}
         for patient in self.all_patients:
             dict['patient_id'].append(patient.unique_id)
             dict['time_of_stroke'].append(patient.time_of_stroke)
@@ -91,9 +91,11 @@ class Hospital(Model):
             else:
                 dict['tpa_time'].append(None)
             if patient.icu_arrived:
+                dict['icu_arrived'].append(True)
                 dict['icu_intime'].append(patient.icu_arrival_time)
                 dict['icu_outtime'].append(patient.icu_outtime)
             else:
+                dict['icu_arrived'].append(False)
                 dict['icu_intime'].append(None)
                 dict['icu_outtime'].append(None)
             dict['neuro_intime'].append(patient.neuro_time)
