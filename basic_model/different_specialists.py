@@ -46,8 +46,6 @@ class TPA(Specialist):
                         if self.model.current_time - 1 > self.current_patient.t_time:
                             self.current_patient.t_time = self.model.current_time
                         self.current_patient.in_treatment = True
-                    else:
-                        patient.tpa_permitted = False
         else:
             for patient in self.model.t_patients:
                 if not patient.check_permitted():

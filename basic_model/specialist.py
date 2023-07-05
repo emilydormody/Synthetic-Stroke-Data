@@ -20,7 +20,7 @@ class Specialist(Agent):
         self.shift_end = time(end)
 
     def working_hours(self):
-        current = (self.model.date + timedelta(minutes=self.model.current_time)).time()
+        current = (self.model.start_date + timedelta(minutes=self.model.current_time)).time()
         if self.same_time(current, self.shift_start):
             self.daily_stroke_patients = random.randint(2, 8)
         if self.daily_stroke_patients == 0:

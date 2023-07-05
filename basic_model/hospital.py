@@ -14,7 +14,7 @@ class Hospital(Model):
         self.t_patients = []
         self.neuro_patients = []
         self.all_patients = []
-        self.date = datetime.datetime.now()
+        self.start_date = datetime.datetime.now()
         self.add_agents()
 
     def step(self):
@@ -24,7 +24,7 @@ class Hospital(Model):
     def convert_time(self, time):
         if time == 0 or time > 30000:
             return None
-        date = self.date + datetime.timedelta(minutes=time)
+        date = self.start_date + datetime.timedelta(minutes=time)
         return str(date)[0:19]
 
     def patient_info(self):
@@ -114,6 +114,8 @@ class Hospital(Model):
         self.schedule.add(ct)
         tpa = TPA(610, self)
         tpa.set_schedule(8, 20)
+        tpa2 = TPA(611, self)
+        tpa2.set_schedule(20,8)
         ocu = OccupationalTherapist(620, self)
         ocu.set_schedule(8, 16)
         phys1 = PhysioTherapist(630, self)
@@ -147,6 +149,7 @@ class Hospital(Model):
             self.schedule.add(nurse)
             nurse.set_schedule(20, 8)
         self.schedule.add(tpa)
+        self.schedule.add(tpa2)
         self.schedule.add(ocu)
         self.schedule.add(phys1)
         self.schedule.add(phys2)
