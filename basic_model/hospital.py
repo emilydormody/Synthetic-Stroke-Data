@@ -2,7 +2,7 @@ from mesa import Agent, Model
 import mesa.time
 import datetime
 from patient import Patient
-from different_specialists import*
+from different_specialists import *
 
 
 class Hospital(Model):
@@ -17,24 +17,21 @@ class Hospital(Model):
         self.date = datetime.datetime.now()
         self.add_agents()
 
-
     def step(self):
         self.schedule.step()
         self.current_time += 1
 
-
     def convert_time(self, time):
-        if time == 0:
+        if time == 0 or time > 30000:
             return None
-        date = self.date+datetime.timedelta(minutes=time)
+        date = self.date + datetime.timedelta(minutes=time)
         return str(date)[0:19]
 
-
     def patient_info(self):
-        dict = {"Patient Id": [], "Age": [], "Gender": [], "Time of Stroke": [], "ED Arrival Time":[],
+        dict = {"Patient Id": [], "Age": [], "Gender": [], "Time of Stroke": [], "ED Arrival Time": [],
                 "Arrival Time": [], "CT Scan Time": [],
-                "TPA Treatment Time": [],"Reason for Rejecting TPA": [], "ICU Arrival Time": [],
-                "ICU Checkout Time": [],"Neurology Ward Arrival Time": [],
+                "TPA Treatment Time": [], "Reason for Rejecting TPA": [], "ICU Arrival Time": [],
+                "ICU Checkout Time": [], "Neurology Ward Arrival Time": [],
                 "Occupational Therapist Visit": [],
                 "Speech Pathologist Visit": [], "Physiotherapist Visit": [], "Dietitian Visit": [],
                 "Social Worker Visit": [],
@@ -78,8 +75,8 @@ class Hospital(Model):
         return dict
 
     def ticks(self):
-        dict = {'patient_id':[], 'time_of_stroke':[], 'ed_intime':[],'admittime':[], 'ct_scan':[], 'tpa_time':[],
-                'icu_intime':[], 'icu_outtime':[], 'neuro_intime':[], 'neuro_outtime':[]}
+        dict = {'patient_id': [], 'time_of_stroke': [], 'ed_intime': [], 'admittime': [], 'ct_scan': [], 'tpa_time': [],
+                'icu_intime': [], 'icu_outtime': [], 'neuro_intime': [], 'neuro_outtime': []}
         for patient in self.all_patients:
             dict['patient_id'].append(patient.unique_id)
             dict['time_of_stroke'].append(patient.time_of_stroke)
@@ -134,7 +131,7 @@ class Hospital(Model):
         neuro = Neurologist(670, self)
         neuro1 = Neurologist(671, self)
         neuro.set_schedule(8, 20)
-        neuro1.set_schedule(20,8)
+        neuro1.set_schedule(20, 8)
         cd = Cardiologist(680, self)
         cd.set_schedule(8, 16)
         for i in range(5):
@@ -146,7 +143,7 @@ class Hospital(Model):
             self.schedule.add(nurse)
             nurse.set_schedule(8, 20)
         for i in range(4):
-            nurse = Nurse(6104 +i, self)
+            nurse = Nurse(6104 + i, self)
             self.schedule.add(nurse)
             nurse.set_schedule(20, 8)
         self.schedule.add(tpa)
