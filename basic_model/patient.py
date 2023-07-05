@@ -106,7 +106,7 @@ class Patient(Agent):
         if self.tpa_denied:
             return False
         else:
-            if self.model.current_time - self.time_of_stroke <= 270:
+            if self.model.current_time - self.time_of_stroke <= 270 and self.model.current_time + 20 <= self.neuro_time:
                 self.tpa_permitted = True
             else:
                 self.tpa_permitted = False
@@ -180,13 +180,13 @@ class Patient(Agent):
         if self.icu_outtime == 0:
             time = self.admission_time
             if n < 0.1:
-                time += stats.skewnorm.rvs(2.81, 0.762, 0.7)
+                time += abs(stats.skewnorm.rvs(2.81, 0.762, 0.7))
             elif 0.1 <= n < 0.54:
-                time += stats.skewnorm.rvs(2.35, 45.6, 49)
+                time += abs(stats.skewnorm.rvs(2.35, 45.6, 49))
             elif 0.54 <= n < 0.878:
-                time += stats.gamma.rvs(1.74, 95.5, 1692.1)
+                time += abs(stats.gamma.rvs(1.74, 95.5, 1692.1))
             else:
-                time += stats.gamma.rvs(0.908, 10090.3, 7966.6)
+                time += abs(stats.gamma.rvs(0.908, 10090.3, 7966.6))
         else:
             time = self.icu_outtime
             if n < 0.0388:
