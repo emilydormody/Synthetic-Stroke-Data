@@ -18,7 +18,8 @@ class CTScan(Specialist):
             if self.current_patient is None:
                 if len(self.model.ct_patients) != 0:
                     self.current_patient = self.model.ct_patients.pop(0)
-                    self.current_patient.ct_time = self.model.current_time
+                    if self.model.current_time - 1 > self.current_patient.ct_time:
+                        self.current_patient.ct_time = self.model.current_time
                     self.current_patient.in_treatment = True
             elif self.current_patient.ct_time < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
@@ -40,7 +41,8 @@ class TPA(Specialist):
                     patient = self.model.t_patients.pop(0)
                     if patient.check_permitted():
                         self.current_patient = patient
-                        self.current_patient.t_time = self.model.current_time
+                        if self.model.current_time - 1 > self.current_patient.t_time:
+                            self.current_patient.t_time = self.model.current_time
                         self.current_patient.in_treatment = True
                     else:
                         patient.tpa_permitted = False
