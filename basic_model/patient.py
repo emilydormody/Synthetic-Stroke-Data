@@ -32,7 +32,7 @@ class Patient(Agent):
         else:
             self.transport = None
 
-        self.ct_time = self.hospital_arrival + self.ct_time_normal()
+        self.ct_time = self.ct_time_normal()
         self.ct_treated = False
         self.t_time = self.hospital_arrival + self.tpa_time_normal()
         self.tpa_treated = False
