@@ -16,17 +16,22 @@ class Patient(Agent):
         else:
             self.gender = "F"
         self.age = random.randint(20, 91)
+
         self.hospital_arrival = random.randint(300, 8000) + random.random()
         if random.random() >= 0.75:
             self.admission_time = self.hospital_arrival
         else:
             self.admission_time = self.hospital_arrival + self.admission_time_normal()
         self.time_of_stroke = self.hospital_arrival - random.randint(120, 150) - np.random.normal(90, 15)
-        if random.random() <= 0.62:
-            self.transport = "ambulance"
-            self.time_of_stroke += 30
+        if self.admission_time != self.hospital_arrival:
+            if random.random() <= 0.62:
+                self.transport = "ambulance"
+                self.time_of_stroke += 30
+            else:
+                self.transport = "walkin"
         else:
-            self.transport = "walkin"
+            self.transport = None
+
         self.ct_time = self.hospital_arrival + self.ct_time_normal()
         self.ct_treated = False
         self.t_time = self.hospital_arrival + self.tpa_time_normal()
@@ -36,6 +41,7 @@ class Patient(Agent):
             self.tpa_denied = True
         else:
             self.tpa_denied = False
+
         if random.random() >= 0.5:
             self.need_icu = True
             self.icu_arrival_time = self.admission_time + self.icu_time_normal()
@@ -44,15 +50,17 @@ class Patient(Agent):
             self.need_icu = False
             self.icu_arrival_time = 0
             self.icu_outtime = 0
+
         self.ed_arrived = False
         self.arrived = False
         self.icu_arrived = False
         self.last_treatment = -1
         self.in_treatment = False
         self.in_icu = False
+        self.neuro_ward_arrived = False
+
         self.neuro_time = self.neuro_time_normal()
         self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
-        self.neuro_ward_arrived = False
         self.occupational_visit = 0
         self.speech_visit = 0
         self.physio_visit = 0
@@ -66,6 +74,7 @@ class Patient(Agent):
         self.cardiologist_visit = 0
         self.bloodwork = 0
         self.last_checkin = 0
+
         self.patient_info = self.get_patient_info()
         if self.unique_id <= 100:
             print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
@@ -208,7 +217,10 @@ class Patient(Agent):
             return stats.gamma.rvs(0.547, 201, 15138.3)
 
     def ct_time_normal(self):
-        return stats.norm.rvs(20, 5)
+        if self.hospital_arrival == self.admission_time or random.random() <= 0.379:
+            return self.hospital_arrival + stats.norm.rvs(15, 5)
+        else:
+            return self.admission_time + stats.norm.rvs(15,5)
 
     def tpa_time_normal(self):
         return stats.norm.rvs(45, 5)
