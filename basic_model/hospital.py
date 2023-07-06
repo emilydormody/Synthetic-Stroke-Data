@@ -29,7 +29,7 @@ class Hospital(Model):
 
     def patient_info(self):
         dict = {"Patient Id": [], "Age": [], "Gender": [], "Time of Stroke": [], "ED Arrival Time": [],
-                "Arrival Time": [], "CT Scan Time": [],
+                "Arrival Time": [], "Arrival Transport": [], "CT Scan Time": [],
                 "TPA Treatment Time": [], "Reason for Rejecting TPA": [], "ICU Arrival Time": [],
                 "ICU Checkout Time": [], "Neurology Ward Arrival Time": [],
                 "Occupational Therapist Visit": [],
@@ -46,6 +46,7 @@ class Hospital(Model):
             else:
                 dict["ED Arrival Time"].append(None)
             dict["Arrival Time"].append(self.convert_time(patient.admission_time))
+            dict["Arrival Transport"].append(patient.transport)
             dict["CT Scan Time"].append(self.convert_time(patient.ct_time))
             if patient.tpa_treated == True:
                 dict["TPA Treatment Time"].append(self.convert_time(patient.t_time))

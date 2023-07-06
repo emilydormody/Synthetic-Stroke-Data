@@ -21,7 +21,12 @@ class Patient(Agent):
             self.admission_time = self.hospital_arrival
         else:
             self.admission_time = self.hospital_arrival + self.admission_time_normal()
-        self.time_of_stroke = self.hospital_arrival - random.randint(120, 150) - np.random.normal(60, 15)
+        self.time_of_stroke = self.hospital_arrival - random.randint(120, 150) - np.random.normal(90, 15)
+        if random.random() <= 0.62:
+            self.transport = "ambulance"
+            self.time_of_stroke += 30
+        else:
+            self.transport = "walkin"
         self.ct_time = self.hospital_arrival + self.ct_time_normal()
         self.ct_treated = False
         self.t_time = self.hospital_arrival + self.tpa_time_normal()
@@ -106,7 +111,7 @@ class Patient(Agent):
         if self.tpa_denied:
             return False
         else:
-            if self.model.current_time - self.time_of_stroke <= 270 and self.model.current_time + 20 <= self.neuro_time:
+            if self.model.current_time - self.time_of_stroke <= 270:
                 self.tpa_permitted = True
             else:
                 self.tpa_permitted = False
