@@ -22,7 +22,7 @@ class Hospital(Model):
         self.current_time += 1
 
     def convert_time(self, time):
-        if time == 0 or time > 30000:
+        if time <= 0 or time > 30000:
             return None
         date = self.start_date + datetime.timedelta(minutes=time)
         return str(date)[0:19]
@@ -77,7 +77,7 @@ class Hospital(Model):
 
     def ticks(self):
         dict = {'patient_id': [], 'time_of_stroke': [], 'ed_intime': [], 'admittime': [], 'ct_scan': [], 'tpa_time': [],
-                'icu_intime': [], 'icu_outtime': [], 'icu_arrived': [], 'neuro_intime': [], 'neuro_outtime': []}
+                'icu_intime': [], 'icu_outtime': [], 'icu_arrived': [], 'neuro_intime': [], 'physio': [], 'neuro_outtime': []}
         for patient in self.all_patients:
             dict['patient_id'].append(patient.unique_id)
             dict['time_of_stroke'].append(patient.time_of_stroke)
@@ -101,6 +101,10 @@ class Hospital(Model):
                 dict['icu_outtime'].append(None)
             dict['neuro_intime'].append(patient.neuro_time)
             dict['neuro_outtime'].append(patient.neuro_outtime)
+            if patient.physio_visit <= 30000:
+                dict['physio'].append(patient.physio_visit)
+            else:
+                dict['physio'].append(None)
         return dict
 
     def add_agents(self):

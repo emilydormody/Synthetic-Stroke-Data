@@ -104,10 +104,11 @@ class PhysioTherapist(Specialist):
                 else:
                     for i in np.random.permutation(len(self.model.neuro_patients)):
                         patient = self.model.neuro_patients[i]
-                        if patient.last_treatment < self.model.current_time - 10:
-                            if patient.physio_visit == 0 and not patient.in_treatment:
+                        if not patient.in_treatment:
+                            if self.model.current_time >= patient.physio_visit:
                                 self.current_patient = patient
-                                patient.physio_visit = self.model.current_time
+                                if self.model.current_time -1 > self.current_patient.physio_visit:
+                                    self.current_patient.physio_visit = self.model.current_time
                                 self.current_patient.in_treatment = True
                                 self.busy = True
                                 self.daily_stroke_patients -= 1

@@ -23,7 +23,8 @@ def export_to_pandas(model):
     df["Blood Work Time"] = pd.to_datetime(df["Blood Work Time"])
     print(df.info())
     print(df.head())
+    print(df["Physiotherapist Visit"])
 
-    df.sort_values(by='Arrival Time').to_csv('~/Documents/NSERC/files/stroke_model_data.csv')
-    pd.DataFrame(data=model.ticks()).to_csv('~/Documents/NSERC/files/data_minutes.csv')
-    #pd.DataFrame(data=model.ticks()).to_csv('~/Downloads/data_minutes.csv')
+    #df.sort_values(by='Arrival Time').to_csv('~/Documents/NSERC/files/stroke_model_data.csv')
+    #pd.DataFrame(data=model.ticks()).to_csv('~/Documents/NSERC/files/data_minutes.csv')
+    pd.DataFrame(data=model.ticks()).to_csv('~/Downloads/data_minutes.csv')

@@ -64,7 +64,10 @@ class Patient(Agent):
         self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
         self.occupational_visit = 0
         self.speech_visit = 0
-        self.physio_visit = 0
+        if random.random() >= 0.56:
+            self.physio_visit = self.neuro_time + self.physio_time_normal()
+        else:
+            self.physio_visit = 30001
         self.diet_visit = 0
         self.social_worker_visit = 0
         self.neuro_visit = 0
@@ -202,5 +205,16 @@ class Patient(Agent):
             return stats.gamma.rvs(0.891, 2404.5, 5009.6)
         else:
             return stats.gamma.rvs(1.05, 20001, 11464)
+
+    def physio_time_normal(self):
+        n = random.random()
+        if n < 0.469:
+            return stats.gamma.rvs(1.47, 0.13,19)
+        elif 0.469 <= n < 0.58:
+            return stats.gamma.rvs(0.883, 100.7,138.6)
+        elif 0.58 <= n < 0.943:
+            return stats.gamma.rvs(1.02, 500.6,1120.3)
+        else:
+            return stats.gamma.rvs(0.828, 5024.8, 3719.8)
 
 
