@@ -48,7 +48,7 @@ class Hospital(Model):
             dict["Arrival Time"].append(self.convert_time(patient.admission_time))
             dict["Arrival Transport"].append(patient.transport)
             dict["CT Scan Time"].append(self.convert_time(patient.ct_time))
-            if patient.tpa_treated == True:
+            if patient.tpa_treated:
                 dict["TPA Treatment Time"].append(self.convert_time(patient.t_time))
                 reason = None
             else:
@@ -118,7 +118,7 @@ class Hospital(Model):
         tpa = TPA(610, self)
         tpa.set_schedule(8, 20)
         tpa2 = TPA(611, self)
-        tpa2.set_schedule(20,8)
+        tpa2.set_schedule(20, 8)
         ocu = OccupationalTherapist(620, self)
         ocu.set_schedule(8, 16)
         phys1 = PhysioTherapist(630, self)

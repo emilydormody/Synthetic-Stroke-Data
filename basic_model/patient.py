@@ -17,6 +17,7 @@ class Patient(Agent):
             self.gender = "F"
         self.age = random.randint(20, 91)
 
+
         self.hospital_arrival = random.randint(300, 8000) + random.random()
         if random.random() >= 0.75:
             self.admission_time = self.hospital_arrival
@@ -32,7 +33,7 @@ class Patient(Agent):
         else:
             self.transport = None
 
-        self.ct_time = self.ct_time_normal()
+        self.ct_time = self.hospital_arrival + self.ct_time_normal()
         self.ct_treated = False
         self.t_time = self.hospital_arrival + self.tpa_time_normal()
         self.tpa_treated = False
@@ -75,7 +76,6 @@ class Patient(Agent):
         self.bloodwork = 0
         self.last_checkin = 0
 
-        self.patient_info = self.get_patient_info()
         if self.unique_id <= 100:
             print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
                   self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
@@ -97,14 +97,14 @@ class Patient(Agent):
                     if self.model.ct_patients.count(self) == 0:
                         self.model.ct_patients.append(self)
             elif self.check_permitted() and not self.tpa_treated and self.ct_treated:
-                if self.model.current_time >= self.t_time:
+                if self.model.current_time >= self.t_time-1:
                     if self.model.t_patients.count(self) == 0:
                         self.model.t_patients.append(self)
             elif self.arrived:
                 if (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu:
                     if self.model.current_time >= self.icu_arrival_time:
                         if self.model.current_time - 1 > self.icu_arrival_time:
-                            #print('icu', self.icu_arrival_time, 'current', self.model.current_time, self.unique_id)
+                            # print('icu', self.icu_arrival_time, 'current', self.model.current_time, self.unique_id)
                             self.icu_arrival_time = self.model.current_time
                         self.icu_arrived = True
                         self.in_icu = True
@@ -116,6 +116,8 @@ class Patient(Agent):
                 elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived:
                     if self.model.current_time >= self.neuro_time:
                         self.neuro_ward_admission()
+
+
     def check_permitted(self):
         if self.tpa_denied:
             return False
@@ -134,53 +136,17 @@ class Patient(Agent):
         self.model.neuro_patients.append(self)
 
     def get_patient_info(self):
-        dict = {}
-        dict["Blood Glucose"] = 0
-        dict["Temperature"] = 0
-        dict["Heart Rate"] = 0
-        dict["Respiratory Rate"] = 0
-        dict["Blood Pressure"] = 0
-        dict["Pulse Oximetry"] = 0
-        dict["Swallowing Ability"] = 0
-        dict["Swallowing Screen Result"] = None
-        dict["Diet Type"] = None
-        dict["Texture of Food"] = None
-        dict["Home/Family Situation"] = 0
-        dict["Mental State"] = 0
-        dict["Emotional State"] = 0
-        dict["Action Plan"] = 0
-        dict["Environment"] = 0
-        dict["Bath/Shower Ability"] = 0
-        dict["Dressing"] = 0
-        dict["Grooming"] = 0
-        dict["Toileting"] = 0
-        dict["Eating"] = 0
-        dict["Bed Mobility"] = 0
-        dict["Walking"] = 0
-        dict["Wheelchair Mobility"] = 0
-        dict["Cognition"] = 0
-        dict["Perception"] = 0
-        dict["Range of Motion"] = 0
-        dict["Balance"] = 0
-        dict["Sensation"] = 0
-        dict["Proprioception"] = 0
-        dict["Strength"] = 0
-        dict["Manual Dexterity"] = 0
-        dict["Coordination"] = 0
-        dict["Ashworth Scale Result"] = 0
-        dict["Accomodation"] = 0
-        dict["Hand Dominance"] = 0
-        dict["Pain"] = 0
-        dict["Communication"] = 0
-        dict["Vision"] = 0
-        dict["Hearing"] = 0
-        dict["Bowel/Bladder Functioning"] = 0
-        dict["Cardiopulmonary Functioning"] = 0
-        dict["Respiratory Functioning"] = 0
-        dict["Muscle Tone"] = 0
-        dict["Reflexes/Coordination"] = 0
-        dict["Speech Intelligibility"] = 0
-        dict["Oral Peripheral Exam Result"] = 0
+        dict = {"Blood Glucose": 0, "Temperature": 0, "Heart Rate": 0, "Respiratory Rate": 0, "Blood Pressure": 0,
+                "Pulse Oximetry": 0, "Swallowing Ability": 0, "Swallowing Screen Result": None, "Diet Type": None,
+                "Texture of Food": None, "Home/Family Situation": 0, "Mental State": 0, "Emotional State": 0,
+                "Action Plan": 0, "Environment": 0, "Bath/Shower Ability": 0, "Dressing": 0, "Grooming": 0,
+                "Toileting": 0, "Eating": 0, "Bed Mobility": 0, "Walking": 0, "Wheelchair Mobility": 0, "Cognition": 0,
+                "Perception": 0, "Range of Motion": 0, "Balance": 0, "Sensation": 0, "Proprioception": 0, "Strength": 0,
+                "Manual Dexterity": 0, "Coordination": 0, "Ashworth Scale Result": 0, "Accomodation": 0,
+                "Hand Dominance": 0, "Pain": 0, "Communication": 0, "Vision": 0, "Hearing": 0,
+                "Bowel/Bladder Functioning": 0, "Cardiopulmonary Functioning": 0, "Respiratory Functioning": 0,
+                "Muscle Tone": 0, "Reflexes/Coordination": 0, "Speech Intelligibility": 0,
+                "Oral Peripheral Exam Result": 0}
         return dict
 
     def admission_time_normal(self):
@@ -217,10 +183,7 @@ class Patient(Agent):
             return stats.gamma.rvs(0.547, 201, 15138.3)
 
     def ct_time_normal(self):
-        if self.hospital_arrival == self.admission_time or random.random() <= 0.379:
-            return self.hospital_arrival + stats.norm.rvs(15, 5)
-        else:
-            return self.admission_time + stats.norm.rvs(15,5)
+        return stats.norm.rvs(15, 5)
 
     def tpa_time_normal(self):
         return stats.norm.rvs(45, 5)
@@ -239,3 +202,5 @@ class Patient(Agent):
             return stats.gamma.rvs(0.891, 2404.5, 5009.6)
         else:
             return stats.gamma.rvs(1.05, 20001, 11464)
+
+
