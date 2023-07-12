@@ -64,10 +64,7 @@ class Patient(Agent):
         self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
         self.occupational_visit = 0
         self.speech_visit = 0
-        if random.random() >= 0.56:
-            self.physio_visit = self.neuro_time + self.physio_time_normal()
-        else:
-            self.physio_visit = 30001
+        self.physio_visit = self.neuro_time + self.physio_time_normal()
         self.diet_visit = 0
         self.social_worker_visit = 0
         self.neuro_visit = 0
