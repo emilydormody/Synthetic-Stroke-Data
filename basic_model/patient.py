@@ -75,11 +75,13 @@ class Patient(Agent):
         self.cardiologist_visit = self.cardiology_time_normal()
         self.bloodwork = 0
         self.last_checkin = 0
-        self.neuro_schedule = Scheduler()
-
         if self.unique_id <= 100:
-            print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
-                  self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
+            self.neuro_schedule = Scheduler()
+            self.add_neuro_events()
+
+        #if self.unique_id <= 100:
+            #print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
+                  #self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
 
     def step(self):
         if not self.in_treatment:
@@ -219,7 +221,7 @@ class Patient(Agent):
         if n < 0.2:  # 0 to 250 mins
             return stats.skewnorm.rvs(2.45, 44.7, 87)
         elif 0.2 <= n < 0.864:  # 250 to 20000 mins
-            return stats.gamma(0.847, 250.3, 5876.3)
+            return stats.gamma.rvs(0.847, 250.3, 5876.3)
         else:  # 20000 to 90000 mins
             return stats.gamma.rvs(0.915, 20011.6, 18547.4)
 
@@ -241,3 +243,10 @@ class Patient(Agent):
     def cardiology_time_normal(self):
         return stats.gamma.rvs(0.772, 22.6, 113337.4)
 
+    def add_neuro_events(self):
+        self.neuro_schedule.add_value(('pt', self.physio_visit))
+        self.neuro_schedule.add_value(('sw', self.social_worker_visit))
+        self.neuro_schedule.add_value(('ocu', self.occupational_visit))
+        self.neuro_schedule.add_value(('card', self.cardiologist_visit))
+        self.neuro_schedule.add_value(('slp', self.speech_visit))
+        self.neuro_schedule.filter_times()

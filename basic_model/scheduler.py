@@ -4,11 +4,7 @@ import random
 class Scheduler:
     def __init__(self):
         self.times_lst = []
-        self.add_values()
-        self.times_lst = insert_sort(self.times_lst)
-        self.filter_times()
         self.next_time_name = None
-        print(self.times_lst)
 
     def get_next_time(self, current):
         while self.times_lst[0] < current:
@@ -24,6 +20,13 @@ class Scheduler:
     def add_value(self, value):
         if type(value) is tuple:
             self.times_lst.append(value)
+            i = len(self.times_lst)-2
+            while self.times_lst[i][1] > value[1]:
+                self.times_lst[i+1] = self.times_lst[i]
+                self.times_lst[i] = value
+                i -= 1
+                if i < 0:
+                    return
 
     def filter_times(self):
         i = 0
@@ -31,18 +34,15 @@ class Scheduler:
             while self.times_lst[i][1] + 30 > self.times_lst[i+1][1]:
                 self.times_lst.remove(self.times_lst[i+1])
             i += 1
+        print(self.times_lst)
 
 
-def insert_sort(lst):
-    for i in range(1, len(lst)):
-        key = lst[i]
-        j = i - 1
-        while j >= 0 and lst[j][1] > key[1]:
-            lst[j + 1] = lst[j]
-            j -= 1
-        lst[j + 1] = key
-    return lst
 
 
 s = Scheduler()
-#s.add_values()
+s.add_value(('one',1))
+s.add_value(('six', 6))
+s.add_value(('two', 2))
+s.add_value(('eight', 8))
+s.add_value(('three', 3))
+s.add_value(('four', 4))
