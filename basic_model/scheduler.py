@@ -11,7 +11,7 @@ class NeuroScheduler:
         try:
             if len(self.times_lst) <= 0:
                 return None
-            while self.times_lst[0][1] < current:
+            while self.times_lst[0][1] < current - 30:
                 self.times_lst.pop(0)
                 if len(self.times_lst) <= 0:
                     return None
