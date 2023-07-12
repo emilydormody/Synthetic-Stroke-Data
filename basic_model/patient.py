@@ -76,7 +76,7 @@ class Patient(Agent):
         self.bloodwork = 0
         self.last_checkin = 0
         if self.unique_id <= 100:
-            self.neuro_schedule = NeuroScheduler()
+            self.neuro_schedule = NeuroScheduler(self.unique_id)
             self.add_neuro_events()
 
         #if self.unique_id <= 100:

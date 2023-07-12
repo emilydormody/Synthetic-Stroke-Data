@@ -73,14 +73,17 @@ class OccupationalTherapist(Specialist):
                 else:
                     for i in np.random.permutation(len(self.model.neuro_patients)):
                         patient = self.model.neuro_patients[i]
-                        if patient.last_treatment < self.model.current_time - 10:
-                            if patient.occupational_visit == 0 and not patient.in_treatment:
-                                self.current_patient = patient
-                                patient.occupational_visit = self.model.current_time
-                                self.current_patient.in_treatment = True
-                                self.busy = True
-                                self.daily_stroke_patients -= 1
-                                break
+                        next = patient.neuro_schedule.get_next_time(self.model.current_time)
+                        if next is not None:
+                            if self.model.current_time >= next:
+                                if patient.neuro_schedule.get_next_name() == 'ocu' and not patient.in_treatment:
+                                    self.current_patient = patient
+                                    if self.model.current_time -1 > self.current_patient.occupational_visit:
+                                        patient.occupational_visit = self.model.current_time
+                                    self.current_patient.in_treatment = True
+                                    self.busy = True
+                                    self.daily_stroke_patients -= 1
+                                    break
             elif self.current_patient.occupational_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False

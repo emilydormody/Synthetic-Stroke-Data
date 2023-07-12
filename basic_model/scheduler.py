@@ -2,15 +2,23 @@ import random
 
 
 class NeuroScheduler:
-    def __init__(self):
+    def __init__(self, patient):
         self.times_lst = []
         self.next_time_name = None
+        self.patent = patient
 
     def get_next_time(self, current):
-        while self.times_lst[0] < current:
-            self.times_lst.pop(0)
-        self.next_time_name = self.times_lst[0][0]
-        return self.times_lst[0][1]
+        try:
+            if len(self.times_lst) <= 0:
+                return None
+            while self.times_lst[0][1] < current:
+                self.times_lst.pop(0)
+                if len(self.times_lst) <= 0:
+                    return None
+            self.next_time_name = self.times_lst[0][0]
+            return self.times_lst[0][1]
+        except IndexError:
+            print(self.patent, current)
 
     def get_next_name(self):
         if self.next_time_name != self.times_lst[0][0]:
@@ -33,16 +41,18 @@ class NeuroScheduler:
         while i < len(self.times_lst)-1:
             while self.times_lst[i][1] + 30 > self.times_lst[i+1][1]:
                 self.times_lst.remove(self.times_lst[i+1])
+                if i == len(self.times_lst)-1:
+                    break
             i += 1
-        print(self.times_lst)
+        print(self.patent,self.times_lst)
 
 
 
-
-s = Scheduler()
-s.add_value(('one',1))
-s.add_value(('six', 6))
-s.add_value(('two', 2))
-s.add_value(('eight', 8))
-s.add_value(('three', 3))
-s.add_value(('four', 4))
+s = NeuroScheduler(5)
+s.add_value(('one',10))
+s.add_value(('six', 60))
+s.add_value(('two', 20))
+s.add_value(('eight', 30))
+s.add_value(('three', 93))
+s.add_value(('four', 97))
+s.filter_times()
