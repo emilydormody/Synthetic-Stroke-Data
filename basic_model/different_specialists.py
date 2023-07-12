@@ -77,9 +77,10 @@ class OccupationalTherapist(Specialist):
                         if next is not None:
                             if self.model.current_time >= next:
                                 if patient.neuro_schedule.get_next_name() == 'ocu' and not patient.in_treatment:
+                                    print('ocu', patient.unique_id)
                                     self.current_patient = patient
-                                    if self.model.current_time -1 > self.current_patient.occupational_visit:
-                                        patient.occupational_visit = self.model.current_time
+                                    #if self.model.current_time -1 > self.current_patient.occupational_visit:
+                                    patient.occupational_visit = self.model.current_time
                                     self.current_patient.in_treatment = True
                                     self.busy = True
                                     self.daily_stroke_patients -= 1

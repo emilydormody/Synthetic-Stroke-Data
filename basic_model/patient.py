@@ -62,11 +62,11 @@ class Patient(Agent):
 
         self.neuro_time = self.neuro_time_normal()
         self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
-        self.occupational_visit = self.occupational_time_normal()
-        self.speech_visit = self.speech_time_normal()
-        self.physio_visit = self.physio_time_normal()
+        self.occupational_visit = self.admission_time + self.occupational_time_normal()
+        self.speech_visit = self.admission_time + self.speech_time_normal()
+        self.physio_visit = self.admission_time + self.physio_time_normal()
         self.diet_visit = 0
-        self.social_worker_visit = self.social_worker_normal()
+        self.social_worker_visit = self.admission_time + self.social_worker_normal()
         self.neuro_visit = 0
         if random.randint(0, 3) == 0:
             self.need_cardiologist = True
@@ -244,9 +244,9 @@ class Patient(Agent):
         return stats.gamma.rvs(0.772, 22.6, 113337.4)
 
     def add_neuro_events(self):
-        self.neuro_schedule.add_value(('pt', self.physio_visit))
-        self.neuro_schedule.add_value(('sw', self.social_worker_visit))
+        # self.neuro_schedule.add_value(('pt', self.physio_visit))
+        # self.neuro_schedule.add_value(('sw', self.social_worker_visit))
         self.neuro_schedule.add_value(('ocu', self.occupational_visit))
-        self.neuro_schedule.add_value(('card', self.cardiologist_visit))
-        self.neuro_schedule.add_value(('slp', self.speech_visit))
+        # self.neuro_schedule.add_value(('card', self.cardiologist_visit))
+        # self.neuro_schedule.add_value(('slp', self.speech_visit))
         self.neuro_schedule.filter_times()
