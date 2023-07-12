@@ -1,7 +1,7 @@
 import random
 
 
-class Scheduler:
+class NeuroScheduler:
     def __init__(self):
         self.times_lst = []
         self.next_time_name = None
