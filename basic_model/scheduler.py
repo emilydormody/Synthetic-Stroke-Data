@@ -6,7 +6,9 @@ class Scheduler:
         self.times_lst = []
         self.add_values()
         self.times_lst = insert_sort(self.times_lst)
+        self.filter_times()
         self.next_time_name = None
+        print(self.times_lst)
 
     def get_next_time(self, current):
         while self.times_lst[0] < current:
@@ -20,7 +22,14 @@ class Scheduler:
         return self.next_time_name
 
     def add_values(self):
-        self.times_lst = [('one', 1), ('three', 3), ('six', 6), ('two', 2)]
+        pass
+
+    def filter_times(self):
+        i = 0
+        while i < len(self.times_lst)-1:
+            while self.times_lst[i][1] + 30 > self.times_lst[i+1][1]:
+                self.times_lst.remove(self.times_lst[i+1])
+            i += 1
 
 
 def insert_sort(lst):
@@ -35,4 +44,4 @@ def insert_sort(lst):
 
 
 s = Scheduler()
-s.add_values()
+#s.add_values()
