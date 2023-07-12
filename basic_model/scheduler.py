@@ -21,8 +21,9 @@ class Scheduler:
             self.next_time_name = None
         return self.next_time_name
 
-    def add_values(self):
-        pass
+    def add_value(self, value):
+        if type(value) is tuple:
+            self.times_lst.append(value)
 
     def filter_times(self):
         i = 0

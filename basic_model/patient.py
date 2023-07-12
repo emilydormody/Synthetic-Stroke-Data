@@ -4,6 +4,7 @@ import random
 from mesa import Agent, Model
 import numpy as np
 from scipy import stats
+from scheduler import Scheduler
 
 
 class Patient(Agent):
@@ -16,7 +17,6 @@ class Patient(Agent):
         else:
             self.gender = "F"
         self.age = random.randint(20, 91)
-
 
         self.hospital_arrival = random.randint(300, 8000) + random.random()
         if random.random() >= 0.75:
@@ -62,19 +62,20 @@ class Patient(Agent):
 
         self.neuro_time = self.neuro_time_normal()
         self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
-        self.occupational_visit = 0
-        self.speech_visit = 0
-        self.physio_visit = self.neuro_time + self.physio_time_normal()
+        self.occupational_visit = self.occupational_time_normal()
+        self.speech_visit = self.speech_time_normal()
+        self.physio_visit = self.physio_time_normal()
         self.diet_visit = 0
-        self.social_worker_visit = 0
+        self.social_worker_visit = self.social_worker_normal()
         self.neuro_visit = 0
         if random.randint(0, 3) == 0:
             self.need_cardiologist = True
         else:
             self.need_cardiologist = False
-        self.cardiologist_visit = 0
+        self.cardiologist_visit = self.cardiology_time_normal()
         self.bloodwork = 0
         self.last_checkin = 0
+        self.neuro_schedule = Scheduler()
 
         if self.unique_id <= 100:
             print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
@@ -97,7 +98,7 @@ class Patient(Agent):
                     if self.model.ct_patients.count(self) == 0:
                         self.model.ct_patients.append(self)
             elif self.check_permitted() and not self.tpa_treated and self.ct_treated:
-                if self.model.current_time >= self.t_time-1:
+                if self.model.current_time >= self.t_time - 1:
                     if self.model.t_patients.count(self) == 0:
                         self.model.t_patients.append(self)
             elif self.arrived:
@@ -116,7 +117,6 @@ class Patient(Agent):
                 elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived:
                     if self.model.current_time >= self.neuro_time:
                         self.neuro_ward_admission()
-
 
     def check_permitted(self):
         if self.tpa_denied:
@@ -206,12 +206,38 @@ class Patient(Agent):
     def physio_time_normal(self):
         n = random.random()
         if n < 0.469:
-            return stats.gamma.rvs(1.47, 0.13,19)
+            return stats.gamma.rvs(1.47, 0.13, 19)
         elif 0.469 <= n < 0.58:
-            return stats.gamma.rvs(0.883, 100.7,138.6)
+            return stats.gamma.rvs(0.883, 100.7, 138.6)
         elif 0.58 <= n < 0.943:
-            return stats.gamma.rvs(1.02, 500.6,1120.3)
+            return stats.gamma.rvs(1.02, 500.6, 1120.3)
         else:
             return stats.gamma.rvs(0.828, 5024.8, 3719.8)
 
+    def speech_time_normal(self):
+        n = random.random()
+        if n < 0.2:  # 0 to 250 mins
+            return stats.skewnorm.rvs(2.45, 44.7, 87)
+        elif 0.2 <= n < 0.864:  # 250 to 20000 mins
+            return stats.gamma(0.847, 250.3, 5876.3)
+        else:  # 20000 to 90000 mins
+            return stats.gamma.rvs(0.915, 20011.6, 18547.4)
+
+    def social_worker_normal(self):
+        if random.random() < 0.071:  # 20000 to 60000 mins
+            return stats.gamma.rvs(0.988, 20165.5, 9808.2)
+        else:  # 0 to 20000 mins
+            return stats.gamma.rvs(0.812, 0.117, 4461.4)
+
+    def occupational_time_normal(self):
+        n = random.random()
+        if n < 0.251: # 0 to 200
+            return stats.skewnorm.rvs(-0.664,120.3,51)
+        elif 0.251 <= n < 0.896: # 200 to 20000
+            return stats.gamma.rvs(0.918, 200.4, 4280.7)
+        else: # 20000 to 100000
+            return stats.gamma.rvs(0.872, 20001.8, 16391.2)
+
+    def cardiology_time_normal(self):
+        return stats.gamma.rvs(0.772, 22.6, 113337.4)
 
