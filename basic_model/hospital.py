@@ -22,6 +22,7 @@ class Hospital(Model):
         self.schedule.step()
         self.current_time += 1
 
+
     def convert_time(self, time):
         if time <= 0 or time > 30000:
             return None
@@ -124,8 +125,22 @@ class Hospital(Model):
         tpa.set_schedule(8, 20)
         tpa2 = TPA(611, self)
         tpa2.set_schedule(20, 8)
-        ocu = OccupationalTherapist(620, self)
-        ocu.set_schedule(8, 16)
+
+        for i in range(4):
+            ocu = OccupationalTherapist(620+i, self)
+            self.schedule.add(ocu)
+        for j in range(2):
+            ocu = OccupationalTherapist(624+j, self)
+            ocu.set_schedule(14,20)
+            self.schedule.add(ocu)
+        for k in range(2):
+            ocu = OccupationalTherapist(626+k, self)
+            ocu.set_schedule(20,5)
+            self.schedule.add(ocu)
+        ocu = OccupationalTherapist(628, self)
+        ocu.set_schedule(4,11)
+        self.schedule.add(ocu)
+
         phys1 = PhysioTherapist(630, self)
         phys1.set_schedule(8, 16)
         phys2 = PhysioTherapist(631, self)
@@ -160,7 +175,6 @@ class Hospital(Model):
             nurse.set_schedule(20, 8)
         self.schedule.add(tpa)
         self.schedule.add(tpa2)
-        self.schedule.add(ocu)
         self.schedule.add(phys1)
         self.schedule.add(phys2)
         self.schedule.add(phys3)

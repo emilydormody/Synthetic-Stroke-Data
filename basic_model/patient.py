@@ -62,20 +62,18 @@ class Patient(Agent):
 
         self.neuro_time = self.neuro_time_normal()
         self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
-        self.occupational_visit = 0
-        self.speech_visit = 0
-        if random.random() >= 0.56:
-            self.physio_visit = self.neuro_time + self.physio_time_normal()
-        else:
-            self.physio_visit = 30001
+        self.occupational_visit = self.neuro_time + self.occupational_time_normal()
+        self.ocu_visited = False
+        self.speech_visit = self.neuro_time + self.speech_time_normal()
+        self.physio_visit = self.neuro_time + self.physio_time_normal()
         self.diet_visit = 0
-        self.social_worker_visit = 0
+        self.social_worker_visit = self.neuro_time + self.social_worker_normal()
         self.neuro_visit = 0
         if random.randint(0, 3) == 0:
             self.need_cardiologist = True
         else:
             self.need_cardiologist = False
-        self.cardiologist_visit = 0
+        self.cardiologist_visit = self.neuro_time + self.cardiology_time_normal()
         self.bloodwork = 0
         self.last_checkin = 0
 
@@ -119,6 +117,9 @@ class Patient(Agent):
                 elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived:
                     if self.model.current_time >= self.neuro_time:
                         self.neuro_ward_admission()
+            if self.model.current_time + 5 >= self.occupational_visit and self.neuro_ward_arrived and not self.ocu_visited:
+                if self.model.ocu_patients.count(self) == 0:
+                    self.model.ocu_patients.append(self)
 
 
     def check_permitted(self):

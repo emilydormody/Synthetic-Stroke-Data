@@ -9,8 +9,8 @@ class Specialist(Agent):
         super().__init__(unique_id, model)
         self.name = unique_id
         self.model = model
-        self.shift_end = None
-        self.shift_start = None
+        self.shift_end = time(16)
+        self.shift_start = time(8)
         self.daily_stroke_patients = random.randint(2,8)
         self.busy = False
         self.current_patient = None

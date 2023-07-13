@@ -71,16 +71,19 @@ class OccupationalTherapist(Specialist):
                     self.current_patient.occupational_visit = self.model.current_time
                     self.busy = True
                 else:
-                    for i in np.random.permutation(len(self.model.neuro_patients)):
-                        patient = self.model.neuro_patients[i]
-                        if patient.last_treatment < self.model.current_time - 10:
-                            if patient.occupational_visit == 0 and not patient.in_treatment:
-                                self.current_patient = patient
-                                patient.occupational_visit = self.model.current_time
-                                self.current_patient.in_treatment = True
-                                self.busy = True
-                                self.daily_stroke_patients -= 1
-                                break
+                    for i in range(len(self.model.ocu_patients)):
+                        #patient = self.model.ocu_patients[i]
+                        # if patient.last_treatment < self.model.current_time - 10:
+                        #     if patient.occupational_visit == 0 and not patient.in_treatment:
+                        self.current_patient = self.model.ocu_patients.pop(0)
+                        self.current_patient.ocu_visited = True
+                        print(self.current_patient.unique_id, self.current_patient.occupational_visit, self.model.current_time)
+                        if self.model.current_time - 1 > self.current_patient.occupational_visit:
+                            self.current_patient.occupational_visit = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        self.busy = True
+                        self.daily_stroke_patients -= 1
+                        break
             elif self.current_patient.occupational_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
