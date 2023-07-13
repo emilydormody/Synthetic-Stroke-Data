@@ -65,15 +65,19 @@ class Patient(Agent):
         self.occupational_visit = self.neuro_time + self.occupational_time_normal()
         self.ocu_visited = False
         self.speech_visit = self.neuro_time + self.speech_time_normal()
+        self.speech_visited = False
         self.physio_visit = self.neuro_time + self.physio_time_normal()
+        self.physio_visited = False
         self.diet_visit = 0
         self.social_worker_visit = self.neuro_time + self.social_worker_normal()
+        self.sw_visited = False
         self.neuro_visit = 0
         if random.randint(0, 3) == 0:
             self.need_cardiologist = True
         else:
             self.need_cardiologist = False
         self.cardiologist_visit = self.neuro_time + self.cardiology_time_normal()
+        self.cardio_visited = False
         self.bloodwork = 0
         self.last_checkin = 0
 
@@ -117,9 +121,24 @@ class Patient(Agent):
                 elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived:
                     if self.model.current_time >= self.neuro_time:
                         self.neuro_ward_admission()
-            if self.model.current_time + 5 >= self.occupational_visit and self.neuro_ward_arrived and not self.ocu_visited:
-                if self.model.ocu_patients.count(self) == 0:
-                    self.model.ocu_patients.append(self)
+                else:
+                    if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
+                        if self.model.ocu_patients.count(self) == 0:
+                            self.model.ocu_patients.append(self)
+                    if self.model.current_time >= self.physio_visit -1 and not self.physio_visited:
+                        if self.model.physio_patients.count(self) == 0:
+                            self.model.physio_patients.append(self)
+                    if self.model.current_time >= self.speech_visit -1 and not self.speech_visited:
+                        if self.model.speech_patients.count(self) == 0:
+                            self.model.speech_patients.append(self)
+                    if self.model.current_time >= self.social_worker_visit -1 and not self.sw_visited:
+                        if self.model.social_work_patients.count(self) == 0:
+                            self.model.social_work_patients.append(self)
+                    if self.model.current_time >= self.cardiologist_visit -1 and not self.cardio_visited  and self.need_cardiologist:
+                        if self.model.cardio_patients.count(self) == 0:
+                            self.model.cardio_patients.append(self)
+
+
 
 
     def check_permitted(self):

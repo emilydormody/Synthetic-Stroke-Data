@@ -15,6 +15,10 @@ class Hospital(Model):
         self.neuro_patients = []
         self.all_patients = []
         self.ocu_patients = []
+        self.physio_patients = []
+        self.speech_patients = []
+        self.social_work_patients = []
+        self.cardio_patients = []
         self.start_date = datetime.datetime.now()
         self.add_agents()
 
@@ -79,7 +83,7 @@ class Hospital(Model):
 
     def ticks(self):
         dict = {'patient_id': [], 'time_of_stroke': [], 'ed_intime': [], 'admittime': [], 'ct_scan': [], 'tpa_time': [],
-                'icu_intime': [], 'icu_outtime': [], 'icu_arrived': [], 'neuro_intime': [], 'physio': [], 'neuro_outtime': []}
+                'icu_intime': [], 'icu_outtime': [], 'icu_arrived': [], 'neuro_intime': [], 'ocu': [], 'neuro_outtime': []}
         for patient in self.all_patients:
             dict['patient_id'].append(patient.unique_id)
             dict['time_of_stroke'].append(patient.time_of_stroke)
@@ -103,10 +107,10 @@ class Hospital(Model):
                 dict['icu_outtime'].append(None)
             dict['neuro_intime'].append(patient.neuro_time)
             dict['neuro_outtime'].append(patient.neuro_outtime)
-            if patient.physio_visit <= 30000:
-                dict['physio'].append(patient.physio_visit)
+            if patient.occupational_visit <= 30000:
+                dict['ocu'].append(patient.occupational_visit)
             else:
-                dict['physio'].append(None)
+                dict['ocu'].append(None)
         return dict
 
     def add_agents(self):
@@ -149,38 +153,38 @@ class Hospital(Model):
         phys3.set_schedule(16,8)
         sp = SpeechPathologist(640, self)
         sp.set_schedule(8, 16)
-        diet = Dietitian(650, self)
-        diet.set_schedule(8, 16)
+        # diet = Dietitian(650, self)
+        # diet.set_schedule(8, 16)
         sw1 = SocialWorker(660, self)
         sw1.set_schedule(8, 16)
         sw2 = SocialWorker(661, self)
         sw2.set_schedule(8, 16)
-        neuro = Neurologist(670, self)
-        neuro1 = Neurologist(671, self)
-        neuro.set_schedule(8, 20)
-        neuro1.set_schedule(20, 8)
+        # neuro = Neurologist(670, self)
+        # neuro1 = Neurologist(671, self)
+        # neuro.set_schedule(8, 20)
+        # neuro1.set_schedule(20, 8)
         cd = Cardiologist(680, self)
         cd.set_schedule(8, 16)
-        for i in range(5):
-            bw = BloodWork(690 + i, self)
-            self.schedule.add(bw)
-            bw.set_schedule(8, 16)
-        for i in range(4):
-            nurse = Nurse(6100 + i, self)
-            self.schedule.add(nurse)
-            nurse.set_schedule(8, 20)
-        for i in range(4):
-            nurse = Nurse(6104 + i, self)
-            self.schedule.add(nurse)
-            nurse.set_schedule(20, 8)
+        # for i in range(5):
+        #     bw = BloodWork(690 + i, self)
+        #     self.schedule.add(bw)
+        #     bw.set_schedule(8, 16)
+        # for i in range(4):
+        #     nurse = Nurse(6100 + i, self)
+        #     self.schedule.add(nurse)
+        #     nurse.set_schedule(8, 20)
+        # for i in range(4):
+        #     nurse = Nurse(6104 + i, self)
+        #     self.schedule.add(nurse)
+        #     nurse.set_schedule(20, 8)
         self.schedule.add(tpa)
         self.schedule.add(tpa2)
         self.schedule.add(phys1)
         self.schedule.add(phys2)
         self.schedule.add(phys3)
         self.schedule.add(sp)
-        self.schedule.add(diet)
+        #self.schedule.add(diet)
         self.schedule.add(sw1)
         self.schedule.add(sw2)
-        self.schedule.add(neuro)
+        #self.schedule.add(neuro)
         self.schedule.add(cd)

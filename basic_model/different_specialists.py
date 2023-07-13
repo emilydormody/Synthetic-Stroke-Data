@@ -77,7 +77,6 @@ class OccupationalTherapist(Specialist):
                         #     if patient.occupational_visit == 0 and not patient.in_treatment:
                         self.current_patient = self.model.ocu_patients.pop(0)
                         self.current_patient.ocu_visited = True
-                        print(self.current_patient.unique_id, self.current_patient.occupational_visit, self.model.current_time)
                         if self.model.current_time - 1 > self.current_patient.occupational_visit:
                             self.current_patient.occupational_visit = self.model.current_time
                         self.current_patient.in_treatment = True
@@ -105,17 +104,15 @@ class PhysioTherapist(Specialist):
                     self.current_patient.physio_visit = self.model.current_time
                     self.busy = True
                 else:
-                    for i in np.random.permutation(len(self.model.neuro_patients)):
-                        patient = self.model.neuro_patients[i]
-                        if not patient.in_treatment:
-                            if self.model.current_time >= patient.physio_visit:
-                                self.current_patient = patient
-                                if self.model.current_time -1 > self.current_patient.physio_visit:
-                                    self.current_patient.physio_visit = self.model.current_time
-                                self.current_patient.in_treatment = True
-                                self.busy = True
-                                self.daily_stroke_patients -= 1
-                                break
+                    for i in range(len(self.model.physio_patients)):
+                        self.current_patient = self.model.physio_patients.pop(0)
+                        self.current_patient.physio_visited = True
+                        if self.model.current_time - 1 > self.current_patient.physio_visit:
+                            self.current_patient.physio_visit = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        self.busy = True
+                        self.daily_stroke_patients -= 1
+                        break
             elif self.current_patient.physio_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
@@ -136,16 +133,15 @@ class SpeechPathologist(Specialist):
                     self.current_patient.speech_visit = self.model.current_time
                     self.busy = True
                 else:
-                    for i in np.random.permutation(len(self.model.neuro_patients)):
-                        patient = self.model.neuro_patients[i]
-                        if patient.last_treatment < self.model.current_time - 10:
-                            if patient.speech_visit == 0 and not patient.in_treatment:
-                                self.current_patient = patient
-                                patient.speech_visit = self.model.current_time
-                                self.current_patient.in_treatment = True
-                                self.busy = True
-                                self.daily_stroke_patients -= 1
-                                break
+                    for i in range(len(self.model.speech_patients)):
+                        self.current_patient = self.model.speech_patients.pop(0)
+                        self.current_patient.speech_visited = True
+                        if self.model.current_time - 1 > self.current_patient.speech_visit:
+                            self.current_patient.speech_visit = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        self.busy = True
+                        self.daily_stroke_patients -= 1
+                        break
             elif self.current_patient.speech_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
@@ -196,16 +192,15 @@ class SocialWorker(Specialist):
                     self.current_patient.social_worker_visit = self.model.current_time
                     self.busy = True
                 else:
-                    for i in np.random.permutation(len(self.model.neuro_patients)):
-                        patient = self.model.neuro_patients[i]
-                        if patient.last_treatment < self.model.current_time - 10:
-                            if patient.social_worker_visit == 0 and not patient.in_treatment:
-                                self.current_patient = patient
-                                patient.social_worker_visit = self.model.current_time
-                                self.current_patient.in_treatment = True
-                                self.busy = True
-                                self.daily_stroke_patients -= 1
-                                break
+                    for i in range(len(self.model.social_work_patients)):
+                        self.current_patient = self.model.social_work_patients.pop(0)
+                        self.current_patient.sw_visited = True
+                        if self.model.current_time - 1 > self.current_patient.social_worker_visit:
+                            self.current_patient.social_worker_visit = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        self.busy = True
+                        self.daily_stroke_patients -= 1
+                        break
             elif self.current_patient.social_worker_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
@@ -287,16 +282,15 @@ class Cardiologist(Specialist):
                     self.current_patient.cardiologist_visit = self.model.current_time
                     self.busy = True
                 else:
-                    for i in np.random.permutation(len(self.model.neuro_patients)):
-                        patient = self.model.neuro_patients[i]
-                        if patient.need_cardiologist and patient.last_treatment < self.model.current_time - 10:
-                            if patient.cardiologist_visit == 0 and not patient.in_treatment:
-                                self.current_patient = patient
-                                patient.cardiologist_visit = self.model.current_time
-                                self.current_patient.in_treatment = True
-                                self.busy = True
-                                self.daily_stroke_patients -= 1
-                                break
+                    for i in range(len(self.model.cardio_patients)):
+                        self.current_patient = self.model.cardio_patients.pop(0)
+                        self.current_patient.cardio_visited = True
+                        if self.model.current_time - 1 > self.current_patient.cardiologist_visit:
+                            self.current_patient.cardiologist_visit = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        self.busy = True
+                        self.daily_stroke_patients -= 1
+                        break
             elif self.current_patient.cardiologist_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
