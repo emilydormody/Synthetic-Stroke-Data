@@ -217,4 +217,30 @@ class Patient(Agent):
         else:
             return stats.gamma.rvs(0.828, 5024.8, 3719.8)
 
+    def speech_time_normal(self):
+        n = random.random()
+        if n < 0.2:  # 0 to 250 mins
+            return stats.skewnorm.rvs(2.45, 44.7, 87)
+        elif 0.2 <= n < 0.864:  # 250 to 20000 mins
+            return stats.gamma.rvs(0.847, 250.3, 5876.3)
+        else:  # 20000 to 90000 mins
+            return stats.gamma.rvs(0.915, 20011.6, 18547.4)
+
+    def social_worker_normal(self):
+        if random.random() < 0.071:  # 20000 to 60000 mins
+            return stats.gamma.rvs(0.988, 20165.5, 9808.2)
+        else:  # 0 to 20000 mins
+            return stats.gamma.rvs(0.812, 0.117, 4461.4)
+
+    def occupational_time_normal(self):
+        n = random.random()
+        if n < 0.251:  # 0 to 200
+            return stats.skewnorm.rvs(-0.664, 120.3, 51)
+        elif 0.251 <= n < 0.896:  # 200 to 20000
+            return stats.gamma.rvs(0.918, 200.4, 4280.7)
+        else:  # 20000 to 100000
+            return stats.gamma.rvs(0.872, 20001.8, 16391.2)
+
+    def cardiology_time_normal(self):
+        return stats.gamma.rvs(0.772, 22.6, 113337.4)
 

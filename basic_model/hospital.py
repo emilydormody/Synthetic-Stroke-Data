@@ -14,6 +14,7 @@ class Hospital(Model):
         self.t_patients = []
         self.neuro_patients = []
         self.all_patients = []
+        self.ocu_patients = []
         self.start_date = datetime.datetime.now()
         self.add_agents()
 
