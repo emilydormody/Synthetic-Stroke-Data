@@ -77,7 +77,7 @@ class Patient(Agent):
             self.need_cardiologist = True
         else:
             self.need_cardiologist = False
-        self.cardiologist_visit = self.neuro_time + self.cardiology_time_normal()
+        self.cardiologist_visit = self.admission_time + self.cardiology_time_normal()
         self.cardio_visited = False
         self.bloodwork = 0
         self.last_checkin = 0
