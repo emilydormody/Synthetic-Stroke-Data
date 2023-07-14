@@ -19,12 +19,14 @@ class Hospital(Model):
         self.speech_patients = []
         self.social_work_patients = []
         self.cardio_patients = []
+        self.neurologist_patients = []
         self.start_date = datetime.datetime.now()
         self.add_agents()
 
     def step(self):
         self.schedule.step()
         self.current_time += 1
+
 
     def convert_time(self, time):
         if time <= 0 or time > 30000:
@@ -110,6 +112,35 @@ class Hospital(Model):
                 dict['ocu'].append(patient.occupational_visit)
             else:
                 dict['ocu'].append(None)
+        return dict
+
+    def before_ticks(self):
+        dict = {'patient_id': [], 'time_of_stroke': [], 'ed_intime': [], 'admittime': [], 'ct_scan': [], 'tpa_time': [],
+                'icu_intime': [], 'icu_outtime': [],'neuro_intime': [], 'neuro_outtime': [], 'ocu': [],
+                'physio': [], 'social_work': [], 'cardiologist': [], 'speech_lang': []}
+        for patient in self.all_patients:
+            dict['patient_id'].append(patient.unique_id)
+            dict['time_of_stroke'].append(patient.time_of_stroke)
+            dict['ed_intime'].append(patient.hospital_arrival)
+            dict['admittime'].append(patient.admission_time)
+            dict['ct_scan'].append(patient.ct_time)
+            if patient.hospital_arrival - patient.t_time <= 270:
+                dict['tpa_time'].append(patient.t_time)
+            else:
+                dict['tpa_time'].append(None)
+            if patient.need_icu:
+                dict['icu_intime'].append(patient.icu_arrival_time)
+                dict['icu_outtime'].append(patient.icu_outtime)
+            else:
+                dict['icu_intime'].append(None)
+                dict['icu_outtime'].append(None)
+            dict['neuro_intime'].append(patient.neuro_time)
+            dict['neuro_outtime'].append(patient.neuro_outtime)
+            dict['ocu'].append(patient.occupational_visit)
+            dict['physio'].append(patient.physio_visit)
+            dict['speech_lang'].append(patient.speech_visit)
+            dict['cardiologist'].append(patient.cardiologist_visit)
+            dict['social_work'].append(patient.social_worker_visit)
         return dict
 
     def add_agents(self):

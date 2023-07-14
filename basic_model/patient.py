@@ -1,6 +1,7 @@
 import math
 import random
 
+import pandas as pd
 from mesa import Agent, Model
 import numpy as np
 from scipy import stats
@@ -81,10 +82,11 @@ class Patient(Agent):
         self.bloodwork = 0
         self.last_checkin = 0
 
-        if self.unique_id <= 100:
-            print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
-                  self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
-
+        if self.unique_id == 99:
+            pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Downloads/before.csv')
+            #print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
+                  #self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
+           # print(self.unique_id)
     def step(self):
         if not self.in_treatment:
             if self.model.current_time >= self.hospital_arrival and not (
@@ -137,6 +139,26 @@ class Patient(Agent):
                     if self.model.current_time >= self.cardiologist_visit -1 and not self.cardio_visited  and self.need_cardiologist:
                         if self.model.cardio_patients.count(self) == 0:
                             self.model.cardio_patients.append(self)
+
+
+
+                else:
+                    if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
+                        if self.model.ocu_patients.count(self) == 0:
+                            self.model.ocu_patients.append(self)
+                    if self.model.current_time >= self.physio_visit -1 and not self.physio_visited:
+                        if self.model.physio_patients.count(self) == 0:
+                            self.model.physio_patients.append(self)
+                    if self.model.current_time >= self.speech_visit -1 and not self.speech_visited:
+                        if self.model.speech_patients.count(self) == 0:
+                            self.model.speech_patients.append(self)
+                    if self.model.current_time >= self.social_worker_visit -1 and not self.sw_visited:
+                        if self.model.social_work_patients.count(self) == 0:
+                            self.model.social_work_patients.append(self)
+                    if self.model.current_time >= self.cardiologist_visit - 1 and not self.cardio_visited  and self.need_cardiologist:
+                        if self.model.cardio_patients.count(self) == 0:
+                            self.model.cardio_patients.append(self)
+
 
 
 
