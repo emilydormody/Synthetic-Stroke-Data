@@ -123,6 +123,7 @@ class Patient(Agent):
                 elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived:
                     if self.model.current_time >= self.neuro_time:
                         self.neuro_ward_admission()
+
                 else:
                     if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
                         if self.model.ocu_patients.count(self) == 0:
@@ -136,9 +137,10 @@ class Patient(Agent):
                     if self.model.current_time >= self.social_worker_visit -1 and not self.sw_visited:
                         if self.model.social_work_patients.count(self) == 0:
                             self.model.social_work_patients.append(self)
-                    if self.model.current_time >= self.cardiologist_visit -1 and not self.cardio_visited  and self.need_cardiologist:
+                    if self.model.current_time >= self.cardiologist_visit - 1 and not self.cardio_visited  and self.need_cardiologist:
                         if self.model.cardio_patients.count(self) == 0:
                             self.model.cardio_patients.append(self)
+
 
 
 
