@@ -1,6 +1,7 @@
 import math
 import random
 
+import pandas as pd
 from mesa import Agent, Model
 import numpy as np
 from scipy import stats
@@ -81,10 +82,11 @@ class Patient(Agent):
         self.bloodwork = 0
         self.last_checkin = 0
 
-        if self.unique_id <= 100:
-            print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
-                  self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
-
+        if self.unique_id == 99:
+            pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Downloads/before.csv')
+            #print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
+                  #self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
+           # print(self.unique_id)
     def step(self):
         if not self.in_treatment:
             if self.model.current_time >= self.hospital_arrival and not (
