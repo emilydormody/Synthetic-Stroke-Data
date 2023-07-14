@@ -108,10 +108,11 @@ class Hospital(Model):
                 dict['icu_outtime'].append(None)
             dict['neuro_intime'].append(patient.neuro_time)
             dict['neuro_outtime'].append(patient.neuro_outtime)
-            if patient.occupational_visit <= 30000:
-                dict['ocu'].append(patient.occupational_visit)
-            else:
-                dict['ocu'].append(None)
+            dict['ocu'].append(patient.occupational_visit)
+            dict['physio'].append(patient.physio_visit)
+            dict['speech_lang'].append(patient.speech_visit)
+            dict['cardiologist'].append(patient.cardiologist_visit)
+            dict['social_work'].append(patient.social_worker_visit)
         return dict
 
     def before_ticks(self):
