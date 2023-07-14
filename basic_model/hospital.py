@@ -151,11 +151,15 @@ class Hospital(Model):
             self.all_patients.append(patient)
         for i in range(4):
             ct = CTScan(600 + i, self)
-            ct.set_schedule(8, 16)
             self.schedule.add(ct)
-        ct = CTScan(604, self)
-        ct.set_schedule(16, 6)
-        self.schedule.add(ct)
+        for i in range(2):
+            ct = CTScan(604+i, self)
+            ct.set_schedule(16, 6)
+            self.schedule.add(ct)
+        for i in range(2):
+            ct = CTScan(606 + i, self)
+            ct.set_schedule(4,12)
+            self.schedule.add(ct)
         tpa = TPA(610, self)
         tpa.set_schedule(8, 20)
         tpa2 = TPA(611, self)

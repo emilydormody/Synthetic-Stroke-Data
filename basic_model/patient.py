@@ -63,14 +63,14 @@ class Patient(Agent):
 
         self.neuro_time = self.neuro_time_normal()
         self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
-        self.occupational_visit = self.neuro_time + self.occupational_time_normal()
+        self.occupational_visit = self.admission_time + self.occupational_time_normal()
         self.ocu_visited = False
-        self.speech_visit = self.neuro_time + self.speech_time_normal()
+        self.speech_visit = self.admission_time + self.speech_time_normal()
         self.speech_visited = False
-        self.physio_visit = self.neuro_time + self.physio_time_normal()
+        self.physio_visit = self.admission_time + self.physio_time_normal()
         self.physio_visited = False
         self.diet_visit = 0
-        self.social_worker_visit = self.neuro_time + self.social_worker_normal()
+        self.social_worker_visit = self.admission_time + self.social_worker_normal()
         self.sw_visited = False
         self.neuro_visit = 0
         if random.randint(0, 3) == 0:
