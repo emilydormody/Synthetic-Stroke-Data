@@ -108,40 +108,19 @@ class Patient(Agent):
                     if self.model.t_patients.count(self) == 0:
                         self.model.t_patients.append(self)
             elif self.arrived:
-                if (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu:
-                    if self.model.current_time >= self.icu_arrival_time:
-                        if self.model.current_time - 1 > self.icu_arrival_time:
-                            # print('icu', self.icu_arrival_time, 'current', self.model.current_time, self.unique_id)
-                            self.icu_arrival_time = self.model.current_time
-                        self.icu_arrived = True
-                        self.in_icu = True
+                if (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu and self.model.current_time >= self.icu_arrival_time:
+                    if self.model.current_time - 1 > self.icu_arrival_time:
+                        # print('icu', self.icu_arrival_time, 'current', self.model.current_time, self.unique_id)
+                        self.icu_arrival_time = self.model.current_time
+                    self.icu_arrived = True
+                    self.in_icu = True
                 elif self.in_icu:
                     if self.model.current_time >= self.icu_outtime:
                         self.in_icu = False
                         if self.icu_outtime == self.neuro_time:
                             self.neuro_ward_admission()
-                elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived:
-                    if self.model.current_time >= self.neuro_time:
+                elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived and self.model.current_time >= self.neuro_time:
                         self.neuro_ward_admission()
-                else:
-                    if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
-                        if self.model.ocu_patients.count(self) == 0:
-                            self.model.ocu_patients.append(self)
-                    if self.model.current_time >= self.physio_visit -1 and not self.physio_visited:
-                        if self.model.physio_patients.count(self) == 0:
-                            self.model.physio_patients.append(self)
-                    if self.model.current_time >= self.speech_visit -1 and not self.speech_visited:
-                        if self.model.speech_patients.count(self) == 0:
-                            self.model.speech_patients.append(self)
-                    if self.model.current_time >= self.social_worker_visit -1 and not self.sw_visited:
-                        if self.model.social_work_patients.count(self) == 0:
-                            self.model.social_work_patients.append(self)
-                    if self.model.current_time >= self.cardiologist_visit -1 and not self.cardio_visited  and self.need_cardiologist:
-                        if self.model.cardio_patients.count(self) == 0:
-                            self.model.cardio_patients.append(self)
-
-
-
                 else:
                     if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
                         if self.model.ocu_patients.count(self) == 0:
