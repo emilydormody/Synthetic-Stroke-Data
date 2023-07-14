@@ -84,7 +84,8 @@ class Hospital(Model):
 
     def ticks(self):
         dict = {'patient_id': [], 'time_of_stroke': [], 'ed_intime': [], 'admittime': [], 'ct_scan': [], 'tpa_time': [],
-                'icu_intime': [], 'icu_outtime': [], 'icu_arrived': [], 'neuro_intime': [], 'ocu': [], 'neuro_outtime': []}
+                'icu_intime': [], 'icu_outtime': [], 'icu_arrived': [], 'neuro_intime': [], 'neuro_outtime': [],'ocu': [],
+                'physio': [], 'social_work': [], 'cardiologist': [], 'speech_lang': []}
         for patient in self.all_patients:
             dict['patient_id'].append(patient.unique_id)
             dict['time_of_stroke'].append(patient.time_of_stroke)
