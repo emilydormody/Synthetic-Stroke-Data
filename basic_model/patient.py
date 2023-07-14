@@ -6,7 +6,14 @@ from mesa import Agent, Model
 import numpy as np
 from scipy import stats
 
-
+# lst codes
+OCU = 0
+SLP = 1
+PT = 2
+DT = 3
+SW = 4
+NR = 5
+CD = 6
 class Patient(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
@@ -17,7 +24,6 @@ class Patient(Agent):
         else:
             self.gender = "F"
         self.age = random.randint(20, 91)
-
 
         self.hospital_arrival = random.randint(300, 8000) + random.random()
         if random.random() >= 0.75:
@@ -61,6 +67,13 @@ class Patient(Agent):
         self.in_icu = False
         self.neuro_ward_arrived = False
 
+        self.neuro_times_lst = [self.admission_time + self.occupational_time_normal(),
+                                self.admission_time + self.speech_time_normal(),
+                                self.admission_time + self.physio_time_normal(),
+                                0,
+                                self.admission_time + self.social_worker_normal(),
+                                0,
+                                self.admission_time + self.cardiology_time_normal()]
         self.neuro_time = self.neuro_time_normal()
         self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
         self.occupational_visit = self.admission_time + self.occupational_time_normal()
@@ -84,9 +97,10 @@ class Patient(Agent):
 
         if self.unique_id == 99:
             pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Downloads/before.csv')
-            #print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
-                  #self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
-           # print(self.unique_id)
+            # print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
+            # self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
+        # print(self.unique_id)
+
     def step(self):
         if not self.in_treatment:
             if self.model.current_time >= self.hospital_arrival and not (
@@ -104,11 +118,12 @@ class Patient(Agent):
                     if self.model.ct_patients.count(self) == 0:
                         self.model.ct_patients.append(self)
             elif self.check_permitted() and not self.tpa_treated and self.ct_treated:
-                if self.model.current_time >= self.t_time-1:
+                if self.model.current_time >= self.t_time - 1:
                     if self.model.t_patients.count(self) == 0:
                         self.model.t_patients.append(self)
             elif self.arrived:
-                if (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu and self.model.current_time >= self.icu_arrival_time:
+                if (
+                        self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu and self.model.current_time >= self.icu_arrival_time:
                     if self.model.current_time - 1 > self.icu_arrival_time:
                         # print('icu', self.icu_arrival_time, 'current', self.model.current_time, self.unique_id)
                         self.icu_arrival_time = self.model.current_time
@@ -119,25 +134,26 @@ class Patient(Agent):
                         self.in_icu = False
                         if self.icu_outtime == self.neuro_time:
                             self.neuro_ward_admission()
-                elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived and self.model.current_time >= self.neuro_time:
-                        self.neuro_ward_admission()
+                elif ((
+                              self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived and self.model.current_time >= self.neuro_time:
+                    self.neuro_ward_admission()
                 else:
                     if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
                         if self.occupational_visit < self.icu_outtime:
                             self.occupational_visit = 30001
                         elif self.model.ocu_patients.count(self) == 0:
                             self.model.ocu_patients.append(self)
-                    if self.model.current_time >= self.physio_visit -1 and not self.physio_visited:
+                    if self.model.current_time >= self.physio_visit - 1 and not self.physio_visited:
                         if self.physio_visit < self.icu_outtime:
                             self.physio_visit = 30001
                         elif self.model.physio_patients.count(self) == 0:
                             self.model.physio_patients.append(self)
-                    if self.model.current_time >= self.speech_visit -1 and not self.speech_visited:
+                    if self.model.current_time >= self.speech_visit - 1 and not self.speech_visited:
                         if self.speech_visit < self.icu_outtime:
                             self.speech_visit = 30001
                         elif self.model.speech_patients.count(self) == 0:
                             self.model.speech_patients.append(self)
-                    if self.model.current_time >= self.social_worker_visit -1 and not self.sw_visited:
+                    if self.model.current_time >= self.social_worker_visit - 1 and not self.sw_visited:
                         if self.social_worker_visit < self.icu_outtime:
                             self.social_worker_visit = 30001
                         elif self.model.social_work_patients.count(self) == 0:
@@ -147,10 +163,6 @@ class Patient(Agent):
                             self.need_cardiologist = False
                         elif self.model.cardio_patients.count(self) == 0:
                             self.model.cardio_patients.append(self)
-
-
-
-
 
     def check_permitted(self):
         if self.tpa_denied:
@@ -240,11 +252,11 @@ class Patient(Agent):
     def physio_time_normal(self):
         n = random.random()
         if n < 0.469:
-            return stats.gamma.rvs(1.47, 0.13,19)
+            return stats.gamma.rvs(1.47, 0.13, 19)
         elif 0.469 <= n < 0.58:
-            return stats.gamma.rvs(0.883, 100.7,138.6)
+            return stats.gamma.rvs(0.883, 100.7, 138.6)
         elif 0.58 <= n < 0.943:
-            return stats.gamma.rvs(1.02, 500.6,1120.3)
+            return stats.gamma.rvs(1.02, 500.6, 1120.3)
         else:
             return stats.gamma.rvs(0.828, 5024.8, 3719.8)
 
@@ -274,4 +286,3 @@ class Patient(Agent):
 
     def cardiology_time_normal(self):
         return stats.gamma.rvs(0.772, 22.6, 113337.4)
-
