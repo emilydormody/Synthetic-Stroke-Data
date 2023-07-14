@@ -12,7 +12,6 @@ class Specialist(Agent):
         self.shift_end = time(16)
         self.shift_start = time(8)
         self.daily_stroke_patients = random.randint(2,8)
-        self.busy = False
         self.current_patient = None
 
     def set_schedule(self, start, end):
