@@ -77,7 +77,7 @@ class Patient(Agent):
             self.need_cardiologist = True
         else:
             self.need_cardiologist = False
-        self.cardiologist_visit = self.neuro_time + self.cardiology_time_normal()
+        self.cardiologist_visit = self.admission_time + self.cardiology_time_normal()
         self.cardio_visited = False
         self.bloodwork = 0
         self.last_checkin = 0
@@ -123,19 +123,29 @@ class Patient(Agent):
                         self.neuro_ward_admission()
                 else:
                     if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
-                        if self.model.ocu_patients.count(self) == 0:
+                        if self.occupational_visit < self.icu_outtime:
+                            self.occupational_visit = 30001
+                        elif self.model.ocu_patients.count(self) == 0:
                             self.model.ocu_patients.append(self)
                     if self.model.current_time >= self.physio_visit -1 and not self.physio_visited:
-                        if self.model.physio_patients.count(self) == 0:
+                        if self.physio_visit < self.icu_outtime:
+                            self.physio_visit = 30001
+                        elif self.model.physio_patients.count(self) == 0:
                             self.model.physio_patients.append(self)
                     if self.model.current_time >= self.speech_visit -1 and not self.speech_visited:
-                        if self.model.speech_patients.count(self) == 0:
+                        if self.speech_visit < self.icu_outtime:
+                            self.speech_visit = 30001
+                        elif self.model.speech_patients.count(self) == 0:
                             self.model.speech_patients.append(self)
                     if self.model.current_time >= self.social_worker_visit -1 and not self.sw_visited:
-                        if self.model.social_work_patients.count(self) == 0:
+                        if self.social_worker_visit < self.icu_outtime:
+                            self.social_worker_visit = 30001
+                        elif self.model.social_work_patients.count(self) == 0:
                             self.model.social_work_patients.append(self)
-                    if self.model.current_time >= self.cardiologist_visit - 1 and not self.cardio_visited  and self.need_cardiologist:
-                        if self.model.cardio_patients.count(self) == 0:
+                    if self.model.current_time >= self.cardiologist_visit - 1 and not self.cardio_visited and self.need_cardiologist:
+                        if self.cardiologist_visit < self.icu_outtime:
+                            self.need_cardiologist = False
+                        elif self.model.cardio_patients.count(self) == 0:
                             self.model.cardio_patients.append(self)
 
 
