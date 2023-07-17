@@ -3,6 +3,7 @@ import mesa.time
 import datetime
 from patient import Patient
 from different_specialists import *
+from values import *
 
 
 class Hospital(Model):
@@ -29,7 +30,7 @@ class Hospital(Model):
 
 
     def convert_time(self, time):
-        if time <= 0 or time > 30000:
+        if time <= 0 or time > NUM_TICKS:
             return None
         date = self.start_date + datetime.timedelta(minutes=time)
         return str(date)[0:19]
@@ -109,27 +110,27 @@ class Hospital(Model):
                 dict['icu_outtime'].append(None)
             dict['neuro_intime'].append(patient.neuro_time)
             dict['neuro_outtime'].append(patient.neuro_outtime)
-            if patient.occupational_visit <= 30000:
+            if patient.occupational_visit <= NUM_TICKS:
                 dict['ocu'].append(patient.occupational_visit)
             else:
                 dict['ocu'].append(None)
-            if patient.physio_visit <= 30000:
+            if patient.physio_visit <= NUM_TICKS:
                 dict['physio'].append(patient.physio_visit)
             else:
                 dict['physio'].append(None)
-            if patient.speech_visit <= 30000:
+            if patient.speech_visit <= NUM_TICKS:
                 dict['speech_lang'].append(patient.speech_visit)
             else:
                 dict['speech_lang'].append(None)
-            if patient.cardiologist_visit <= 30000:
+            if patient.cardiologist_visit <= NUM_TICKS:
                 dict['cardiologist'].append(patient.cardiologist_visit)
             else:
                 dict['cardiologist'].append(None)
-            if patient.social_worker_visit <= 30000:
+            if patient.social_worker_visit <= NUM_TICKS:
                 dict['social_work'].append(patient.social_worker_visit)
             else:
                 dict['social_work'].append(None)
-            if patient.neuro_visit <= 30000:
+            if patient.neuro_visit <= NUM_TICKS:
                 dict['neurologist'].append(patient.neuro_visit)
             else:
                 dict['neurologist'].append(None)
@@ -166,7 +167,7 @@ class Hospital(Model):
         return dict
 
     def add_agents(self):
-        for i in range(100):
+        for i in range(NUM_PATIENTS):
             patient = Patient(i, self)
             self.schedule.add(patient)
             self.all_patients.append(patient)

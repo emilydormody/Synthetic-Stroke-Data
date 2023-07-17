@@ -5,6 +5,7 @@ import pandas as pd
 from mesa import Agent, Model
 import numpy as np
 from scipy import stats
+from values import NUM_TICKS
 
 # lst codes
 OCU = 0
@@ -25,7 +26,7 @@ class Patient(Agent):
             self.gender = "F"
         self.age = random.randint(20, 91)
 
-        self.hospital_arrival = random.randint(300, 8000) + random.random()
+        self.hospital_arrival = random.randint(300, NUM_TICKS//4) + random.random()
         if random.random() >= 0.75:
             self.admission_time = self.hospital_arrival
         else:
@@ -139,22 +140,22 @@ class Patient(Agent):
                 else:
                     if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
                         if self.icu_arrival_time < self.occupational_visit < self.icu_outtime:
-                            self.occupational_visit = 30001
+                            self.occupational_visit = NUM_TICKS+1
                         elif self.model.ocu_patients.count(self) == 0:
                             self.model.ocu_patients.append(self)
                     if self.model.current_time >= self.physio_visit - 1 and not self.physio_visited:
                         if self.icu_arrival_time < self.physio_visit < self.icu_outtime:
-                            self.physio_visit = 30001
+                            self.physio_visit = NUM_TICKS+1
                         elif self.model.physio_patients.count(self) == 0:
                             self.model.physio_patients.append(self)
                     if self.model.current_time >= self.speech_visit - 1 and not self.speech_visited:
                         if self.icu_arrival_time < self.speech_visit < self.icu_outtime:
-                            self.speech_visit = 30001
+                            self.speech_visit = NUM_TICKS+1
                         elif self.model.speech_patients.count(self) == 0:
                             self.model.speech_patients.append(self)
                     if self.model.current_time >= self.social_worker_visit - 1 and not self.sw_visited:
                         if self.icu_arrival_time < self.social_worker_visit < self.icu_outtime:
-                            self.social_worker_visit = 30001
+                            self.social_worker_visit = NUM_TICKS+1
                         elif self.model.social_work_patients.count(self) == 0:
                             self.model.social_work_patients.append(self)
                     if self.model.current_time >= self.cardiologist_visit - 1 and not self.cardio_visited and self.need_cardiologist:
@@ -164,7 +165,7 @@ class Patient(Agent):
                             self.model.cardio_patients.append(self)
                     if self.model.current_time >= self.neuro_visit - 1 and not self.neuro_visited:
                         if self.icu_arrival_time < self.neuro_visit < self.icu_outtime:
-                            self.neuro_visit = 30001
+                            self.neuro_visit = NUM_TICKS+1
                         elif self.model.neurologist_patients.count(self) == 0:
                             self.model.neurologist_patients.append(self)
 
