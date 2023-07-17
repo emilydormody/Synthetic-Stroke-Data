@@ -164,7 +164,7 @@ class Patient(Agent):
                             self.model.cardio_patients.append(self)
                     if self.model.current_time >= self.neuro_visit - 1 and not self.neuro_visited:
                         if self.icu_arrival_time < self.neuro_visit < self.icu_outtime:
-                            self.neuro_time = 30001
+                            self.neuro_visit = 30001
                         elif self.model.neurologist_patients.count(self) == 0:
                             self.model.neurologist_patients.append(self)
 
