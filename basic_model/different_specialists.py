@@ -6,6 +6,7 @@ from mesa import Agent
 from datetime import time
 from specialist import Specialist
 from patient import Patient
+from values import NUM_PATIENTS
 
 
 class CTScan(Specialist):
@@ -67,7 +68,7 @@ class OccupationalTherapist(Specialist):
         if super().working_hours():
             if self.current_patient is None:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(10000, self.model)
+                    self.current_patient = Patient(NUM_PATIENTS+1, self.model)
                     self.current_patient.occupational_visit = self.model.current_time
                 else:
                     for i in range(len(self.model.ocu_patients)):
@@ -95,7 +96,7 @@ class PhysioTherapist(Specialist):
         if super().working_hours():
             if self.current_patient is None:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(10000, self.model)
+                    self.current_patient = Patient(NUM_PATIENTS+1, self.model)
                     self.current_patient.physio_visit = self.model.current_time
                     self.busy = True
                 else:
@@ -123,7 +124,7 @@ class SpeechPathologist(Specialist):
         if super().working_hours():
             if self.current_patient is None:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(10000, self.model)
+                    self.current_patient = Patient(NUM_PATIENTS+1, self.model)
                     self.current_patient.speech_visit = self.model.current_time
                 else:
                     for i in range(len(self.model.speech_patients)):
@@ -150,7 +151,7 @@ class Dietitian(Specialist):
         if super().working_hours():
             if self.current_patient is None:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(10000, self.model)
+                    self.current_patient = Patient(NUM_PATIENTS+1, self.model)
                     self.current_patient.diet_visit = self.model.current_time
                 else:
                     for i in np.random.permutation(len(self.model.neuro_patients)):
@@ -179,7 +180,7 @@ class SocialWorker(Specialist):
         if super().working_hours():
             if self.current_patient is None:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(10000, self.model)
+                    self.current_patient = Patient(NUM_PATIENTS+1, self.model)
                     self.current_patient.social_worker_visit = self.model.current_time
                 else:
                     for i in range(len(self.model.social_work_patients)):
@@ -207,7 +208,7 @@ class Neurologist(Specialist):
         if super().working_hours():
             if self.current_patient is None:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(10000, self.model)
+                    self.current_patient = Patient(NUM_PATIENTS+1, self.model)
                     self.current_patient.neuro_visit = self.model.current_time
                 else:
                     for i in range(len(self.model.neurologist_patients)):
@@ -235,7 +236,7 @@ class BloodWork(Specialist):
         if super().working_hours():
             if self.current_patient is None:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(10000, self.model)
+                    self.current_patient = Patient(NUM_PATIENTS+1, self.model)
                     self.current_patient.bloodwork = self.model.current_time
                 else:
                     for i in np.random.permutation(len(self.model.neuro_patients)):
@@ -265,7 +266,7 @@ class Cardiologist(Specialist):
         if super().working_hours():
             if self.current_patient is None:
                 if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(10000, self.model)
+                    self.current_patient = Patient(NUM_PATIENTS+1, self.model)
                     self.current_patient.cardiologist_visit = self.model.current_time
                 else:
                     for i in range(len(self.model.cardio_patients)):

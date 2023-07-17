@@ -5,7 +5,7 @@ import pandas as pd
 from mesa import Agent, Model
 import numpy as np
 from scipy import stats
-from values import NUM_TICKS
+from values import *
 
 # lst codes
 OCU = 0
@@ -97,7 +97,7 @@ class Patient(Agent):
         self.bloodwork = 0
         self.last_checkin = 0
 
-        if self.unique_id == 99:
+        if self.unique_id == NUM_PATIENTS-1:
             pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Downloads/before.csv')
             # print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
             # self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
