@@ -98,7 +98,7 @@ class Patient(Agent):
         self.last_checkin = 0
 
         if self.unique_id == NUM_PATIENTS-1:
-            pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Downloads/before.csv')
+            pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
             # print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
             # self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
         # print(self.unique_id)
@@ -256,14 +256,12 @@ class Patient(Agent):
 
     def physio_time_normal(self):
         n = random.random()
-        if n < 0.469:
-            return stats.gamma.rvs(1.47, 0.13, 19)
-        elif 0.469 <= n < 0.58:
-            return stats.gamma.rvs(0.883, 100.7, 138.6)
-        elif 0.58 <= n < 0.943:
-            return stats.gamma.rvs(1.02, 500.6, 1120.3)
-        else:
-            return stats.gamma.rvs(0.828, 5024.8, 3719.8)
+        if n < 0.307: # 0 to 500 mins
+            return stats.gamma.rvs(2.19, -6.1, 69.4)
+        elif 0.307 <= n < 0.931: # 500 to 30000 mins
+            return stats.gamma.rvs(0.846, 500.6, 6590.9)
+        else: # 30000 to 80000 mins
+            return stats.gamma.rvs(0.896, 30021.7, 12822.1)
 
     def speech_time_normal(self):
         n = random.random()
