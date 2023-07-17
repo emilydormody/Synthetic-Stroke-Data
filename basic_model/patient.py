@@ -86,6 +86,7 @@ class Patient(Agent):
         self.social_worker_visit = self.admission_time + self.social_worker_normal()
         self.sw_visited = False
         self.neuro_visit = self.admission_time + self.neurologist_time_normal()
+        self.neuro_visited = False
         if random.randint(0, 3) == 0:
             self.need_cardiologist = True
         else:
@@ -161,6 +162,11 @@ class Patient(Agent):
                             self.need_cardiologist = False
                         elif self.model.cardio_patients.count(self) == 0:
                             self.model.cardio_patients.append(self)
+                    if self.model.current_time >= self.neuro_visit - 1 and not self.neuro_visited:
+                        if self.icu_arrival_time < self.neuro_visit < self.icu_outtime:
+                            self.neuro_time = 30001
+                        elif self.model.neurologist_patients.count(self) == 0:
+                            self.model.neurologist_patients.append(self)
 
     def check_permitted(self):
         if self.tpa_denied:
