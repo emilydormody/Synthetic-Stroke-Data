@@ -85,7 +85,7 @@ class Hospital(Model):
     def ticks(self):
         dict = {'patient_id': [], 'time_of_stroke': [], 'ed_intime': [], 'admittime': [], 'ct_scan': [], 'tpa_time': [],
                 'icu_intime': [], 'icu_outtime': [], 'icu_arrived': [], 'neuro_intime': [],'neuro_outtime': [], 'ocu': [],'physio': [],
-                'social_work': [], 'cardiologist': [], 'speech_lang': [], }
+                'social_work': [], 'cardiologist': [], 'speech_lang': [],'neurologist': [] }
         for patient in self.all_patients:
             dict['patient_id'].append(patient.unique_id)
             dict['time_of_stroke'].append(patient.time_of_stroke)
@@ -129,12 +129,16 @@ class Hospital(Model):
                 dict['social_work'].append(patient.social_worker_visit)
             else:
                 dict['social_work'].append(None)
+            if patient.neuro_visit <= 30000:
+                dict['neurologist'].append(patient.neuro_visit)
+            else:
+                dict['neurologist'].append(None)
         return dict
 
     def before_ticks(self):
         dict = {'patient_id': [], 'time_of_stroke': [], 'ed_intime': [], 'admittime': [], 'ct_scan': [], 'tpa_time': [],
                 'icu_intime': [], 'icu_outtime': [],'neuro_intime': [], 'neuro_outtime': [], 'ocu': [],
-                'physio': [], 'social_work': [], 'cardiologist': [], 'speech_lang': []}
+                'physio': [], 'social_work': [], 'cardiologist': [], 'speech_lang': [], 'neurologist': []}
         for patient in self.all_patients:
             dict['patient_id'].append(patient.unique_id)
             dict['time_of_stroke'].append(patient.time_of_stroke)
@@ -158,6 +162,7 @@ class Hospital(Model):
             dict['speech_lang'].append(patient.speech_visit)
             dict['cardiologist'].append(patient.cardiologist_visit)
             dict['social_work'].append(patient.social_worker_visit)
+            dict['neurologist'].append(patient.neuro_visit)
         return dict
 
     def add_agents(self):
