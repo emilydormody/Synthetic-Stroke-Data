@@ -245,10 +245,16 @@ class Hospital(Model):
         sw = SocialWorker(668, self)
         sw.set_schedule(4, 11)
         self.schedule.add(sw)
-        # neuro = Neurologist(670, self)
-        # neuro1 = Neurologist(671, self)
-        # neuro.set_schedule(8, 20)
-        # neuro1.set_schedule(20, 8)
+
+        for i in range(3):
+            neuro = Neurologist(670+i, self)
+            neuro.set_schedule(8, 20)
+            self.schedule.add(neuro)
+            neuro1 = Neurologist(673+i, self)
+            neuro1.set_schedule(20, 8)
+            self.schedule.add(neuro1)
+
+
         for i in range(3):
             cd = Cardiologist(680+i, self)
             self.schedule.add(cd)
