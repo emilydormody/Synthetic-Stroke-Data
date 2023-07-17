@@ -84,7 +84,8 @@ class Hospital(Model):
 
     def ticks(self):
         dict = {'patient_id': [], 'time_of_stroke': [], 'ed_intime': [], 'admittime': [], 'ct_scan': [], 'tpa_time': [],
-                'icu_intime': [], 'icu_outtime': [], 'icu_arrived': [], 'neuro_intime': [], 'ocu': [], 'neuro_outtime': []}
+                'icu_intime': [], 'icu_outtime': [], 'icu_arrived': [], 'neuro_intime': [],'neuro_outtime': [], 'ocu': [],'physio': [],
+                'social_work': [], 'cardiologist': [], 'speech_lang': [], }
         for patient in self.all_patients:
             dict['patient_id'].append(patient.unique_id)
             dict['time_of_stroke'].append(patient.time_of_stroke)
@@ -176,9 +177,11 @@ class Hospital(Model):
             ct.set_schedule(4,12)
             self.schedule.add(ct)
         tpa = TPA(610, self)
-        tpa.set_schedule(8, 20)
+        tpa.set_schedule(8, 22)
         tpa2 = TPA(611, self)
-        tpa2.set_schedule(20, 8)
+        tpa2.set_schedule(22, 8)
+        self.schedule.add(tpa)
+        self.schedule.add(tpa2)
 
         for i in range(4):
             ocu = OccupationalTherapist(620+i, self)
@@ -195,26 +198,68 @@ class Hospital(Model):
         ocu.set_schedule(4,11)
         self.schedule.add(ocu)
 
-        phys1 = PhysioTherapist(630, self)
-        phys1.set_schedule(8, 16)
-        phys2 = PhysioTherapist(631, self)
-        phys2.set_schedule(8, 16)
-        phys3 = PhysioTherapist(632, self)
-        phys3.set_schedule(16,8)
-        sp = SpeechPathologist(640, self)
-        sp.set_schedule(8, 16)
+        for i in range(5):
+            phys1 = PhysioTherapist(630+i, self)
+            self.schedule.add(phys1)
+        for i in range(2):
+            phys2 = PhysioTherapist(635+i, self)
+            phys2.set_schedule(16,0)
+            self.schedule.add(phys2)
+        phys3 = PhysioTherapist(637, self)
+        phys3.set_schedule(0, 7)
+        self.schedule.add(phys3)
+        phys4 = PhysioTherapist(638, self)
+        phys4.set_schedule(1,8)
+        self.schedule.add(phys4)
+
+        for i in range(3):
+            sp = SpeechPathologist(640+i, self)
+            self.schedule.add(sp)
+        for j in range(2):
+            sp = SpeechPathologist(643+j, self)
+            sp.set_schedule(13,22)
+            self.schedule.add(sp)
+        for k in range(2):
+            sp = SpeechPathologist(645+k, self)
+            sp.set_schedule(20,4)
+            self.schedule.add(sp)
+        sp = SpeechPathologist(647, self)
+        sp.set_schedule(0,8)
+        self.schedule.add(sp)
+
+
+
         # diet = Dietitian(650, self)
         # diet.set_schedule(8, 16)
-        sw1 = SocialWorker(660, self)
-        sw1.set_schedule(8, 16)
-        sw2 = SocialWorker(661, self)
-        sw2.set_schedule(8, 16)
+        for i in range(4):
+            sw1 = SocialWorker(660+i, self)
+            self.schedule.add(sw1)
+        for j in range(2):
+            sw = SocialWorker(664 + j, self)
+            sw.set_schedule(14, 20)
+            self.schedule.add(sw)
+        for k in range(2):
+            sw = SocialWorker(666 + k, self)
+            sw.set_schedule(20, 5)
+            self.schedule.add(sw)
+        sw = SocialWorker(668, self)
+        sw.set_schedule(4, 11)
+        self.schedule.add(sw)
         # neuro = Neurologist(670, self)
         # neuro1 = Neurologist(671, self)
         # neuro.set_schedule(8, 20)
         # neuro1.set_schedule(20, 8)
-        cd = Cardiologist(680, self)
-        cd.set_schedule(8, 16)
+        for i in range(3):
+            cd = Cardiologist(680+i, self)
+            self.schedule.add(cd)
+        for j in range(2):
+            cd = Cardiologist(683+j, self)
+            cd.set_schedule(14,23)
+            self.schedule.add(cd)
+        cd = Cardiologist(685, self)
+        cd.set_schedule(22,8)
+        self.schedule.add(cd)
+
         # for i in range(5):
         #     bw = BloodWork(690 + i, self)
         #     self.schedule.add(bw)
@@ -227,14 +272,4 @@ class Hospital(Model):
         #     nurse = Nurse(6104 + i, self)
         #     self.schedule.add(nurse)
         #     nurse.set_schedule(20, 8)
-        self.schedule.add(tpa)
-        self.schedule.add(tpa2)
-        self.schedule.add(phys1)
-        self.schedule.add(phys2)
-        self.schedule.add(phys3)
-        self.schedule.add(sp)
-        #self.schedule.add(diet)
-        self.schedule.add(sw1)
-        self.schedule.add(sw2)
-        #self.schedule.add(neuro)
-        self.schedule.add(cd)
+
