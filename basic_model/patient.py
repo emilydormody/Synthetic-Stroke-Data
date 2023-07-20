@@ -51,7 +51,7 @@ class Patient(Agent):
         else:
             self.tpa_denied = False
 
-        if random.random() >= 0.5:
+        if random.random() <= 0.45:
             self.need_icu = True
             self.icu_arrival_time = self.admission_time + self.icu_time_normal()
             self.icu_outtime = self.icu_arrival_time + self.icu_outtime_normal()
@@ -204,20 +204,20 @@ class Patient(Agent):
         if random.random() < 0.956:
             return stats.skewnorm.rvs(4, 146.3, 269.8)
         else:
-            return stats.gamma.rvs(1.2, 1002.4, 320.2)
+            return stats.gamma.rvs(1.21, 1002.4, 320.2)
 
     def neuro_time_normal(self):
         n = random.random()
         if self.icu_outtime == 0:
             time = self.admission_time
             if n < 0.1:
-                time += abs(stats.skewnorm.rvs(2.81, 0.762, 0.7))
-            elif 0.1 <= n < 0.54:
-                time += abs(stats.skewnorm.rvs(2.35, 45.6, 49))
-            elif 0.54 <= n < 0.878:
-                time += abs(stats.gamma.rvs(1.74, 95.5, 1692.1))
+                time += abs(stats.skewnorm.rvs(2.81, 0.762, 0.703))
+            elif 0.1 <= n < 0.556:
+                time += abs(stats.skewnorm.rvs(2.3, 45.1, 49.4))
+            elif 0.556 <= n < 0.931:
+                time += abs(stats.gamma.rvs(1.72, 1002.2,1821.30))
             else:
-                time += abs(stats.gamma.rvs(0.908, 10090.3, 7966.6))
+                time += abs(stats.gamma.rvs(0.749, 10089.2, 8856.7))
         else:
             time = self.icu_outtime
             if n < 0.0388:
@@ -243,12 +243,12 @@ class Patient(Agent):
         if random.random() < 0.941:
             return stats.gamma.rvs(2.16, -410.2, 2262.7)
         else:
-            return stats.gamma.rvs(1.026, 15065.1, 6889.6)
+            return stats.gamma.rvs(1.026, 15065.1, 6889.8)
 
     def icu_outtime_normal(self):
         n = random.random()
         if n < 0.285:
-            return stats.skewnorm.rvs(-2.82, 2085.4, 805.6)
+            return stats.skewnorm.rvs(-2.82, 2085, 805.6)
         elif 0.285 <= n < 0.923:
             return stats.gamma.rvs(0.891, 2404.5, 5009.6)
         else:
