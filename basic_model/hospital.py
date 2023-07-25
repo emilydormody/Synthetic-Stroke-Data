@@ -21,6 +21,7 @@ class Hospital(Model):
         self.social_work_patients = []
         self.cardio_patients = []
         self.neurologist_patients = []
+        self.dietitian_patients = []
         self.start_date = datetime.datetime.now()
         self.add_agents()
 

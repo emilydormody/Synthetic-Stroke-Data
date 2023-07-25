@@ -154,21 +154,19 @@ class Dietitian(Specialist):
                     self.current_patient = Patient(NUM_PATIENTS+1, self.model)
                     self.current_patient.diet_visit = self.model.current_time
                 else:
-                    for i in np.random.permutation(len(self.model.neuro_patients)):
-                        patient = self.model.neuro_patients[i]
-                        if patient.last_treatment < self.model.current_time - 10:
-                            if patient.diet_visit == 0 and not patient.in_treatment:
-                                self.current_patient = patient
-                                patient.diet_visit = self.model.current_time
-                                self.current_patient.in_treatment = True
-                                self.daily_stroke_patients -= 1
-                                break
+                    for i in range(len(self.model.dietitian_patients)):
+                        self.current_patient = self.model.dietitian_patients.pop(0)
+                        self.current_patient.diet_visited = True
+                        if self.model.current_time - 1 > self.current_patient.diet_visit:
+                            self.current_patient.diet_visit = self.model.current_time
+                        self.current_patient.in_treatment = True
+                        self.daily_stroke_patients -= 1
+                        break
         if self.current_patient is not None:
             if self.current_patient.diet_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
                 self.current_patient = None
-                self.busy = False
 
 
 class SocialWorker(Specialist):

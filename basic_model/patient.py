@@ -92,7 +92,11 @@ class Patient(Agent):
         else:
             self.physio_visit = NUM_TICKS+1
         self.physio_visited = False
-        self.diet_visit = 0
+        if random.random() <= 0.179:
+            self.diet_visit = self.admission_time + self.dietitian_time_normal()
+        else:
+            self.diet_visit = NUM_TICKS+1
+        self.diet_visited = False
         if random.random() <= 0.203:
             self.social_worker_visit = self.admission_time + self.social_worker_normal()
         else:
@@ -162,6 +166,9 @@ class Patient(Agent):
                     if self.model.current_time >= self.speech_visit - 1 and not self.speech_visited:
                         if self.model.speech_patients.count(self) == 0:
                             self.model.speech_patients.append(self)
+                    if self.model.current_time >= self.diet_visit - 1 and not self.diet_visited:
+                        if self.model.dietitian_patients.count(self) == 0:
+                            self.model.dietitian_patients.append(self)
                     if self.model.current_time >= self.social_worker_visit - 1 and not self.sw_visited:
                         if self.model.social_work_patients.count(self) == 0:
                             self.model.social_work_patients.append(self)
@@ -267,6 +274,12 @@ class Patient(Agent):
             return stats.gamma.rvs(0.973, 300.3, 5128.5)
         else: # 30000 to 80000 mins
             return stats.gamma.rvs(0.896, 30021.7, 12822.1)
+
+    def dietitian_time_normal(self):
+        if random.random() <= 0.026: #50000 to 1750000 mins
+            return stats.gamma.rvs(0.91, 50820.9, 28701.1)
+        else: # 0 to 50000 mins
+            return stats.gamma.rvs(0.865, 0.15, 11974.5)
 
     def speech_time_normal(self):
         n = random.random()
