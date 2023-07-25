@@ -68,31 +68,47 @@ class Patient(Agent):
         self.in_icu = False
         self.neuro_ward_arrived = False
 
-        self.neuro_times_lst = [self.admission_time + self.occupational_time_normal(),
-                                self.admission_time + self.speech_time_normal(),
-                                self.admission_time + self.physio_time_normal(),
-                                0,
-                                self.admission_time + self.social_worker_normal(),
-                                0,
-                                self.admission_time + self.cardiology_time_normal()]
+        # self.neuro_times_lst = [self.admission_time + self.occupational_time_normal(),
+        #                         self.admission_time + self.speech_time_normal(),
+        #                         self.admission_time + self.physio_time_normal(),
+        #                         0,
+        #                         self.admission_time + self.social_worker_normal(),
+        #                         0,
+        #                         self.admission_time + self.cardiology_time_normal()]
         self.neuro_time = self.neuro_time_normal()
         self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
-        self.occupational_visit = self.admission_time + self.occupational_time_normal()
+        if random.random() <= 0.52:
+            self.occupational_visit = self.admission_time + self.occupational_time_normal()
+        else:
+            self.occupational_visit = NUM_TICKS+1
         self.ocu_visited = False
-        self.speech_visit = self.admission_time + self.speech_time_normal()
+        if random.random() <= 0.331:
+            self.speech_visit = self.admission_time + self.speech_time_normal()
+        else:
+            self.occupational_visit = NUM_TICKS+1
         self.speech_visited = False
-        self.physio_visit = self.admission_time + self.physio_time_normal()
+        if random.random() <= 0.742:
+            self.physio_visit = self.admission_time + self.physio_time_normal()
+        else:
+            self.physio_visit = NUM_TICKS+1
         self.physio_visited = False
         self.diet_visit = 0
-        self.social_worker_visit = self.admission_time + self.social_worker_normal()
+        if random.random() <= 0.203:
+            self.social_worker_visit = self.admission_time + self.social_worker_normal()
+        else:
+            self.social_worker_visit = NUM_TICKS+1
         self.sw_visited = False
-        self.neuro_visit = self.admission_time + self.neurologist_time_normal()
+        if random.random() <= 0.023:
+            self.neuro_visit = self.admission_time + self.neurologist_time_normal()
+        else:
+            self.neuro_visit = NUM_TICKS+1
         self.neuro_visited = False
-        if random.randint(0, 3) == 0:
+        if random.random() <= 0.022:
             self.need_cardiologist = True
+            self.cardiologist_visit = self.admission_time + self.cardiology_time_normal()
         else:
             self.need_cardiologist = False
-        self.cardiologist_visit = self.admission_time + self.cardiology_time_normal()
+            self.cardiologist_visit = NUM_TICKS+1
         self.cardio_visited = False
         self.bloodwork = 0
         self.last_checkin = 0
@@ -130,43 +146,30 @@ class Patient(Agent):
                         self.icu_arrival_time = self.model.current_time
                     self.icu_arrived = True
                     self.in_icu = True
-                elif self.in_icu:
-                    if self.model.current_time >= self.icu_outtime:
-                        self.in_icu = False
-                        if self.icu_outtime == self.neuro_time:
-                            self.neuro_ward_admission()
+                elif self.model.current_time >= self.icu_outtime:
+                    self.in_icu = False
+                    if self.icu_outtime == self.neuro_time:
+                        self.neuro_ward_admission()
                 elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived and self.model.current_time >= self.neuro_time:
                     self.neuro_ward_admission()
                 else:
                     if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
-                        if self.icu_arrival_time < self.occupational_visit < self.icu_outtime:
-                            self.occupational_visit = NUM_TICKS+1
-                        elif self.model.ocu_patients.count(self) == 0:
+                        if self.model.ocu_patients.count(self) == 0:
                             self.model.ocu_patients.append(self)
                     if self.model.current_time >= self.physio_visit - 1 and not self.physio_visited:
-                        if self.icu_arrival_time < self.physio_visit < self.icu_outtime:
-                            self.physio_visit = NUM_TICKS+1
-                        elif self.model.physio_patients.count(self) == 0:
+                        if self.model.physio_patients.count(self) == 0:
                             self.model.physio_patients.append(self)
                     if self.model.current_time >= self.speech_visit - 1 and not self.speech_visited:
-                        if self.icu_arrival_time < self.speech_visit < self.icu_outtime:
-                            self.speech_visit = NUM_TICKS+1
-                        elif self.model.speech_patients.count(self) == 0:
+                        if self.model.speech_patients.count(self) == 0:
                             self.model.speech_patients.append(self)
                     if self.model.current_time >= self.social_worker_visit - 1 and not self.sw_visited:
-                        if self.icu_arrival_time < self.social_worker_visit < self.icu_outtime:
-                            self.social_worker_visit = NUM_TICKS+1
-                        elif self.model.social_work_patients.count(self) == 0:
+                        if self.model.social_work_patients.count(self) == 0:
                             self.model.social_work_patients.append(self)
                     if self.model.current_time >= self.cardiologist_visit - 1 and not self.cardio_visited and self.need_cardiologist:
-                        if self.icu_arrival_time < self.cardiologist_visit < self.icu_outtime:
-                            self.need_cardiologist = False
-                        elif self.model.cardio_patients.count(self) == 0:
+                        if self.model.cardio_patients.count(self) == 0:
                             self.model.cardio_patients.append(self)
                     if self.model.current_time >= self.neuro_visit - 1 and not self.neuro_visited:
-                        if self.icu_arrival_time < self.neuro_visit < self.icu_outtime:
-                            self.neuro_visit = NUM_TICKS+1
-                        elif self.model.neurologist_patients.count(self) == 0:
+                        if self.model.neurologist_patients.count(self) == 0:
                             self.model.neurologist_patients.append(self)
 
     def check_permitted(self):
