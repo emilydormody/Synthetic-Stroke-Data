@@ -87,7 +87,7 @@ class Hospital(Model):
     def ticks(self):
         dict = {'patient_id': [], 'time_of_stroke': [], 'ed_intime': [], 'admittime': [], 'ct_scan': [], 'tpa_time': [],
                 'icu_intime': [], 'icu_outtime': [], 'icu_arrived': [], 'neuro_intime': [],'neuro_outtime': [], 'ocu': [],'physio': [],
-                'social_work': [], 'cardiologist': [], 'speech_lang': [],'neurologist': [] }
+                'social_work': [],'dietitian': [], 'cardiologist': [], 'speech_lang': [],'neurologist': [] }
         for patient in self.all_patients:
             dict['patient_id'].append(patient.unique_id)
             dict['time_of_stroke'].append(patient.time_of_stroke)
@@ -131,6 +131,8 @@ class Hospital(Model):
                 dict['social_work'].append(patient.social_worker_visit)
             else:
                 dict['social_work'].append(None)
+            if patient.diet_visited:
+                dict['dietitian']
             if patient.neuro_visit <= NUM_TICKS:
                 dict['neurologist'].append(patient.neuro_visit)
             else:
@@ -234,10 +236,21 @@ class Hospital(Model):
         sp.set_schedule(0,8)
         self.schedule.add(sp)
 
+        for i in range(4):
+            dt = Dietitian(650 + i, self)
+            self.schedule.add(dt)
+        for j in range(2):
+            dt = Dietitian(654 + j, self)
+            dt.set_schedule(14, 20)
+            self.schedule.add(dt)
+        for k in range(2):
+            dt = Dietitian(656 + k, self)
+            dt.set_schedule(20, 5)
+            self.schedule.add(dt)
+        dt = Dietitian(658, self)
+        dt.set_schedule(4, 11)
+        self.schedule.add(dt)
 
-
-        # diet = Dietitian(650, self)
-        # diet.set_schedule(8, 16)
         for i in range(4):
             sw1 = SocialWorker(660+i, self)
             self.schedule.add(sw1)

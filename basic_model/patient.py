@@ -85,7 +85,7 @@ class Patient(Agent):
         if random.random() <= 0.331:
             self.speech_visit = self.admission_time + self.speech_time_normal()
         else:
-            self.occupational_visit = NUM_TICKS+1
+            self.speech_visit = NUM_TICKS+1
         self.speech_visited = False
         if random.random() <= 0.742:
             self.physio_visit = self.admission_time + self.physio_time_normal()
@@ -117,8 +117,8 @@ class Patient(Agent):
         self.bloodwork = 0
         self.last_checkin = 0
 
-        if self.unique_id == NUM_PATIENTS-1:
-            pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
+        # if self.unique_id == NUM_PATIENTS-1:
+        #     pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
             # print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
             # self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
         # print(self.unique_id)
