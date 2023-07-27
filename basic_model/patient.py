@@ -128,8 +128,8 @@ class Patient(Agent):
         self.cardio_visited = False
         self.bloodwork = 0
         self.last_checkin = 0
-        # if self.unique_id == NUM_PATIENTS-1:
-        #     pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
+        if self.unique_id == NUM_PATIENTS-1:
+            pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
         # print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
         # self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
         # print(self.unique_id)
@@ -174,28 +174,27 @@ class Patient(Agent):
                 elif self.model.current_time >= self.neuro_outtime and self.specialist_count == 7:
                     self.discharge = self.model.current_time
                     self.model.schedule.remove(self)
-                else:
-                    if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
-                        if self.model.ocu_patients.count(self) == 0:
-                            self.model.ocu_patients.append(self)
-                    if self.model.current_time >= self.physio_visit - 1 and not self.physio_visited:
-                        if self.model.physio_patients.count(self) == 0:
-                            self.model.physio_patients.append(self)
-                    if self.model.current_time >= self.speech_visit - 1 and not self.speech_visited:
-                        if self.model.speech_patients.count(self) == 0:
-                            self.model.speech_patients.append(self)
-                    if self.model.current_time >= self.diet_visit - 1 and not self.diet_visited:
-                        if self.model.dietitian_patients.count(self) == 0:
-                            self.model.dietitian_patients.append(self)
-                    if self.model.current_time >= self.social_worker_visit - 1 and not self.sw_visited:
-                        if self.model.social_work_patients.count(self) == 0:
-                            self.model.social_work_patients.append(self)
-                    if self.model.current_time >= self.cardiologist_visit - 1 and not self.cardio_visited and self.need_cardiologist:
-                        if self.model.cardio_patients.count(self) == 0:
-                            self.model.cardio_patients.append(self)
-                    if self.model.current_time >= self.neuro_visit - 1 and not self.neuro_visited:
-                        if self.model.neurologist_patients.count(self) == 0:
-                            self.model.neurologist_patients.append(self)
+            if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
+                if self.model.ocu_patients.count(self) == 0:
+                    self.model.ocu_patients.append(self)
+            if self.model.current_time >= self.physio_visit - 1 and not self.physio_visited:
+                if self.model.physio_patients.count(self) == 0:
+                    self.model.physio_patients.append(self)
+            if self.model.current_time >= self.speech_visit - 1 and not self.speech_visited:
+                if self.model.speech_patients.count(self) == 0:
+                    self.model.speech_patients.append(self)
+            if self.model.current_time >= self.diet_visit - 1 and not self.diet_visited:
+                if self.model.dietitian_patients.count(self) == 0:
+                    self.model.dietitian_patients.append(self)
+            if self.model.current_time >= self.social_worker_visit - 1 and not self.sw_visited:
+                if self.model.social_work_patients.count(self) == 0:
+                    self.model.social_work_patients.append(self)
+            if self.model.current_time >= self.cardiologist_visit - 1 and not self.cardio_visited and self.need_cardiologist:
+                if self.model.cardio_patients.count(self) == 0:
+                    self.model.cardio_patients.append(self)
+            if self.model.current_time >= self.neuro_visit - 1 and not self.neuro_visited:
+                if self.model.neurologist_patients.count(self) == 0:
+                    self.model.neurologist_patients.append(self)
 
     def check_permitted(self):
         if self.tpa_denied:
