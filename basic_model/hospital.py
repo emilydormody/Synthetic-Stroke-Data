@@ -132,7 +132,9 @@ class Hospital(Model):
             else:
                 dict['social_work'].append(None)
             if patient.diet_visited:
-                dict['dietitian']
+                dict['dietitian'].append(patient.diet_visit)
+            else:
+                dict['dietitian'].append(None)
             if patient.neuro_visit <= NUM_TICKS:
                 dict['neurologist'].append(patient.neuro_visit)
             else:
