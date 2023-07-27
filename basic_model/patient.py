@@ -15,6 +15,8 @@ DT = 3
 SW = 4
 NR = 5
 CD = 6
+
+
 class Patient(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
@@ -26,7 +28,7 @@ class Patient(Agent):
             self.gender = "F"
         self.age = random.randint(20, 91)
 
-        self.hospital_arrival = random.randint(300, NUM_TICKS//4) + random.random()
+        self.hospital_arrival = random.randint(300, NUM_TICKS // 4) + random.random()
         if random.random() >= 0.75:
             self.admission_time = self.hospital_arrival
         else:
@@ -80,47 +82,47 @@ class Patient(Agent):
         if random.random() <= 0.52:
             self.occupational_visit = self.admission_time + self.occupational_time_normal()
         else:
-            self.occupational_visit = NUM_TICKS+1
+            self.occupational_visit = NUM_TICKS + 1
         self.ocu_visited = False
         if random.random() <= 0.331:
             self.speech_visit = self.admission_time + self.speech_time_normal()
         else:
-            self.speech_visit = NUM_TICKS+1
+            self.speech_visit = NUM_TICKS + 1
         self.speech_visited = False
         if random.random() <= 0.742:
             self.physio_visit = self.admission_time + self.physio_time_normal()
         else:
-            self.physio_visit = NUM_TICKS+1
+            self.physio_visit = NUM_TICKS + 1
         self.physio_visited = False
         if random.random() <= 0.179:
             self.diet_visit = self.admission_time + self.dietitian_time_normal()
         else:
-            self.diet_visit = NUM_TICKS+1
+            self.diet_visit = NUM_TICKS + 1
         self.diet_visited = False
         if random.random() <= 0.203:
             self.social_worker_visit = self.admission_time + self.social_worker_normal()
         else:
-            self.social_worker_visit = NUM_TICKS+1
+            self.social_worker_visit = NUM_TICKS + 1
         self.sw_visited = False
         if random.random() <= 0.023:
             self.neuro_visit = self.admission_time + self.neurologist_time_normal()
         else:
-            self.neuro_visit = NUM_TICKS+1
+            self.neuro_visit = NUM_TICKS + 1
         self.neuro_visited = False
         if random.random() <= 0.022:
             self.need_cardiologist = True
             self.cardiologist_visit = self.admission_time + self.cardiology_time_normal()
         else:
             self.need_cardiologist = False
-            self.cardiologist_visit = NUM_TICKS+1
+            self.cardiologist_visit = NUM_TICKS + 1
         self.cardio_visited = False
         self.bloodwork = 0
         self.last_checkin = 0
 
         # if self.unique_id == NUM_PATIENTS-1:
         #     pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
-            # print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
-            # self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
+        # print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
+        # self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
         # print(self.unique_id)
 
     def step(self):
@@ -144,17 +146,21 @@ class Patient(Agent):
                     if self.model.t_patients.count(self) == 0:
                         self.model.t_patients.append(self)
             elif self.arrived:
-                if (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu and self.model.current_time >= self.icu_arrival_time:
+                if (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu and \
+                        self.model.current_time >= self.icu_arrival_time:
                     if self.model.current_time - 1 > self.icu_arrival_time:
                         # print('icu', self.icu_arrival_time, 'current', self.model.current_time, self.unique_id)
                         self.icu_arrival_time = self.model.current_time
                     self.icu_arrived = True
                     self.in_icu = True
-                elif self.model.current_time >= self.icu_outtime:
+                elif self.model.current_time >= self.icu_outtime and self.in_icu:
                     self.in_icu = False
                     if self.icu_outtime == self.neuro_time:
                         self.neuro_ward_admission()
-                elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived and self.model.current_time >= self.neuro_time:
+                    if self.model.current_time - 1 > self.icu_outtime:
+                        self.icu_outtime = self.model.current_time
+                elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived and \
+                        self.model.current_time >= self.neuro_time:
                     self.neuro_ward_admission()
                 else:
                     if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
@@ -225,7 +231,7 @@ class Patient(Agent):
             elif 0.1 <= n < 0.556:
                 time += abs(stats.skewnorm.rvs(2.3, 45.1, 49.4))
             elif 0.556 <= n < 0.931:
-                time += abs(stats.gamma.rvs(1.72, 1002.2,1821.30))
+                time += abs(stats.gamma.rvs(1.72, 1002.2, 1821.30))
             else:
                 time += abs(stats.gamma.rvs(0.749, 10089.2, 8856.7))
         else:
@@ -266,19 +272,19 @@ class Patient(Agent):
 
     def physio_time_normal(self):
         n = random.random()
-        if n < 0.027 and not self.hospital_arrival == self.admission_time: # <0 minutes (happens in ed)
-            return stats.gamma.rvs(2.15, 42.2,82.7)
-        if n < 0.277: # 0 to 300 mins
+        if n < 0.027 and not self.hospital_arrival == self.admission_time:  # <0 minutes (happens in ed)
+            return stats.gamma.rvs(2.15, 42.2, 82.7)
+        if n < 0.277:  # 0 to 300 mins
             return stats.gamma.rvs(5.91, -45.7, 28)
-        elif 0.277 <= n < 0.931: # 300 to 30000 mins
+        elif 0.277 <= n < 0.931:  # 300 to 30000 mins
             return stats.gamma.rvs(0.973, 300.3, 5128.5)
-        else: # 30000 to 80000 mins
+        else:  # 30000 to 80000 mins
             return stats.gamma.rvs(0.896, 30021.7, 12822.1)
 
     def dietitian_time_normal(self):
-        if random.random() <= 0.026: #50000 to 1750000 mins
+        if random.random() <= 0.026:  # 50000 to 1750000 mins
             return stats.gamma.rvs(0.91, 50820.9, 28701.1)
-        else: # 0 to 50000 mins
+        else:  # 0 to 50000 mins
             return stats.gamma.rvs(0.865, 0.15, 11974.5)
 
     def speech_time_normal(self):
