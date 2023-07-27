@@ -17,6 +17,7 @@ NR = 5
 CD = 6
 
 
+
 class Patient(Agent):
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)
@@ -42,6 +43,7 @@ class Patient(Agent):
                 self.transport = "walkin"
         else:
             self.transport = None
+        self.discharge = None
 
         self.ct_time = self.hospital_arrival + self.ct_time_normal()
         self.ct_treated = False
@@ -79,35 +81,42 @@ class Patient(Agent):
         #                         self.admission_time + self.cardiology_time_normal()]
         self.neuro_time = self.neuro_time_normal()
         self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
+        self.specialist_count = 0
         if random.random() <= 0.52:
             self.occupational_visit = self.admission_time + self.occupational_time_normal()
         else:
             self.occupational_visit = NUM_TICKS + 1
+            self.specialist_count += 1
         self.ocu_visited = False
         if random.random() <= 0.331:
             self.speech_visit = self.admission_time + self.speech_time_normal()
         else:
             self.speech_visit = NUM_TICKS + 1
+            self.specialist_count += 1
         self.speech_visited = False
         if random.random() <= 0.742:
             self.physio_visit = self.admission_time + self.physio_time_normal()
         else:
             self.physio_visit = NUM_TICKS + 1
+            self.specialist_count += 1
         self.physio_visited = False
         if random.random() <= 0.179:
             self.diet_visit = self.admission_time + self.dietitian_time_normal()
         else:
             self.diet_visit = NUM_TICKS + 1
+            self.specialist_count += 1
         self.diet_visited = False
         if random.random() <= 0.203:
             self.social_worker_visit = self.admission_time + self.social_worker_normal()
         else:
             self.social_worker_visit = NUM_TICKS + 1
+            self.specialist_count += 1
         self.sw_visited = False
         if random.random() <= 0.023:
             self.neuro_visit = self.admission_time + self.neurologist_time_normal()
         else:
             self.neuro_visit = NUM_TICKS + 1
+            self.specialist_count += 1
         self.neuro_visited = False
         if random.random() <= 0.022:
             self.need_cardiologist = True
@@ -115,10 +124,10 @@ class Patient(Agent):
         else:
             self.need_cardiologist = False
             self.cardiologist_visit = NUM_TICKS + 1
+            self.specialist_count += 1
         self.cardio_visited = False
         self.bloodwork = 0
         self.last_checkin = 0
-
         # if self.unique_id == NUM_PATIENTS-1:
         #     pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
         # print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
@@ -162,6 +171,9 @@ class Patient(Agent):
                 elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived and \
                         self.model.current_time >= self.neuro_time:
                     self.neuro_ward_admission()
+                elif self.model.current_time >= self.neuro_outtime and self.specialist_count == 7:
+                    self.discharge = self.model.current_time
+                    self.model.schedule.remove(self)
                 else:
                     if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
                         if self.model.ocu_patients.count(self) == 0:
@@ -316,3 +328,6 @@ class Patient(Agent):
 
     def neurologist_time_normal(self):
         return stats.gamma.rvs(0.566, 5.92, 14428.2)
+
+
+
