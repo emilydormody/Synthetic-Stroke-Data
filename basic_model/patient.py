@@ -283,11 +283,11 @@ class Patient(Agent):
 
     def physio_time_normal(self):
         n = random.random()
-        if n < 0.027 and not self.hospital_arrival == self.admission_time:  # <0 minutes (happens in ed)
+        if n < 0.041 and not self.hospital_arrival == self.admission_time:  # <0 minutes (happens in ed)
             return stats.gamma.rvs(2.15, 42.2, 82.7)
-        if n < 0.277:  # 0 to 300 mins
+        if n < 0.318:  # 0 to 300 mins
             return stats.gamma.rvs(5.91, -45.7, 28)
-        elif 0.277 <= n < 0.931:  # 300 to 30000 mins
+        elif 0.277 <= n < 0.972:  # 300 to 30000 mins
             return stats.gamma.rvs(0.973, 300.3, 5128.5)
         else:  # 30000 to 80000 mins
             return stats.gamma.rvs(0.896, 30021.7, 12822.1)
