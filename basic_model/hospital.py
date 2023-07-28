@@ -171,117 +171,153 @@ class Hospital(Model):
             patient = Patient(i, self)
             self.schedule.add(patient)
             self.all_patients.append(patient)
-        for i in range(4):
+
+        shift_num = 0
+        for i in range(NUM_PER_SPECIALISTS):
             ct = CTScan(6000 + i, self)
+            tpa = TPA(6100 + i, self)
+            ocu = OccupationalTherapist(6200 + i, self)
+            phys1 = PhysioTherapist(6300 + i, self)
+            sp = SpeechPathologist(6400 + i, self)
+            dt = Dietitian(6500 + i, self)
+            sw1 = SocialWorker(6600 + i, self)
+            neuro = Neurologist(6700 + i, self)
+            cd = Cardiologist(6800 + i, self)
             self.schedule.add(ct)
-        for i in range(2):
-            ct = CTScan(6004+i, self)
-            ct.set_schedule(16, 6)
-            self.schedule.add(ct)
-        for i in range(2):
-            ct = CTScan(6006 + i, self)
-            ct.set_schedule(4,12)
-            self.schedule.add(ct)
-        tpa = TPA(6010, self)
-        tpa.set_schedule(8, 22)
-        tpa2 = TPA(6011, self)
-        tpa2.set_schedule(22, 8)
-        self.schedule.add(tpa)
-        self.schedule.add(tpa2)
-
-        for i in range(4):
-            ocu = OccupationalTherapist(6020+i, self)
+            self.schedule.add(tpa)
             self.schedule.add(ocu)
-        for j in range(2):
-            ocu = OccupationalTherapist(6024+j, self)
-            ocu.set_schedule(14,20)
-            self.schedule.add(ocu)
-        for k in range(2):
-            ocu = OccupationalTherapist(6026+k, self)
-            ocu.set_schedule(20,5)
-            self.schedule.add(ocu)
-        ocu = OccupationalTherapist(6028, self)
-        ocu.set_schedule(4,11)
-        self.schedule.add(ocu)
-
-        for i in range(5):
-            phys1 = PhysioTherapist(6030+i, self)
             self.schedule.add(phys1)
-        for i in range(2):
-            phys2 = PhysioTherapist(6035+i, self)
-            phys2.set_schedule(16,0)
-            self.schedule.add(phys2)
-        phys3 = PhysioTherapist(6037, self)
-        phys3.set_schedule(0, 7)
-        self.schedule.add(phys3)
-        phys4 = PhysioTherapist(6038, self)
-        phys4.set_schedule(1,8)
-        self.schedule.add(phys4)
-
-        for i in range(3):
-            sp = SpeechPathologist(6040+i, self)
             self.schedule.add(sp)
-        for j in range(2):
-            sp = SpeechPathologist(6043+j, self)
-            sp.set_schedule(13,22)
-            self.schedule.add(sp)
-        for k in range(2):
-            sp = SpeechPathologist(6045+k, self)
-            sp.set_schedule(20,4)
-            self.schedule.add(sp)
-        sp = SpeechPathologist(6047, self)
-        sp.set_schedule(0,8)
-        self.schedule.add(sp)
-
-        for i in range(4):
-            dt = Dietitian(6050 + i, self)
             self.schedule.add(dt)
-        for j in range(2):
-            dt = Dietitian(6054 + j, self)
-            dt.set_schedule(14, 20)
-            self.schedule.add(dt)
-        for k in range(2):
-            dt = Dietitian(6056 + k, self)
-            dt.set_schedule(20, 5)
-            self.schedule.add(dt)
-        dt = Dietitian(6058, self)
-        dt.set_schedule(4, 11)
-        self.schedule.add(dt)
-
-        for i in range(4):
-            sw1 = SocialWorker(6060+i, self)
             self.schedule.add(sw1)
-        for j in range(2):
-            sw = SocialWorker(6064 + j, self)
-            sw.set_schedule(14, 20)
-            self.schedule.add(sw)
-        for k in range(2):
-            sw = SocialWorker(6066 + k, self)
-            sw.set_schedule(20, 5)
-            self.schedule.add(sw)
-        sw = SocialWorker(6068, self)
-        sw.set_schedule(4, 11)
-        self.schedule.add(sw)
-
-        for i in range(3):
-            neuro = Neurologist(6070+i, self)
-            neuro.set_schedule(8, 20)
             self.schedule.add(neuro)
-            neuro1 = Neurologist(6073+i, self)
-            neuro1.set_schedule(20, 8)
-            self.schedule.add(neuro1)
+            self.schedule.add(cd)
+            if shift_num > 0:
+                ct.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
+                tpa.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
+                ocu.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
+                phys1.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
+                sp.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
+                dt.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
+                sw1.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
+                neuro.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
+                cd.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
+            shift_num += 1
+            if shift_num >= len(SHIFT_LST):
+                shift_num = 0
 
 
-        for i in range(3):
-            cd = Cardiologist(6080+i, self)
-            self.schedule.add(cd)
-        for j in range(2):
-            cd = Cardiologist(6083+j, self)
-            cd.set_schedule(14,23)
-            self.schedule.add(cd)
-        cd = Cardiologist(6085, self)
-        cd.set_schedule(22,8)
-        self.schedule.add(cd)
+        # for i in range(4):
+        #     ct = CTScan(6000 + i, self)
+        #     self.schedule.add(ct)
+        # for i in range(2):
+        #     ct = CTScan(6004+i, self)
+        #     ct.set_schedule(16, 6)
+        #     self.schedule.add(ct)
+        # for i in range(2):
+        #     ct = CTScan(6006 + i, self)
+        #     ct.set_schedule(4,12)
+        #     self.schedule.add(ct)
+        # tpa = TPA(6010, self)
+        # tpa.set_schedule(8, 22)
+        # tpa2 = TPA(6011, self)
+        # tpa2.set_schedule(22, 8)
+        # self.schedule.add(tpa)
+        # self.schedule.add(tpa2)
+        #
+        # for i in range(4):
+        #     ocu = OccupationalTherapist(6020+i, self)
+        #     self.schedule.add(ocu)
+        # for j in range(2):
+        #     ocu = OccupationalTherapist(6024+j, self)
+        #     ocu.set_schedule(14,20)
+        #     self.schedule.add(ocu)
+        # for k in range(2):
+        #     ocu = OccupationalTherapist(6026+k, self)
+        #     ocu.set_schedule(20,5)
+        #     self.schedule.add(ocu)
+        # ocu = OccupationalTherapist(6028, self)
+        # ocu.set_schedule(4,11)
+        # self.schedule.add(ocu)
+        #
+        # for i in range(5):
+        #     phys1 = PhysioTherapist(6030+i, self)
+        #     self.schedule.add(phys1)
+        # for i in range(2):
+        #     phys2 = PhysioTherapist(6035+i, self)
+        #     phys2.set_schedule(16,0)
+        #     self.schedule.add(phys2)
+        # phys3 = PhysioTherapist(6037, self)
+        # phys3.set_schedule(0, 7)
+        # self.schedule.add(phys3)
+        # phys4 = PhysioTherapist(6038, self)
+        # phys4.set_schedule(1,8)
+        # self.schedule.add(phys4)
+        #
+        # for i in range(3):
+        #     sp = SpeechPathologist(6040+i, self)
+        #     self.schedule.add(sp)
+        # for j in range(2):
+        #     sp = SpeechPathologist(6043+j, self)
+        #     sp.set_schedule(13,22)
+        #     self.schedule.add(sp)
+        # for k in range(2):
+        #     sp = SpeechPathologist(6045+k, self)
+        #     sp.set_schedule(20,4)
+        #     self.schedule.add(sp)
+        # sp = SpeechPathologist(6047, self)
+        # sp.set_schedule(0,8)
+        # self.schedule.add(sp)
+        #
+        # for i in range(4):
+        #     dt = Dietitian(6050 + i, self)
+        #     self.schedule.add(dt)
+        # for j in range(2):
+        #     dt = Dietitian(6054 + j, self)
+        #     dt.set_schedule(14, 20)
+        #     self.schedule.add(dt)
+        # for k in range(2):
+        #     dt = Dietitian(6056 + k, self)
+        #     dt.set_schedule(20, 5)
+        #     self.schedule.add(dt)
+        # dt = Dietitian(6058, self)
+        # dt.set_schedule(4, 11)
+        # self.schedule.add(dt)
+        #
+        # for i in range(4):
+        #     sw1 = SocialWorker(6060+i, self)
+        #     self.schedule.add(sw1)
+        # for j in range(2):
+        #     sw = SocialWorker(6064 + j, self)
+        #     sw.set_schedule(14, 20)
+        #     self.schedule.add(sw)
+        # for k in range(2):
+        #     sw = SocialWorker(6066 + k, self)
+        #     sw.set_schedule(20, 5)
+        #     self.schedule.add(sw)
+        # sw = SocialWorker(6068, self)
+        # sw.set_schedule(4, 11)
+        # self.schedule.add(sw)
+        #
+        # for i in range(3):
+        #     neuro = Neurologist(6070+i, self)
+        #     neuro.set_schedule(8, 20)
+        #     self.schedule.add(neuro)
+        #     neuro1 = Neurologist(6073+i, self)
+        #     neuro1.set_schedule(20, 8)
+        #     self.schedule.add(neuro1)
+        #
+        #
+        # for i in range(3):
+        #     cd = Cardiologist(6080+i, self)
+        #     self.schedule.add(cd)
+        # for j in range(2):
+        #     cd = Cardiologist(6083+j, self)
+        #     cd.set_schedule(14,23)
+        #     self.schedule.add(cd)
+        # cd = Cardiologist(6085, self)
+        # cd.set_schedule(22,8)
+        # self.schedule.add(cd)
 
         # for i in range(5):
         #     bw = BloodWork(690 + i, self)

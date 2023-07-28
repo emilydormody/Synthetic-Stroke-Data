@@ -7,16 +7,6 @@ import numpy as np
 from scipy import stats
 from values import *
 
-# lst codes
-OCU = 0
-SLP = 1
-PT = 2
-DT = 3
-SW = 4
-NR = 5
-CD = 6
-
-
 
 class Patient(Agent):
     def __init__(self, unique_id, model):
