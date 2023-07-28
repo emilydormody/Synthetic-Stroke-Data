@@ -95,7 +95,7 @@ class Patient(Agent):
             self.specialist_count += 1
         self.speech_visited = False
         if random.random() <= 0.742:
-            self.physio_visit = self.admission_time + self.physio_time_normal()
+            self.physio_visit = self.physio_time_normal()
         else:
             self.physio_visit = NUM_TICKS + 1
             self.specialist_count += 1
@@ -284,13 +284,13 @@ class Patient(Agent):
     def physio_time_normal(self):
         n = random.random()
         if n < 0.041 and not self.hospital_arrival == self.admission_time:  # <0 minutes (happens in ed)
-            return stats.gamma.rvs(2.15, 42.2, 82.7)
+            return self.hospital_arrival + stats.gamma.rvs(2.15, 42.2, 82.7)
         if n < 0.318:  # 0 to 300 mins
-            return stats.gamma.rvs(5.91, -45.7, 28)
+            return self.admission_time + stats.gamma.rvs(5.91, -45.7, 28)
         elif 0.277 <= n < 0.972:  # 300 to 30000 mins
-            return stats.gamma.rvs(0.973, 300.3, 5128.5)
+            return self.admission_time + stats.gamma.rvs(0.973, 300.3, 5128.5)
         else:  # 30000 to 80000 mins
-            return stats.gamma.rvs(0.896, 30021.7, 12822.1)
+            return self.admission_time + stats.gamma.rvs(0.896, 30021.7, 12822.1)
 
     def dietitian_time_normal(self):
         if random.random() <= 0.026:  # 50000 to 1750000 mins
