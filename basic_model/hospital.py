@@ -39,7 +39,7 @@ class Hospital(Model):
     def patient_info(self):
         dict = {"Patient Id": [], "Age": [], "Gender": [], "Time of Stroke": [], "ED Arrival Time": [],
                 "Arrival Time": [], "Arrival Transport": [], "CT Scan Time": [],
-                "TPA Treatment Time": [], "Reason for Rejecting TPA": [], "ICU Arrival Time": [],
+                "TPA Treatment Time": [], "ICU Arrival Time": [],
                 "ICU Checkout Time": [], "Neurology Ward Arrival Time": [],
                 "Occupational Therapist Visit": [],
                 "Speech Pathologist Visit": [], "Physiotherapist Visit": [], "Dietitian Visit": [],
@@ -59,14 +59,8 @@ class Hospital(Model):
             dict["CT Scan Time"].append(self.convert_time(patient.ct_time))
             if patient.tpa_treated:
                 dict["TPA Treatment Time"].append(self.convert_time(patient.t_time))
-                reason = None
             else:
                 dict["TPA Treatment Time"].append(None)
-                if patient.tpa_denied:
-                    reason = "Patient/family refusal"
-                else:
-                    reason = "Arrived later then 4.5 Hours"
-            dict["Reason for Rejecting TPA"].append(reason)
             dict["ICU Arrival Time"].append(self.convert_time(patient.icu_arrival_time))
             dict["ICU Checkout Time"].append(self.convert_time(patient.icu_outtime))
             dict["Neurology Ward Arrival Time"].append(self.convert_time(patient.neuro_time))

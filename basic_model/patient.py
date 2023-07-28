@@ -45,14 +45,18 @@ class Patient(Agent):
             self.transport = None
         self.discharge = None
 
-        self.ct_time = self.hospital_arrival + self.ct_time_normal()
+        if random.random() <= 0.167:
+            self.ct_time = self.hospital_arrival + self.ct_time_normal()
+        else:
+            self.ct_time = NUM_TICKS+1
         self.ct_treated = False
-        self.t_time = self.hospital_arrival + self.tpa_time_normal()
         self.tpa_treated = False
         self.tpa_permitted = False
-        if random.random() >= 0.9:
+        if random.random() >= 0.04:
+            self.t_time = NUM_TICKS+1
             self.tpa_denied = True
         else:
+            self.t_time = self.hospital_arrival + self.tpa_time_normal()
             self.tpa_denied = False
 
         if random.random() <= 0.45:
@@ -128,8 +132,8 @@ class Patient(Agent):
         self.cardio_visited = False
         self.bloodwork = 0
         self.last_checkin = 0
-        if self.unique_id == NUM_PATIENTS-1:
-            pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
+        #if self.unique_id == NUM_PATIENTS-1:
+            #pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
         # print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
         # self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
         # print(self.unique_id)
@@ -146,20 +150,9 @@ class Patient(Agent):
                     self.model.ed_patients.remove(self)
                 if self.model.current_time - 1 > self.admission_time:
                     self.admission_time = self.model.current_time
-            elif not self.ct_treated:
-                if self.model.current_time >= self.ct_time - 1:
-                    if self.model.ct_patients.count(self) == 0:
-                        self.model.ct_patients.append(self)
-            elif self.check_permitted() and not self.tpa_treated and self.ct_treated:
-                if self.model.current_time >= self.t_time - 1:
-                    if self.model.t_patients.count(self) == 0:
-                        self.model.t_patients.append(self)
             elif self.arrived:
-                if (self.tpa_treated or not self.tpa_permitted) and not self.icu_arrived and self.need_icu and \
-                        self.model.current_time >= self.icu_arrival_time:
-                    if self.model.current_time - 1 > self.icu_arrival_time:
-                        # print('icu', self.icu_arrival_time, 'current', self.model.current_time, self.unique_id)
-                        self.icu_arrival_time = self.model.current_time
+                if self.model.current_time - 1 > self.icu_arrival_time and not self.icu_arrived and self.need_icu:
+                    self.icu_arrival_time = self.model.current_time
                     self.icu_arrived = True
                     self.in_icu = True
                 elif self.model.current_time >= self.icu_outtime and self.in_icu:
@@ -174,6 +167,12 @@ class Patient(Agent):
                 elif self.model.current_time >= self.neuro_outtime and self.specialist_count == 7:
                     self.discharge = self.model.current_time
                     self.model.schedule.remove(self)
+            if self.model.current_time >= self.ct_time -1 and not self.ct_treated:
+                if self.model.ct_patients.count(self) == 0:
+                    self.model.ct_patients.append(self)
+            if self.model.current_time >= self.t_time - 1 and not self.tpa_treated:
+                if self.model.t_patients.count(self) == 0 and self.check_permitted():
+                    self.model.t_patients.append(self)
             if self.model.current_time >= self.occupational_visit - 1 and not self.ocu_visited:
                 if self.model.ocu_patients.count(self) == 0:
                     self.model.ocu_patients.append(self)
