@@ -193,16 +193,17 @@ class Hospital(Model):
             self.schedule.add(neuro)
             self.schedule.add(cd)
             if shift_num > 0:
-                ct.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
-                tpa.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
-                ocu.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
-                phys1.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
-                sp.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
-                dt.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
-                sw1.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
-                neuro.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
-                cd.set_schedule(SHIFT_LST[i][0], SHIFT_LST[i][1])
+                ct.set_schedule(SHIFT_LST[shift_num][0], SHIFT_LST[shift_num][1])
+                tpa.set_schedule(SHIFT_LST[shift_num][0], SHIFT_LST[shift_num][1])
+                ocu.set_schedule(SHIFT_LST[shift_num][0], SHIFT_LST[shift_num][1])
+                phys1.set_schedule(SHIFT_LST[shift_num][0], SHIFT_LST[shift_num][1])
+                sp.set_schedule(SHIFT_LST[shift_num][0], SHIFT_LST[shift_num][1])
+                dt.set_schedule(SHIFT_LST[shift_num][0], SHIFT_LST[shift_num][1])
+                sw1.set_schedule(SHIFT_LST[shift_num][0], SHIFT_LST[shift_num][1])
+                neuro.set_schedule(SHIFT_LST[shift_num][0], SHIFT_LST[shift_num][1])
+                cd.set_schedule(SHIFT_LST[shift_num][0], SHIFT_LST[shift_num][1])
             shift_num += 1
+            print(shift_num)
             if shift_num >= len(SHIFT_LST):
                 shift_num = 0
 
