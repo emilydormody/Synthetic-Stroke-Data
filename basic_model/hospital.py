@@ -91,7 +91,10 @@ class Hospital(Model):
                 dict['ed_intime'].append(None)
             dict['admittime'].append(patient.admission_time)
             dict['discharge'].append(patient.discharge)
-            dict['ct_scan'].append(patient.ct_time)
+            if patient.ct_treated:
+                dict['ct_scan'].append(patient.ct_time)
+            else:
+                dict['ct_time'].append(None)
             if patient.tpa_treated:
                 dict['tpa_time'].append(patient.t_time)
             else:
@@ -104,8 +107,12 @@ class Hospital(Model):
                 dict['icu_arrived'].append(False)
                 dict['icu_intime'].append(None)
                 dict['icu_outtime'].append(None)
-            dict['neuro_intime'].append(patient.neuro_time)
-            dict['neuro_outtime'].append(patient.neuro_outtime)
+            if patient.neuro_visited:
+                dict['neuro_intime'].append(patient.neuro_time)
+                dict['neuro_outtime'].append(patient.neuro_outtime)
+            else:
+                dict['neuro_intime'].append(None)
+                dict['neuro_outtime'].append(None)
             if patient.occupational_visit <= NUM_TICKS:
                 dict['ocu'].append(patient.occupational_visit)
             else:
