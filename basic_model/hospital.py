@@ -94,7 +94,7 @@ class Hospital(Model):
             if patient.ct_treated:
                 dict['ct_scan'].append(patient.ct_time)
             else:
-                dict['ct_time'].append(None)
+                dict['ct_scan'].append(None)
             if patient.tpa_treated:
                 dict['tpa_time'].append(patient.t_time)
             else:
@@ -107,7 +107,7 @@ class Hospital(Model):
                 dict['icu_arrived'].append(False)
                 dict['icu_intime'].append(None)
                 dict['icu_outtime'].append(None)
-            if patient.neuro_visited:
+            if patient.neuro_time <= NUM_TICKS:
                 dict['neuro_intime'].append(patient.neuro_time)
                 dict['neuro_outtime'].append(patient.neuro_outtime)
             else:
