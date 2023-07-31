@@ -2,8 +2,8 @@ from mesa import Agent, Model
 import mesa.time
 import datetime
 from patient import Patient
-from different_specialists import *
-from values import *
+from .different_specialists import *
+from .values import *
 
 
 class Hospital(Model):

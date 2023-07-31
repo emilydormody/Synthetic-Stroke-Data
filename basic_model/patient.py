@@ -5,7 +5,7 @@ import pandas as pd
 from mesa import Agent, Model
 import numpy as np
 from scipy import stats
-from values import *
+from .values import *
 
 
 class Patient(Agent):
