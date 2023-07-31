@@ -226,14 +226,14 @@ class Patient(Agent):
         n = random.random()
         if self.icu_outtime == 0:
             time = self.admission_time
-            if n < 0.1:
-                time += abs(stats.skewnorm.rvs(2.81, 0.762, 0.703))
-            elif 0.1 <= n < 0.556:
-                time += abs(stats.skewnorm.rvs(2.3, 45.1, 49.4))
-            elif 0.556 <= n < 0.931:
-                time += abs(stats.gamma.rvs(1.72, 1002.2, 1821.30))
+            if n < 0.136:
+                time += stats.skewnorm.rvs(2.89, 0.762, 0.716)
+            elif 0.136 <= n < 0.823:
+                time += stats.skewnorm.rvs(2.38, 45.2, 49.6)
+            elif 0.823 <= n < 0.99:
+                time += stats.gamma.rvs(0.84, 201.1, 2428.7)
             else:
-                time += abs(stats.gamma.rvs(0.749, 10089.2, 8856.7))
+                time += stats.gamma.rvs(0.409, 10089.2, 10251.9)
         else:
             time = self.icu_outtime
             if n < 0.0388:
