@@ -38,12 +38,12 @@ class Patient(Agent):
         if random.random() <= 0.167:
             self.ct_time = self.hospital_arrival + self.ct_time_normal()
         else:
-            self.ct_time = NUM_TICKS+1
+            self.ct_time = NUM_TICKS + 1
         self.ct_treated = False
         self.tpa_treated = False
         self.tpa_permitted = False
         if random.random() >= 0.04:
-            self.t_time = NUM_TICKS+1
+            self.t_time = NUM_TICKS + 1
             self.tpa_denied = True
         else:
             self.t_time = self.hospital_arrival + self.tpa_time_normal()
@@ -73,7 +73,17 @@ class Patient(Agent):
         #                         self.admission_time + self.social_worker_normal(),
         #                         0,
         #                         self.admission_time + self.cardiology_time_normal()]
-        self.neuro_time = self.neuro_time_normal()
+        if self.icu_outtime == 0:
+            if random.random() <= 0.506:
+                self.neuro_time = self.neuro_time_normal()
+            else:
+                self.neuro_time = NUM_TICKS + 1
+        else:
+            if random.random() <= 0.36:
+                self.neuro_time = self.neuro_time_normal()
+            else:
+                self.neuro_time = NUM_TICKS + 1
+
         self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
         self.specialist_count = 0
         if random.random() <= 0.52:
@@ -122,8 +132,8 @@ class Patient(Agent):
         self.cardio_visited = False
         self.bloodwork = 0
         self.last_checkin = 0
-        #if self.unique_id == NUM_PATIENTS-1:
-            #pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
+        if self.unique_id == NUM_PATIENTS - 1:
+            pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
         # print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
         # self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
         # print(self.unique_id)
@@ -157,7 +167,7 @@ class Patient(Agent):
                 elif self.model.current_time >= self.neuro_outtime and self.specialist_count == 7:
                     self.discharge = self.model.current_time
                     self.model.schedule.remove(self)
-            if self.model.current_time >= self.ct_time -1 and not self.ct_treated:
+            if self.model.current_time >= self.ct_time - 1 and not self.ct_treated:
                 if self.model.ct_patients.count(self) == 0:
                     self.model.ct_patients.append(self)
             if self.model.current_time >= self.t_time - 1 and not self.tpa_treated:
@@ -228,9 +238,9 @@ class Patient(Agent):
             time = self.admission_time
             if n < 0.136:
                 time += stats.skewnorm.rvs(2.89, 0.762, 0.716)
-            elif 0.136 <= n < 0.823:
+            elif 0.136 <= n < 0.824:
                 time += stats.skewnorm.rvs(2.38, 45.2, 49.6)
-            elif 0.823 <= n < 0.99:
+            elif 0.824 <= n < 0.991:
                 time += stats.gamma.rvs(0.84, 201.1, 2428.7)
             else:
                 time += stats.gamma.rvs(0.409, 10089.2, 10251.9)
@@ -316,6 +326,3 @@ class Patient(Agent):
 
     def neurologist_time_normal(self):
         return stats.gamma.rvs(0.566, 5.92, 14428.2)
-
-
-
