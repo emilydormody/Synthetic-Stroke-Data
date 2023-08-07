@@ -158,7 +158,7 @@ class Patient(Agent):
                     self.admission_time = self.model.current_time
             elif self.arrived:
                 if self.treatment_count == 11:
-                    if self.current_time - 20 >= self.admission_time:
+                    if self.model.current_time - 20 >= self.admission_time:
                         self.discharge = self.model.current_time
                         self.model.schedule.remove(self)
                 if self.model.current_time - 1 > self.icu_arrival_time and not self.icu_arrived and self.need_icu:

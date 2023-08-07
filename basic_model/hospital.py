@@ -42,7 +42,7 @@ class Hospital(Model):
                 "Occupational Therapist Visit": [],
                 "Speech Pathologist Visit": [], "Physiotherapist Visit": [], "Dietitian Visit": [],
                 "Social Worker Visit": [],
-                "Cardiologist Visit": [], "Neurologist Visit": [], "Blood Work Time": [], "Last Check": []}
+                "Cardiologist Visit": [], "Neurologist Visit": []}
         for patient in self.all_patients:
             dict["Patient Id"].append(patient.name)
             dict["Age"].append(patient.age)
@@ -72,8 +72,6 @@ class Hospital(Model):
             else:
                 dict["Cardiologist Visit"].append(self.convert_time(patient.cardiologist_visit))
             dict["Neurologist Visit"].append(self.convert_time(patient.neuro_visit))
-            dict["Blood Work Time"].append(self.convert_time(patient.bloodwork))
-            dict["Last Check"].append(self.convert_time(patient.last_checkin))
         return dict
 
     def ticks(self):
