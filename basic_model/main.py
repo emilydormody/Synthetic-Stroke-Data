@@ -1,6 +1,6 @@
 from hospital import Hospital
 from export_to_df import *
-from .values import NUM_TICKS
+from values import NUM_TICKS
 def main():
     h = Hospital()
     for i in range(NUM_TICKS):

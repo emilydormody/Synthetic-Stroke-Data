@@ -4,9 +4,9 @@ import random
 import numpy as np
 from mesa import Agent
 from datetime import time
-from .specialist import Specialist
-from .patient import Patient
-from .values import NUM_PATIENTS
+from specialist import Specialist
+from patient import Patient
+from values import NUM_PATIENTS
 
 
 class CTScan(Specialist):

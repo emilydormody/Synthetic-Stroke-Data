@@ -5,7 +5,7 @@ import pandas as pd
 from mesa import Agent, Model
 import numpy as np
 from scipy import stats
-from .values import *
+from values import *
 
 
 class Patient(Agent):
@@ -65,6 +65,7 @@ class Patient(Agent):
         self.in_treatment = False
         self.in_icu = False
         self.neuro_ward_arrived = False
+        self.specialist_count = 0
 
         # self.neuro_times_lst = [self.admission_time + self.occupational_time_normal(),
         #                         self.admission_time + self.speech_time_normal(),
@@ -76,16 +77,19 @@ class Patient(Agent):
         if self.icu_outtime == 0:
             if random.random() <= 0.506:
                 self.neuro_time = self.neuro_time_normal()
+                self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
             else:
                 self.neuro_time = NUM_TICKS + 1
+                self.neuro_outtime = NUM_TICKS + 1
         else:
             if random.random() <= 0.36:
                 self.neuro_time = self.neuro_time_normal()
+                self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
             else:
                 self.neuro_time = NUM_TICKS + 1
+                self.neuro_outtime = NUM_TICKS + 1
 
-        self.neuro_outtime = self.neuro_time + self.neuro_outtime_normal()
-        self.specialist_count = 0
+
         if random.random() <= 0.52:
             self.occupational_visit = self.admission_time + self.occupational_time_normal()
         else:
@@ -132,8 +136,8 @@ class Patient(Agent):
         self.cardio_visited = False
         self.bloodwork = 0
         self.last_checkin = 0
-        if self.unique_id == NUM_PATIENTS - 1:
-            pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
+        #if self.unique_id == NUM_PATIENTS - 1:
+            #pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
         # print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
         # self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
         # print(self.unique_id)

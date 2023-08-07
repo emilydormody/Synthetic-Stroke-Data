@@ -1,7 +1,7 @@
 from mesa import Agent, Model
 import mesa.time
-from .different_specialists import *
-from .values import *
+from different_specialists import *
+from values import *
 
 
 class Hospital(Model):
