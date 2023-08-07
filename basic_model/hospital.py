@@ -102,6 +102,7 @@ class Hospital(Model):
                 dict['icu_intime'].append(patient.icu_arrival_time)
                 dict['icu_outtime'].append(patient.icu_outtime)
             else:
+                print(patient.unique_id)
                 dict['icu_arrived'].append(False)
                 dict['icu_intime'].append(None)
                 dict['icu_outtime'].append(None)

@@ -60,6 +60,7 @@ class Patient(Agent):
             self.need_icu = False
             self.icu_arrival_time = 0
             self.icu_outtime = 0
+            self.treatment_count += 1
 
         self.ed_arrived = False
         self.arrived = False
