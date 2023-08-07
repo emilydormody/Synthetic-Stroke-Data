@@ -138,8 +138,6 @@ class Patient(Agent):
             self.cardiologist_visit = NUM_TICKS + 1
             self.treatment_count += 1
         self.cardio_visited = False
-        self.bloodwork = 0
-        self.last_checkin = 0
         # if self.unique_id == NUM_PATIENTS - 1:
         # pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
         # print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
@@ -147,9 +145,6 @@ class Patient(Agent):
         # print(self.unique_id)
 
     def step(self):
-        if self.treatment_count == 11:
-            self.discharge = self.model.current_time
-            self.model.schedule.remove(self)
         if not self.in_treatment:
             if self.model.current_time >= self.hospital_arrival and not (
                     self.ed_arrived or self.hospital_arrival == self.admission_time):
@@ -162,6 +157,10 @@ class Patient(Agent):
                 if self.model.current_time - 1 > self.admission_time:
                     self.admission_time = self.model.current_time
             elif self.arrived:
+                if self.treatment_count == 11:
+                    if self.current_time - 20 >= self.admission_time:
+                        self.discharge = self.model.current_time
+                        self.model.schedule.remove(self)
                 if self.model.current_time - 1 > self.icu_arrival_time and not self.icu_arrived and self.need_icu:
                     self.icu_arrival_time = self.model.current_time
                     self.icu_arrived = True
