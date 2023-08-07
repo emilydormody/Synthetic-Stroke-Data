@@ -27,6 +27,7 @@ class CTScan(Specialist):
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
                 self.current_patient.ct_treated = True
+                self.current_patient.treatment_count += 1
                 self.current_patient = None
 
 
@@ -56,6 +57,7 @@ class TPA(Specialist):
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
                 self.current_patient.tpa_treated = True
+                self.current_patient.treatment_count += 1
                 self.current_patient = None
 
 
@@ -82,7 +84,7 @@ class OccupationalTherapist(Specialist):
         if self.current_patient is not None:
             if self.current_patient.occupational_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.specialist_count += 1
+                self.current_patient.treatment_count += 1
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
@@ -112,7 +114,7 @@ class PhysioTherapist(Specialist):
         if self.current_patient is not None:
             if self.current_patient.physio_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.specialist_count += 1
+                self.current_patient.treatment_count += 1
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
@@ -140,7 +142,7 @@ class SpeechPathologist(Specialist):
         if self.current_patient is not None:
             if self.current_patient.speech_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.specialist_count += 1
+                self.current_patient.treatment_count += 1
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
@@ -168,7 +170,7 @@ class Dietitian(Specialist):
         if self.current_patient is not None:
             if self.current_patient.diet_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.specialist_count += 1
+                self.current_patient.treatment_count += 1
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
@@ -196,7 +198,7 @@ class SocialWorker(Specialist):
         if self.current_patient is not None:
             if self.current_patient.social_worker_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.specialist_count += 1
+                self.current_patient.treatment_count += 1
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
@@ -224,7 +226,7 @@ class Neurologist(Specialist):
         if self.current_patient is not None:
             if self.current_patient.neuro_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.specialist_count += 1
+                self.current_patient.treatment_count += 1
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
@@ -282,7 +284,7 @@ class Cardiologist(Specialist):
         if self.current_patient is not None:
             if self.current_patient.cardiologist_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.specialist_count += 1
+                self.current_patient.treatment_count += 1
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
