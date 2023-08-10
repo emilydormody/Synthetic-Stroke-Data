@@ -114,7 +114,7 @@ class PhysioTherapist(Specialist):
         if self.current_patient is not None:
             if self.current_patient.physio_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.treatment_counts['pt'] = False
+                self.current_patient.treatment_counts['physio'] = False
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 

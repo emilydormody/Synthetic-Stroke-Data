@@ -142,9 +142,9 @@ class Patient(Agent):
             # pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
             print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
                   self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time,
-                  self.physio_visit, self.occupational_visit, self.diet_visit, self.speech_visit,
-                  self.social_worker_visit,
-                  self.neuro_visit, self.cardiologist_visit, self.treatment_counts)
+                  'physio', self.physio_visit, 'ocu',self.occupational_visit, 'dt',self.diet_visit, 'slp',self.speech_visit,
+                  'sw', self.social_worker_visit, 'neuro',
+                  self.neuro_visit, 'cardio', self.cardiologist_visit, self.treatment_counts)
         # print(self.unique_id)
 
     def step(self):
@@ -338,7 +338,10 @@ class Patient(Agent):
             return stats.gamma.rvs(0.872, 20001.8, 16391.2)
 
     def cardiology_time_normal(self):
-        return stats.gamma.rvs(0.772, 22.6, 113337.4)
+        if random.random() >= 0.808:
+            return stats.gamma.rvs(1.21, 16.03, 3320.7)
+        else:
+            return stats.gamma.rvs(0.735, 15177, 16620.2)
 
     def neurologist_time_normal(self):
         return stats.gamma.rvs(0.566, 5.92, 14428.2)
