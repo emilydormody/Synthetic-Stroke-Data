@@ -27,7 +27,7 @@ class CTScan(Specialist):
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
                 self.current_patient.ct_treated = True
-                self.current_patient.treatment_count += 1
+                self.current_patient.treatment_counts['ct'] = False
                 self.current_patient = None
 
 
@@ -57,7 +57,7 @@ class TPA(Specialist):
                 self.current_patient.last_treatment = self.model.current_time
                 self.current_patient.in_treatment = False
                 self.current_patient.tpa_treated = True
-                self.current_patient.treatment_count += 1
+                self.current_patient.treatment_counts['tpa'] = False
                 self.current_patient = None
 
 
@@ -84,7 +84,7 @@ class OccupationalTherapist(Specialist):
         if self.current_patient is not None:
             if self.current_patient.occupational_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.treatment_count += 1
+                self.current_patient.treatment_counts['ocu'] = False
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
@@ -114,7 +114,7 @@ class PhysioTherapist(Specialist):
         if self.current_patient is not None:
             if self.current_patient.physio_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.treatment_count += 1
+                self.current_patient.treatment_counts['pt'] = False
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
@@ -142,7 +142,7 @@ class SpeechPathologist(Specialist):
         if self.current_patient is not None:
             if self.current_patient.speech_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.treatment_count += 1
+                self.current_patient.treatment_counts['slp'] = False
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
@@ -170,7 +170,7 @@ class Dietitian(Specialist):
         if self.current_patient is not None:
             if self.current_patient.diet_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.treatment_count += 1
+                self.current_patient.treatment_counts['dt'] = False
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
@@ -198,7 +198,7 @@ class SocialWorker(Specialist):
         if self.current_patient is not None:
             if self.current_patient.social_worker_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.treatment_count += 1
+                self.current_patient.treatment_counts['sw'] = False
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
@@ -226,38 +226,11 @@ class Neurologist(Specialist):
         if self.current_patient is not None:
             if self.current_patient.neuro_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.treatment_count += 1
+                self.current_patient.treatment_counts['neuro'] = False
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
 
-class BloodWork(Specialist):
-    def __init__(self, unique_id, model):
-        super().__init__(unique_id, model)
-        self.treatment_time = 20
-
-    def step(self):
-        if super().working_hours():
-            if self.current_patient is None:
-                if random.randint(0, 1) == 0:
-                    self.current_patient = Patient(NUM_PATIENTS+1, self.model)
-                    self.current_patient.bloodwork = self.model.current_time
-                else:
-                    for i in np.random.permutation(len(self.model.neuro_patients)):
-                        patient = self.model.neuro_patients[i]
-                        if patient.last_treatment < self.model.current_time - 10:
-                            if patient.bloodwork == 0 and not patient.in_treatment:
-                                self.current_patient = patient
-                                patient.bloodwork = self.model.current_time
-                                self.current_patient.in_treatment = True
-                                self.daily_stroke_patients -= 1
-                                break
-        if self.current_patient is not None:
-            if self.current_patient.bloodwork < self.model.current_time - self.treatment_time:
-                self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.in_treatment = False
-                self.current_patient = None
-                self.busy = False
 
 
 class Cardiologist(Specialist):
@@ -284,27 +257,8 @@ class Cardiologist(Specialist):
         if self.current_patient is not None:
             if self.current_patient.cardiologist_visit < self.model.current_time - self.treatment_time:
                 self.current_patient.last_treatment = self.model.current_time
-                self.current_patient.treatment_count += 1
+                self.current_patient.treatment_counts['cardio'] = False
                 self.current_patient.in_treatment = False
                 self.current_patient = None
 
 
-class Nurse(Specialist):
-    def __init__(self, unique_id, model):
-        super().__init__(unique_id, model)
-        self.treatment_time = 5
-
-    def step(self):
-        if super().working_hours():
-            if self.current_patient is None:
-                for i in np.random.permutation(len(self.model.neuro_patients)):
-                    patient = self.model.neuro_patients[i]
-                    if not patient.in_treatment:
-                        self.current_patient = patient
-                        patient.last_checkin = self.model.current_time
-                        self.current_patient.in_treatment = True
-                        break
-        if self.current_patient is not None:
-            if self.current_patient.last_checkin < self.model.current_time - self.treatment_time:
-                self.current_patient.in_treatment = False
-                self.current_patient = None

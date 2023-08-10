@@ -25,7 +25,8 @@ class Patient(Agent):
         else:
             self.admission_time = self.hospital_arrival + self.admission_time_normal()
         self.time_of_stroke = self.hospital_arrival - random.randint(120, 150) - np.random.normal(90, 15)
-        self.treatment_count = 0
+        self.treatment_counts = {'ct': True, 'tpa': True, 'icu': True, 'neuro_ward': True, 'physio': True, 'sw': True,
+                                 'slp': True, 'cardio': True, 'ocu': True, 'neuro': True, 'dt': True}
         if self.admission_time != self.hospital_arrival:
             if random.random() <= 0.62:
                 self.transport = "ambulance"
@@ -34,23 +35,22 @@ class Patient(Agent):
                 self.transport = "walkin"
         else:
             self.transport = None
-        self.discharge = None
+        self.discharge = NUM_TICKS + 1
 
         if random.random() <= 0.167:
             self.ct_time = self.hospital_arrival + self.ct_time_normal()
         else:
             self.ct_time = NUM_TICKS + 1
-            self.treatment_count += 1
+            self.treatment_counts['ct'] = False
         self.ct_treated = False
         self.tpa_treated = False
-        self.tpa_permitted = False
+        self.tpa_permitted = True
         if random.random() >= 0.04:
             self.t_time = NUM_TICKS + 1
-            self.treatment_count += 1
-            self.tpa_denied = True
+            self.treatment_counts['tpa'] = False
+            self.tpa_permitted = False
         else:
             self.t_time = self.hospital_arrival + self.tpa_time_normal()
-            self.tpa_denied = False
 
         if random.random() <= 0.45:
             self.need_icu = True
@@ -60,7 +60,7 @@ class Patient(Agent):
             self.need_icu = False
             self.icu_arrival_time = 0
             self.icu_outtime = 0
-            self.treatment_count += 1
+            self.treatment_counts['icu'] = False
 
         self.ed_arrived = False
         self.arrived = False
@@ -84,7 +84,7 @@ class Patient(Agent):
             else:
                 self.neuro_time = NUM_TICKS + 1
                 self.neuro_outtime = NUM_TICKS + 1
-                self.treatment_count += 1
+                self.treatment_counts['neuro_ward'] = False
         else:
             if random.random() <= 0.36:
                 self.neuro_time = self.neuro_time_normal()
@@ -92,43 +92,43 @@ class Patient(Agent):
             else:
                 self.neuro_time = NUM_TICKS + 1
                 self.neuro_outtime = NUM_TICKS + 1
-                self.treatment_count += 1
+                self.treatment_counts['neuro_ward'] = False
 
         if random.random() <= 0.52:
             self.occupational_visit = self.admission_time + self.occupational_time_normal()
         else:
             self.occupational_visit = NUM_TICKS + 1
-            self.treatment_count += 1
+            self.treatment_counts['ocu'] = False
         self.ocu_visited = False
         if random.random() <= 0.331:
             self.speech_visit = self.admission_time + self.speech_time_normal()
         else:
             self.speech_visit = NUM_TICKS + 1
-            self.treatment_count += 1
+            self.treatment_counts['slp'] = False
         self.speech_visited = False
         if random.random() <= 0.742:
             self.physio_visit = self.physio_time_normal()
         else:
             self.physio_visit = NUM_TICKS + 1
-            self.treatment_count += 1
+            self.treatment_counts['physio'] = False
         self.physio_visited = False
         if random.random() <= 0.179:
             self.diet_visit = self.admission_time + self.dietitian_time_normal()
         else:
             self.diet_visit = NUM_TICKS + 1
-            self.treatment_count += 1
+            self.treatment_counts['dt'] = False
         self.diet_visited = False
         if random.random() <= 0.203:
             self.social_worker_visit = self.admission_time + self.social_worker_normal()
         else:
             self.social_worker_visit = NUM_TICKS + 1
-            self.treatment_count += 1
+            self.treatment_counts['sw'] = False
         self.sw_visited = False
         if random.random() <= 0.023:
             self.neuro_visit = self.admission_time + self.neurologist_time_normal()
         else:
             self.neuro_visit = NUM_TICKS + 1
-            self.treatment_count += 1
+            self.treatment_counts['neuro'] = False
         self.neuro_visited = False
         if random.random() <= 0.022:
             self.need_cardiologist = True
@@ -136,12 +136,15 @@ class Patient(Agent):
         else:
             self.need_cardiologist = False
             self.cardiologist_visit = NUM_TICKS + 1
-            self.treatment_count += 1
+            self.treatment_counts['cardio'] = False
         self.cardio_visited = False
-        # if self.unique_id == NUM_PATIENTS - 1:
-        # pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
-        # print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
-        # self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time)
+        if self.unique_id < NUM_PATIENTS:
+            # pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
+            print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
+                  self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time,
+                  self.physio_visit, self.occupational_visit, self.diet_visit, self.speech_visit,
+                  self.social_worker_visit,
+                  self.neuro_visit, self.cardiologist_visit, self.treatment_counts)
         # print(self.unique_id)
 
     def step(self):
@@ -157,8 +160,8 @@ class Patient(Agent):
                 if self.model.current_time - 1 > self.admission_time:
                     self.admission_time = self.model.current_time
             elif self.arrived:
-                if self.treatment_count == 11:
-                    if self.current_time - 20 >= self.admission_time:
+                if self.check_treatments():
+                    if self.model.current_time - 20 >= self.admission_time:
                         self.discharge = self.model.current_time
                         self.model.schedule.remove(self)
                 if self.model.current_time - 1 > self.icu_arrival_time and not self.icu_arrived and self.need_icu:
@@ -167,7 +170,7 @@ class Patient(Agent):
                     self.in_icu = True
                 elif self.model.current_time >= self.icu_outtime and self.in_icu:
                     self.in_icu = False
-                    self.treatment_count += 1
+                    self.treatment_counts['icu'] = False
                     if self.icu_outtime == self.neuro_time:
                         self.neuro_ward_admission()
                     if self.model.current_time - 1 > self.icu_outtime:
@@ -176,9 +179,9 @@ class Patient(Agent):
                         self.model.current_time >= self.neuro_time:
                     self.neuro_ward_admission()
                 elif self.model.current_time >= self.neuro_outtime:
-                    if self.model.current_time-1 >= self.neuro_outtime:
+                    if self.model.current_time - 1 >= self.neuro_outtime:
                         self.neuro_outtime = self.model.current_time
-                    self.treatment_count += 1  # for leaving neurology ward
+                    self.treatment_counts['neuro_ward'] = False  # for leaving neurology ward
             if self.model.current_time >= self.ct_time - 1 and not self.ct_treated:
                 if self.model.ct_patients.count(self) == 0:
                     self.model.ct_patients.append(self)
@@ -208,14 +211,14 @@ class Patient(Agent):
                     self.model.neurologist_patients.append(self)
 
     def check_permitted(self):
-        if self.tpa_denied:
+        if not self.tpa_permitted:
             return False
         else:
             if self.model.current_time - self.time_of_stroke <= 270:
                 self.tpa_permitted = True
             else:
-                self.treatment_count += 1
                 self.tpa_permitted = False
+                self.treatment_counts['tpa'] = False
             return self.tpa_permitted
 
     def neuro_ward_admission(self):
@@ -339,3 +342,13 @@ class Patient(Agent):
 
     def neurologist_time_normal(self):
         return stats.gamma.rvs(0.566, 5.92, 14428.2)
+
+    def check_treatments(self):
+        for key in self.treatment_counts.keys():
+            if self.treatment_counts[key]:
+                if self.model.current_time == NUM_TICKS-1:
+                    print(self.unique_id, self.treatment_counts)
+                return False
+
+        print(self.treatment_counts)
+        return True

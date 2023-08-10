@@ -36,13 +36,13 @@ class Hospital(Model):
 
     def patient_info(self):
         dict = {"Patient Id": [], "Age": [], "Gender": [], "Time of Stroke": [], "ED Arrival Time": [],
-                "Arrival Time": [], "Arrival Transport": [], "CT Scan Time": [],
+                "Arrival Time": [], "Arrival Transport": [], "Discharge Time": [],"CT Scan Time": [],
                 "TPA Treatment Time": [], "ICU Arrival Time": [],
                 "ICU Checkout Time": [], "Neurology Ward Arrival Time": [],
                 "Occupational Therapist Visit": [],
                 "Speech Pathologist Visit": [], "Physiotherapist Visit": [], "Dietitian Visit": [],
                 "Social Worker Visit": [],
-                "Cardiologist Visit": [], "Neurologist Visit": [], "Blood Work Time": [], "Last Check": []}
+                "Cardiologist Visit": [], "Neurologist Visit": []}
         for patient in self.all_patients:
             dict["Patient Id"].append(patient.name)
             dict["Age"].append(patient.age)
@@ -54,6 +54,7 @@ class Hospital(Model):
                 dict["ED Arrival Time"].append(None)
             dict["Arrival Time"].append(self.convert_time(patient.admission_time))
             dict["Arrival Transport"].append(patient.transport)
+            dict["Discharge Time"].append(self.convert_time(patient.discharge))
             dict["CT Scan Time"].append(self.convert_time(patient.ct_time))
             if patient.tpa_treated:
                 dict["TPA Treatment Time"].append(self.convert_time(patient.t_time))
@@ -72,8 +73,6 @@ class Hospital(Model):
             else:
                 dict["Cardiologist Visit"].append(self.convert_time(patient.cardiologist_visit))
             dict["Neurologist Visit"].append(self.convert_time(patient.neuro_visit))
-            dict["Blood Work Time"].append(self.convert_time(patient.bloodwork))
-            dict["Last Check"].append(self.convert_time(patient.last_checkin))
         return dict
 
     def ticks(self):
