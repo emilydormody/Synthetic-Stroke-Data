@@ -350,9 +350,5 @@ class Patient(Agent):
     def check_treatments(self):
         for key in self.treatment_counts.keys():
             if self.treatment_counts[key]:
-                if self.model.current_time == NUM_TICKS-1:
-                    print(self.unique_id, self.treatment_counts)
                 return False
-
-        print(self.treatment_counts)
         return True
