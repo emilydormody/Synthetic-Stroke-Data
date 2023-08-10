@@ -178,9 +178,10 @@ class Patient(Agent):
                 elif ((self.icu_arrived and not self.in_icu) or not self.need_icu) and not self.neuro_ward_arrived and \
                         self.model.current_time >= self.neuro_time:
                     self.neuro_ward_admission()
-                elif self.model.current_time >= self.neuro_outtime:
+                elif self.model.current_time >= self.neuro_outtime and self in self.model.neuro_patients:
                     if self.model.current_time - 1 >= self.neuro_outtime:
                         self.neuro_outtime = self.model.current_time
+                    self.model.neuro_patients.remove(self)
                     self.treatment_counts['neuro_ward'] = False  # for leaving neurology ward
             if self.model.current_time >= self.ct_time - 1 and not self.ct_treated:
                 if self.model.ct_patients.count(self) == 0:
