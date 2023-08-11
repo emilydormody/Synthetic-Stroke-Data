@@ -308,7 +308,7 @@ class Patient(Agent):
             return stats.gamma.rvs(0.872, 20001.8, 16391.2)
 
     def cardiology_time_normal(self):
-        if random.random() >= 0.808:
+        if random.random() <= 0.808:
             return stats.gamma.rvs(1.21, 16.03, 3320.7)
         else:
             return stats.gamma.rvs(0.735, 15177, 16620.2)
