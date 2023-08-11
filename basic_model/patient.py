@@ -1,8 +1,6 @@
-import math
 import random
 
-import pandas as pd
-from mesa import Agent, Model
+from mesa import Agent
 import numpy as np
 from scipy import stats
 from values import *
@@ -70,13 +68,6 @@ class Patient(Agent):
         self.in_icu = False
         self.neuro_ward_arrived = False
 
-        # self.neuro_times_lst = [self.admission_time + self.occupational_time_normal(),
-        #                         self.admission_time + self.speech_time_normal(),
-        #                         self.admission_time + self.physio_time_normal(),
-        #                         0,
-        #                         self.admission_time + self.social_worker_normal(),
-        #                         0,
-        #                         self.admission_time + self.cardiology_time_normal()]
         if self.icu_outtime == 0:
             if random.random() <= 0.506:
                 self.neuro_time = self.neuro_time_normal()
@@ -138,14 +129,6 @@ class Patient(Agent):
             self.cardiologist_visit = NUM_TICKS + 1
             self.treatment_counts['cardio'] = False
         self.cardio_visited = False
-        if self.unique_id < NUM_PATIENTS:
-            # pd.DataFrame(data=self.model.before_ticks()).to_csv('~/Documents/NSERC/files/before.csv')
-            print(self.unique_id, 'ed', self.hospital_arrival, 'admit', self.admission_time, 'ct', self.ct_time, 'tpa',
-                  self.t_time, 'icu', self.icu_arrival_time, 'out', self.icu_outtime, 'neuro', self.neuro_time,
-                  'physio', self.physio_visit, 'ocu',self.occupational_visit, 'dt',self.diet_visit, 'slp',self.speech_visit,
-                  'sw', self.social_worker_visit, 'neuro',
-                  self.neuro_visit, 'cardio', self.cardiologist_visit, self.treatment_counts)
-        # print(self.unique_id)
 
     def step(self):
         if not self.in_treatment:
@@ -228,20 +211,6 @@ class Patient(Agent):
         self.neuro_ward_arrived = True
         self.last_treatment = self.model.current_time
         self.model.neuro_patients.append(self)
-
-    def get_patient_info(self):
-        dict = {"Blood Glucose": 0, "Temperature": 0, "Heart Rate": 0, "Respiratory Rate": 0, "Blood Pressure": 0,
-                "Pulse Oximetry": 0, "Swallowing Ability": 0, "Swallowing Screen Result": None, "Diet Type": None,
-                "Texture of Food": None, "Home/Family Situation": 0, "Mental State": 0, "Emotional State": 0,
-                "Action Plan": 0, "Environment": 0, "Bath/Shower Ability": 0, "Dressing": 0, "Grooming": 0,
-                "Toileting": 0, "Eating": 0, "Bed Mobility": 0, "Walking": 0, "Wheelchair Mobility": 0, "Cognition": 0,
-                "Perception": 0, "Range of Motion": 0, "Balance": 0, "Sensation": 0, "Proprioception": 0, "Strength": 0,
-                "Manual Dexterity": 0, "Coordination": 0, "Ashworth Scale Result": 0, "Accomodation": 0,
-                "Hand Dominance": 0, "Pain": 0, "Communication": 0, "Vision": 0, "Hearing": 0,
-                "Bowel/Bladder Functioning": 0, "Cardiopulmonary Functioning": 0, "Respiratory Functioning": 0,
-                "Muscle Tone": 0, "Reflexes/Coordination": 0, "Speech Intelligibility": 0,
-                "Oral Peripheral Exam Result": 0}
-        return dict
 
     def admission_time_normal(self):
         if random.random() < 0.956:
